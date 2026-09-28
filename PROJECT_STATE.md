@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 88 100% COMPLETE — Strict .env Exclusion & Dynamic Root-Relative Image Architecture
+**Last Updated:** Phase 89 100% COMPLETE — Elimination of Categories & Filter Drawer Over-Layering Flaw
 
 ---
 
@@ -75,6 +75,13 @@
 | 86 | Natively Mobile Fast Site Architecture (Google Stitch Tokens, 2x2 Grid, 5-Slot Dock, Live Tunnel) |
 | 87 | Frictionless 1-Tap Buyer Mode ⇄ Shop Mode Switcher & Navigation Dock Sync (Google Stitch Nocturne Aurum Standards) |
 | 88 | Strict .env Exclusion & Dynamic Root-Relative Image Architecture (Zero-Tolerance Deployment Audit, Hostinger WAF 422 Direct 404 Fix) |
+| 89 | Elimination of Categories & Filter Drawer Over-Layering Flaw (Root-Level DOM Relocation, Visibility Hardening & Print Exclusion) |
+
+### Phase 89 Details — Elimination of Categories & Filter Drawer Over-Layering Flaw
+- **1. Root-Level DOM Relocation (`home.php`):** Extracted the `#categoryDrawer` and `#categoryDrawerScrim` markup and scripts from the document content flow (previously nestled between Hero and Products grid) to the root document level immediately before `</body>`.
+- **2. Hardware-Accelerated Visibility Hardening (`home.php`):** Configured strict inactive styling (`visibility: hidden`, `opacity: 0`, `pointer-events: none`, `transform: translateY(115%)`, `z-index: 99999`) preventing bottom dock collision, shadow artifacts, and unwanted rendering during page load.
+- **3. Print & Full-Page Screenshot Protection (`home.php`):** Added `@media print { .category-drawer, .drawer-scrim, .modal-overlay { display: none !important; } }` ensuring iOS Safari full-page screenshot tools and rasterizers never capture hidden drawers over product cards.
+- **4. Synchronized Toggle Engine (`home.php`):** Enhanced `toggleCategoryDrawer()` to synchronously manage `aria-hidden` attributes and transition visibility smoothly with 360ms CSS cleanup.
 
 ### Phase 88 Details — Strict .env Exclusion & Dynamic Root-Relative Image Architecture
 - **1. Zero-Tolerance Deployment Build Engine (`build_hostinger_zip.py` / `build_phase_zip.py`):** Multi-layer filter excluding any `.env` file variant, coupled with an automated post-build archive inspection that immediately aborts and purges the archive if any `.env` entry is detected.

@@ -573,13 +573,15 @@ $exchange_rate = floatval(getPartnerSetting('exchange_rate', '1'));
       background: rgba(4, 6, 12, 0.75);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      z-index: 2000;
+      z-index: 99990;
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
     }
     .drawer-scrim.active, .modal-overlay.active {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
     }
 
@@ -588,23 +590,31 @@ $exchange_rate = floatval(getPartnerSetting('exchange_rate', '1'));
       bottom: 0;
       left: 0;
       right: 0;
+      width: 100%;
       max-height: 85vh;
       background: rgba(12, 15, 26, 0.98);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-top: 1px solid rgba(252, 185, 0, 0.3);
       border-radius: 24px 24px 0 0;
-      z-index: 2001;
+      z-index: 99999;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(252, 185, 0, 0.1);
-      transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(252, 185, 0, 0.15);
+      transform: translateY(115%);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s ease;
       box-sizing: border-box;
       overflow: hidden;
+      padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 12px);
     }
     .category-drawer.active {
       transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
 
     @media (min-width: 768px) {
@@ -620,15 +630,24 @@ $exchange_rate = floatval(getPartnerSetting('exchange_rate', '1'));
         border: 1px solid rgba(252, 185, 0, 0.25);
         transform: translate(-50%, -40%) scale(0.96);
         opacity: 0;
+        visibility: hidden;
         pointer-events: none;
-        transition: transform 0.25s ease, opacity 0.25s ease;
+        transition: transform 0.25s ease, opacity 0.25s ease, visibility 0.25s ease;
+        padding-bottom: 0;
       }
       .category-drawer.active {
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
+        visibility: visible;
         pointer-events: auto;
       }
       .drawer-handle-bar {
+        display: none !important;
+      }
+    }
+
+    @media print {
+      .category-drawer, .drawer-scrim, .modal-overlay {
         display: none !important;
       }
     }
@@ -1643,214 +1662,6 @@ if ($show_banner !== 'none'):
   </div>
 </div>
 
-<!-- Universal Category & Filter Drawer Overlay -->
-<div class="drawer-scrim" id="categoryDrawerScrim" onclick="toggleCategoryDrawer(false)"></div>
-
-<!-- Slide-Up Category Drawer Container -->
-<div class="category-drawer drawer-menu modal-box" id="categoryDrawer" role="dialog" aria-modal="true">
-    <!-- Top Grab Handle (Mobile UX) -->
-    <div class="drawer-handle-bar">
-        <div class="drawer-drag-pill"></div>
-    </div>
-
-    <!-- Drawer Header -->
-    <div class="category-drawer-header">
-        <div class="header-titles">
-            <h2 class="drawer-title">
-                <span>📁</span> Categories &amp; Filters
-            </h2>
-            <p class="drawer-subtitle">Browse products, services, and official partner shops</p>
-        </div>
-        <button type="button" class="drawer-close-btn" onclick="toggleCategoryDrawer(false)" aria-label="Close Drawer">&times;</button>
-    </div>
-
-    <!-- Scrollable Content Body -->
-    <div class="category-drawer-body no-scrollbar">
-        <form method="GET" action="index.php" id="drawerFilterForm">
-            <?php if (!empty($search)): ?>
-                <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
-            <?php endif; ?>
-
-            <!-- Section 1: Listing Types -->
-            <div class="drawer-section">
-                <div class="section-label-row">
-                    <span class="section-label">1. Select Listing Type</span>
-                </div>
-                <div class="type-card-grid">
-                    <label class="type-card-label">
-                        <input type="radio" name="type" value="all" <?= ($viewType === 'all' || empty($viewType)) ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
-                        <div class="type-card <?= ($viewType === 'all' || empty($viewType)) ? 'active' : '' ?>">
-                            <span class="type-icon">📦</span>
-                            <span class="type-text">All Items</span>
-                        </div>
-                    </label>
-                    <label class="type-card-label">
-                        <input type="radio" name="type" value="products" <?= $viewType === 'products' ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
-                        <div class="type-card <?= $viewType === 'products' ? 'active' : '' ?>">
-                            <span class="type-icon">🛍️</span>
-                            <span class="type-text">Products</span>
-                        </div>
-                    </label>
-                    <label class="type-card-label">
-                        <input type="radio" name="type" value="services" <?= $viewType === 'services' ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
-                        <div class="type-card <?= $viewType === 'services' ? 'active' : '' ?>">
-                            <span class="type-icon">🤝</span>
-                            <span class="type-text">Services</span>
-                        </div>
-                    </label>
-                    <label class="type-card-label">
-                        <input type="radio" name="type" value="shops" <?= $viewType === 'shops' ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
-                        <div class="type-card <?= $viewType === 'shops' ? 'active' : '' ?>">
-                            <span class="type-icon">🏪</span>
-                            <span class="type-text">Partner Shops</span>
-                        </div>
-                    </label>
-                    <label class="type-card-label full-width">
-                        <input type="radio" name="type" value="offers" <?= ($viewType === 'offers' || $viewType === 'affiliate') ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
-                        <div class="type-card <?= ($viewType === 'offers' || $viewType === 'affiliate') ? 'active' : '' ?>">
-                            <span class="type-icon">⚡</span>
-                            <span class="type-text">Partner Deals &amp; Offers</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Section 2: Visual Categories Grid -->
-            <div class="drawer-section">
-                <div class="section-label-row">
-                    <span class="section-label">2. Browse Categories</span>
-                    <span class="section-count"><?= count($categories) + 1 ?> available</span>
-                </div>
-
-                <div class="categories-visual-grid no-scrollbar">
-                    <!-- All Categories Option -->
-                    <label class="cat-card-label">
-                        <input type="radio" name="category" value="All" <?= $selectedCategory === 'All' ? 'checked' : '' ?> onchange="onDrawerCatChange(this)">
-                        <div class="cat-visual-card <?= $selectedCategory === 'All' ? 'active' : '' ?>">
-                            <div class="cat-icon-wrap">🌐</div>
-                            <div class="cat-info">
-                                <span class="cat-name">All Categories</span>
-                                <span class="cat-sub">Complete catalog</span>
-                            </div>
-                            <span class="cat-check">✓</span>
-                        </div>
-                    </label>
-
-                    <?php foreach ($categories as $cat): 
-                        // Map category icons intelligently
-                        $icon = '📁';
-                        $catLower = strtolower($cat);
-                        if (strpos($catLower, 'nid') !== false) $icon = '🪪';
-                        elseif (strpos($catLower, 'license') !== false || strpos($catLower, 'driving') !== false || strpos($catLower, 'transport') !== false) $icon = '🚗';
-                        elseif (strpos($catLower, 'passport') !== false || strpos($catLower, 'travel') !== false || strpos($catLower, 'visa') !== false) $icon = '✈️';
-                        elseif (strpos($catLower, 'tech') !== false || strpos($catLower, 'saas') !== false || strpos($catLower, 'software') !== false || strpos($catLower, 'web') !== false) $icon = '💻';
-                        elseif (strpos($catLower, 'fashion') !== false || strpos($catLower, 'cloth') !== false || strpos($catLower, 'apparel') !== false) $icon = '👗';
-                        elseif (strpos($catLower, 'motor') !== false || strpos($catLower, 'part') !== false || strpos($catLower, 'auto') !== false) $icon = '⚙️';
-                        elseif (strpos($catLower, 'gaming') !== false || strpos($catLower, 'game') !== false) $icon = '🎮';
-                        elseif (strpos($catLower, 'certificate') !== false || strpos($catLower, 'birth') !== false || strpos($catLower, 'legal') !== false) $icon = '📜';
-                        elseif (strpos($catLower, 'digital') !== false || strpos($catLower, 'download') !== false) $icon = '💾';
-                        elseif (strpos($catLower, 'mobile') !== false || strpos($catLower, 'recharge') !== false || strpos($catLower, 'topup') !== false) $icon = '📱';
-                    ?>
-                    <label class="cat-card-label">
-                        <input type="radio" name="category" value="<?= htmlspecialchars($cat) ?>" <?= $selectedCategory === $cat ? 'checked' : '' ?> onchange="onDrawerCatChange(this)">
-                        <div class="cat-visual-card <?= $selectedCategory === $cat ? 'active' : '' ?>">
-                            <div class="cat-icon-wrap"><?= $icon ?></div>
-                            <div class="cat-info">
-                                <span class="cat-name"><?= htmlspecialchars(mb_strtoupper($cat, 'UTF-8')) ?></span>
-                                <span class="cat-sub">Verified Listings</span>
-                            </div>
-                            <span class="cat-check">✓</span>
-                        </div>
-                    </label>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
-            <?php if ($isGeoEnabled): ?>
-            <!-- Section 3: Region / District Filter (Conditional) -->
-            <div class="drawer-section">
-                <div class="section-label-row">
-                    <span class="section-label">3. Region / District</span>
-                </div>
-                <select name="district" class="drawer-select">
-                    <option value="">🌍 All Regions</option>
-                    <option value="Dhaka" <?= $selectedDistrict == 'Dhaka' ? 'selected' : '' ?>>Dhaka</option>
-                    <option value="Chittagong" <?= $selectedDistrict == 'Chittagong' ? 'selected' : '' ?>>Chittagong</option>
-                    <option value="Sylhet" <?= $selectedDistrict == 'Sylhet' ? 'selected' : '' ?>>Sylhet</option>
-                    <option value="Rajshahi" <?= $selectedDistrict == 'Rajshahi' ? 'selected' : '' ?>>Rajshahi</option>
-                    <option value="Khulna" <?= $selectedDistrict == 'Khulna' ? 'selected' : '' ?>>Khulna</option>
-                    <option value="Barisal" <?= $selectedDistrict == 'Barisal' ? 'selected' : '' ?>>Barisal</option>
-                    <option value="Rangpur" <?= $selectedDistrict == 'Rangpur' ? 'selected' : '' ?>>Rangpur</option>
-                    <option value="Mymensingh" <?= $selectedDistrict == 'Mymensingh' ? 'selected' : '' ?>>Mymensingh</option>
-                </select>
-            </div>
-            <?php endif; ?>
-        </form>
-    </div>
-
-    <!-- Sticky Bottom Action Dock -->
-    <div class="category-drawer-footer">
-        <a href="index.php" class="btn-drawer-reset">Reset All</a>
-        <button type="submit" form="drawerFilterForm" class="btn-drawer-apply">
-            <span>Apply Filters</span>
-            <span class="apply-icon">➔</span>
-        </button>
-    </div>
-</div>
-
-<script>
-function toggleCategoryDrawer(show) {
-    const drawer = document.getElementById('categoryDrawer');
-    const scrim = document.getElementById('categoryDrawerScrim');
-    if (!drawer || !scrim) return;
-
-    if (show) {
-        scrim.classList.add('active');
-        drawer.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    } else {
-        scrim.classList.remove('active');
-        drawer.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-}
-
-// Backward compatibility alias for any legacy triggers
-window.toggleFilterModal = toggleCategoryDrawer;
-
-function onDrawerTypeChange(radio) {
-    const allCards = document.querySelectorAll('.type-card');
-    allCards.forEach(c => c.classList.remove('active'));
-    const parent = radio.closest('.type-card-label');
-    if (parent) {
-        const card = parent.querySelector('.type-card');
-        if (card) card.classList.add('active');
-    }
-}
-
-function onDrawerCatChange(radio) {
-    const allCards = document.querySelectorAll('.cat-visual-card');
-    allCards.forEach(c => c.classList.remove('active'));
-    const parent = radio.closest('.cat-card-label');
-    if (parent) {
-        const card = parent.querySelector('.cat-visual-card');
-        if (card) card.classList.add('active');
-    }
-}
-
-// Backward compatibility helper
-function updateRadioUI(input) {
-    onDrawerTypeChange(input);
-}
-
-// ESC Key closes drawer
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        toggleCategoryDrawer(false);
-    }
-});
-</script>
-
 <section class="grid-section">
 
 <?php if (empty($search) && $selectedCategory === 'All' && !empty($trending_products)): ?>
@@ -2422,6 +2233,224 @@ function showShareToast(msg) {
         toast.style.transform = 'translateX(-50%) translateY(0)';
     }, 2500);
 }
+</script>
+
+<!-- Universal Category & Filter Drawer Overlay (Root Level) -->
+<div class="drawer-scrim" id="categoryDrawerScrim" onclick="toggleCategoryDrawer(false)"></div>
+
+<!-- Slide-Up Category Drawer Container -->
+<div class="category-drawer drawer-menu modal-box" id="categoryDrawer" role="dialog" aria-modal="true" aria-hidden="true">
+    <!-- Top Grab Handle (Mobile UX) -->
+    <div class="drawer-handle-bar">
+        <div class="drawer-drag-pill"></div>
+    </div>
+
+    <!-- Drawer Header -->
+    <div class="category-drawer-header">
+        <div class="header-titles">
+            <h2 class="drawer-title">
+                <span>📁</span> Categories &amp; Filters
+            </h2>
+            <p class="drawer-subtitle">Browse products, services, and official partner shops</p>
+        </div>
+        <button type="button" class="drawer-close-btn" onclick="toggleCategoryDrawer(false)" aria-label="Close Drawer">&times;</button>
+    </div>
+
+    <!-- Scrollable Content Body -->
+    <div class="category-drawer-body no-scrollbar">
+        <form method="GET" action="index.php" id="drawerFilterForm">
+            <?php if (!empty($search)): ?>
+                <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+            <?php endif; ?>
+
+            <!-- Section 1: Listing Types -->
+            <div class="drawer-section">
+                <div class="section-label-row">
+                    <span class="section-label">1. Select Listing Type</span>
+                </div>
+                <div class="type-card-grid">
+                    <label class="type-card-label">
+                        <input type="radio" name="type" value="all" <?= ($viewType === 'all' || empty($viewType)) ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
+                        <div class="type-card <?= ($viewType === 'all' || empty($viewType)) ? 'active' : '' ?>">
+                            <span class="type-icon">📦</span>
+                            <span class="type-text">All Items</span>
+                        </div>
+                    </label>
+                    <label class="type-card-label">
+                        <input type="radio" name="type" value="products" <?= $viewType === 'products' ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
+                        <div class="type-card <?= $viewType === 'products' ? 'active' : '' ?>">
+                            <span class="type-icon">🛍️</span>
+                            <span class="type-text">Products</span>
+                        </div>
+                    </label>
+                    <label class="type-card-label">
+                        <input type="radio" name="type" value="services" <?= $viewType === 'services' ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
+                        <div class="type-card <?= $viewType === 'services' ? 'active' : '' ?>">
+                            <span class="type-icon">🤝</span>
+                            <span class="type-text">Services</span>
+                        </div>
+                    </label>
+                    <label class="type-card-label">
+                        <input type="radio" name="type" value="shops" <?= $viewType === 'shops' ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
+                        <div class="type-card <?= $viewType === 'shops' ? 'active' : '' ?>">
+                            <span class="type-icon">🏪</span>
+                            <span class="type-text">Partner Shops</span>
+                        </div>
+                    </label>
+                    <label class="type-card-label full-width">
+                        <input type="radio" name="type" value="offers" <?= ($viewType === 'offers' || $viewType === 'affiliate') ? 'checked' : '' ?> onchange="onDrawerTypeChange(this)">
+                        <div class="type-card <?= ($viewType === 'offers' || $viewType === 'affiliate') ? 'active' : '' ?>">
+                            <span class="type-icon">⚡</span>
+                            <span class="type-text">Partner Deals &amp; Offers</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Section 2: Visual Categories Grid -->
+            <div class="drawer-section">
+                <div class="section-label-row">
+                    <span class="section-label">2. Browse Categories</span>
+                    <span class="section-count"><?= count($categories) + 1 ?> available</span>
+                </div>
+
+                <div class="categories-visual-grid no-scrollbar">
+                    <!-- All Categories Option -->
+                    <label class="cat-card-label">
+                        <input type="radio" name="category" value="All" <?= $selectedCategory === 'All' ? 'checked' : '' ?> onchange="onDrawerCatChange(this)">
+                        <div class="cat-visual-card <?= $selectedCategory === 'All' ? 'active' : '' ?>">
+                            <div class="cat-icon-wrap">🌐</div>
+                            <div class="cat-info">
+                                <span class="cat-name">All Categories</span>
+                                <span class="cat-sub">Complete catalog</span>
+                            </div>
+                            <span class="cat-check">✓</span>
+                        </div>
+                    </label>
+
+                    <?php foreach ($categories as $cat): 
+                        // Map category icons intelligently
+                        $icon = '📁';
+                        $catLower = strtolower($cat);
+                        if (strpos($catLower, 'nid') !== false) $icon = '🪪';
+                        elseif (strpos($catLower, 'license') !== false || strpos($catLower, 'driving') !== false || strpos($catLower, 'transport') !== false) $icon = '🚗';
+                        elseif (strpos($catLower, 'passport') !== false || strpos($catLower, 'travel') !== false || strpos($catLower, 'visa') !== false) $icon = '✈️';
+                        elseif (strpos($catLower, 'tech') !== false || strpos($catLower, 'saas') !== false || strpos($catLower, 'software') !== false || strpos($catLower, 'web') !== false) $icon = '💻';
+                        elseif (strpos($catLower, 'fashion') !== false || strpos($catLower, 'cloth') !== false || strpos($catLower, 'apparel') !== false) $icon = '👗';
+                        elseif (strpos($catLower, 'motor') !== false || strpos($catLower, 'part') !== false || strpos($catLower, 'auto') !== false) $icon = '⚙️';
+                        elseif (strpos($catLower, 'gaming') !== false || strpos($catLower, 'game') !== false) $icon = '🎮';
+                        elseif (strpos($catLower, 'certificate') !== false || strpos($catLower, 'birth') !== false || strpos($catLower, 'legal') !== false) $icon = '📜';
+                        elseif (strpos($catLower, 'digital') !== false || strpos($catLower, 'download') !== false) $icon = '💾';
+                        elseif (strpos($catLower, 'mobile') !== false || strpos($catLower, 'recharge') !== false || strpos($catLower, 'topup') !== false) $icon = '📱';
+                    ?>
+                    <label class="cat-card-label">
+                        <input type="radio" name="category" value="<?= htmlspecialchars($cat) ?>" <?= $selectedCategory === $cat ? 'checked' : '' ?> onchange="onDrawerCatChange(this)">
+                        <div class="cat-visual-card <?= $selectedCategory === $cat ? 'active' : '' ?>">
+                            <div class="cat-icon-wrap"><?= $icon ?></div>
+                            <div class="cat-info">
+                                <span class="cat-name"><?= htmlspecialchars(mb_strtoupper($cat, 'UTF-8')) ?></span>
+                                <span class="cat-sub">Verified Listings</span>
+                            </div>
+                            <span class="cat-check">✓</span>
+                        </div>
+                    </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <?php if ($isGeoEnabled): ?>
+            <!-- Section 3: Region / District Filter (Conditional) -->
+            <div class="drawer-section">
+                <div class="section-label-row">
+                    <span class="section-label">3. Region / District</span>
+                </div>
+                <select name="district" class="drawer-select">
+                    <option value="">🌍 All Regions</option>
+                    <option value="Dhaka" <?= $selectedDistrict == 'Dhaka' ? 'selected' : '' ?>>Dhaka</option>
+                    <option value="Chittagong" <?= $selectedDistrict == 'Chittagong' ? 'selected' : '' ?>>Chittagong</option>
+                    <option value="Sylhet" <?= $selectedDistrict == 'Sylhet' ? 'selected' : '' ?>>Sylhet</option>
+                    <option value="Rajshahi" <?= $selectedDistrict == 'Rajshahi' ? 'selected' : '' ?>>Rajshahi</option>
+                    <option value="Khulna" <?= $selectedDistrict == 'Khulna' ? 'selected' : '' ?>>Khulna</option>
+                    <option value="Barisal" <?= $selectedDistrict == 'Barisal' ? 'selected' : '' ?>>Barisal</option>
+                    <option value="Rangpur" <?= $selectedDistrict == 'Rangpur' ? 'selected' : '' ?>>Rangpur</option>
+                    <option value="Mymensingh" <?= $selectedDistrict == 'Mymensingh' ? 'selected' : '' ?>>Mymensingh</option>
+                </select>
+            </div>
+            <?php endif; ?>
+        </form>
+    </div>
+
+    <!-- Sticky Bottom Action Dock -->
+    <div class="category-drawer-footer">
+        <a href="index.php" class="btn-drawer-reset">Reset All</a>
+        <button type="submit" form="drawerFilterForm" class="btn-drawer-apply">
+            <span>Apply Filters</span>
+            <span class="apply-icon">➔</span>
+        </button>
+    </div>
+</div>
+
+<script>
+function toggleCategoryDrawer(show) {
+    const drawer = document.getElementById('categoryDrawer');
+    const scrim = document.getElementById('categoryDrawerScrim');
+    if (!drawer || !scrim) return;
+
+    if (show) {
+        scrim.style.visibility = 'visible';
+        drawer.style.visibility = 'visible';
+        scrim.classList.add('active');
+        drawer.classList.add('active');
+        drawer.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    } else {
+        scrim.classList.remove('active');
+        drawer.classList.remove('active');
+        drawer.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        setTimeout(() => {
+            if (!drawer.classList.contains('active')) {
+                scrim.style.visibility = 'hidden';
+                drawer.style.visibility = 'hidden';
+            }
+        }, 360);
+    }
+}
+
+// Backward compatibility alias for any legacy triggers
+window.toggleFilterModal = toggleCategoryDrawer;
+
+function onDrawerTypeChange(radio) {
+    const allCards = document.querySelectorAll('.type-card');
+    allCards.forEach(c => c.classList.remove('active'));
+    const parent = radio.closest('.type-card-label');
+    if (parent) {
+        const card = parent.querySelector('.type-card');
+        if (card) card.classList.add('active');
+    }
+}
+
+function onDrawerCatChange(radio) {
+    const allCards = document.querySelectorAll('.cat-visual-card');
+    allCards.forEach(c => c.classList.remove('active'));
+    const parent = radio.closest('.cat-card-label');
+    if (parent) {
+        const card = parent.querySelector('.cat-visual-card');
+        if (card) card.classList.add('active');
+    }
+}
+
+// Backward compatibility helper
+function updateRadioUI(input) {
+    onDrawerTypeChange(input);
+}
+
+// ESC Key closes drawer
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        toggleCategoryDrawer(false);
+    }
+});
 </script>
 <script src="/assets/js/pull_to_refresh.js"></script>
 </body>

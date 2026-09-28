@@ -23,41 +23,46 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 88 Complete & Production-Verified
-The platform is currently at **Phase 88: Strict .env Exclusion & Dynamic Root-Relative Image Architecture (Zero-Tolerance Deployment Audit & Hostinger WAF 422 Direct 404 Fix)**.
+### Active Status: Phase 89 Complete & Production-Verified
+The platform is currently at **Phase 89: Elimination of Categories & Filter Drawer Over-Layering Flaw (Root-Level DOM Relocation, Hardware-Accelerated Visibility Hardening & Print Exclusion)**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Zero-Tolerance Deployment Build Engine (`build_hostinger_zip.py`, `build_phase_zip.py`):**
+1. **Elimination of Drawer Over-Layering & Bleeding (Phase 89):**
+   - **Root Cause Eliminated:** Relocated the `#categoryDrawer` and `#categoryDrawerScrim` DOM tree out of the content flow (previously nestled between Hero and Product grid) to the root document level right before `</body>`.
+   - **Hardened Visibility Architecture:** Enforced `visibility: hidden`, `opacity: 0`, `pointer-events: none`, `transform: translateY(115%)`, and `z-index: 99999` when inactive. Completely eliminates bottom-dock peeking, shadow artifacts, and prevents iOS Safari full-page screenshot tools from rendering the drawer over product cards.
+   - **Dynamic Hardware Stacking:** Configured safe-area inset padding `calc(env(safe-area-inset-bottom, 16px) + 12px)` and `@media print { display: none !important; }` ensuring clean rasterization in all viewport states.
+   - **Synchronized Toggle Engine:** `toggleCategoryDrawer()` upgraded to manage `aria-hidden` and explicitly toggle `visibility` with smooth 360ms CSS transition.
+2. **Zero-Tolerance Deployment Build Engine (`build_hostinger_zip.py`, `build_phase_zip.py`):**
    - Implements multi-layer filter explicitly rejecting `.env`, `.env.*`, and any environment file variant.
    - Enforces automated post-build archive inspection (`ZipArchive` / `zipfile`) that audits all entries and immediately purges the archive if any `.env` entry is detected, guaranteeing that live Hostinger production database credentials (`u422364295_admin`) can NEVER be overwritten.
    - Embeds auto-generated, canonical `DEPLOYMENT_GUIDE.txt` detailing exact extraction paths and phase status.
-2. **Universal Dynamic Root-Relative Media Resolution (`config.php`, `includes/image_helper.php`):**
+3. **Universal Dynamic Root-Relative Media Resolution (`config.php`, `includes/image_helper.php`):**
    - Core resolvers upgraded: `resolveProductArtwork()`, `resolveShopMedia()`, `resolveMediaUrl()`, and `resolveUserAvatar()`.
    - Strips hardcoded localhost origins (`http://localhost:8000/...`, `http://127.0.0.1:...`), ensuring images never attempt to resolve to localhost on production devices.
    - Normalizes Windows backslashes (`\`) to POSIX forward slashes (`/`), preventing Linux flat-file filename corruption.
    - Resolves all local images as dynamic root-relative paths (`/uploads/...`, `/assets/...`) allowing 100% seamless rendering across Localhost, Cloudflare tunnels, and Hostinger production without environmental configuration changes.
-3. **Elimination of Hostinger WAF 422 Rewrite Loop (`.htaccess`):**
+4. **Elimination of Hostinger WAF 422 Rewrite Loop (`.htaccess`):**
    - Injected dedicated direct HTTP 404 rule for missing static media files (`.jpg`, `.jpeg`, `.png`, `.webp`, `.svg`, `.mp3`) placed directly before the catch-all `index.php` rewrite.
    - Prevents Apache from rewriting missing image requests into `index.php` and returning HTML text to `<img>` tags, eliminating browser parse failures and stopping Hostinger ModSecurity/WAF HTTP 422 (Unprocessable Entity) errors.
-4. **Clean Storefront & Admin Image Linkage:**
+5. **Clean Storefront & Admin Image Linkage:**
    - Overhauled relative paths (`../uploads/...`) in `checkout.php`, `admin/partner_shops.php`, `admin/shop_edit.php`, `partner/dashboard.php`, and `user/forgot_password.php` into canonical root-relative resolvers with SVG vector fallbacks.
-5. **1-Tap Bi-Directional Mode Switcher & 5-Slot Bottom Dock (Phase 87):**
+6. **1-Tap Bi-Directional Mode Switcher & 5-Slot Bottom Dock (Phase 87):**
    - User Panel: `[ 🏪 Switch to Shop Mode ]` (or `[ ➕ Open Free Shop ]` / `[ ⏳ Shop Under Review ]`).
    - Shop Panel: `[ 👤 Switch to Buyer Mode ]` top header pill and persistent bottom dock.
    - Synchronized 5-slot bottom floating docks across Storefront, User Space, and Shop Space with active state badges.
-6. **Active Test Environments:**
+7. **Active Test Environments:**
    - **Local Server Live Host**: `http://localhost:8000` (test locally before Hostinger upload).
    - **Cloudflare Mobile Live Tunnel**: `https://lamb-applications-favors-disabilities.trycloudflare.com`.
-7. **Latest Deployment Archive:**
+8. **Latest Deployment Archive:**
    - Archive Name: `fastsite_phase88.zip` (53.25 KB) located in root directory.
    - Security Audit: 0 `.env` files detected, 100% clean.
-8. **Automated GitHub & Hostinger Git Auto-Deployment (`gixsam/FAST-SITE`):**
+9. **Automated GitHub & Hostinger Git Auto-Deployment (`gixsam/FAST-SITE`):**
    - Public Repository initialized & linked: `https://github.com/gixsam/FAST-SITE` (Branch: `main`).
    - Automated Workflow: `.github/workflows/deploy.yml` with pre-flight asset/security validation.
    - Hostinger Native Git Integration Activated: Connected via Hostinger hPanel Advanced Git to `gixsam/FAST-SITE` with `Auto-deployment` enabled deploying directly into `public_html/` (Verified live status: `Completed` in 5 seconds).
    - Live Production Verification: `https://fastsite.best-travel.ltd` responding HTTP 200 OK with zero errors.
    - Permanent zero-tolerance protection for live `.env` credentials and local dev databases.
-9. **Mandatory Direct URL Links Directive (Rule 7):**
+10. **Mandatory Direct URL Links Directive (Rule 7):**
    - Enforced in `.agents/AGENTS.md`: Every AI model and developer must provide direct clickable URL links to both the User Panel and Admin Panel (Local & Live Hostinger) at the conclusion of every update response for immediate verification.
 
 ---
