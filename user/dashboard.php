@@ -185,33 +185,38 @@ if ($partnerRow = $p_stmt->fetch()) {
     }
 }
 
+// ===============================================================
+// FETCH NEW FEATURED PRODUCTS / FRESH ARRIVALS (PHASE 98)
+// ===============================================================
+$exchange_rate = floatval(getPartnerSetting('exchange_rate', '1'));
+if ($exchange_rate <= 0) $exchange_rate = 1;
+
 $latest_marketplace_products = [];
-if (!$isPartner) {
-    try {
-        $stmt_all_products = $pdo->query("
-            SELECT p.*,
-                   COALESCE(pt.business_name, 'Fast Site Official') AS shop_name,
-                   (SELECT image_url FROM partner_product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumb,
-                   (SELECT image_url FROM partner_product_images WHERE product_id = p.id ORDER BY id ASC LIMIT 1) AS fallback_img
-            FROM partner_products p
-            LEFT JOIN partners pt ON pt.id = p.partner_id
-            WHERE p.is_published = 1 
-            ORDER BY p.created_at DESC 
-            LIMIT 4
-        ");
-        $latest_marketplace_products = $stmt_all_products->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($latest_marketplace_products as $k => $p) {
-            $latest_marketplace_products[$k]['display_thumb'] = resolveProductArtwork(
-                $p['thumb'] ?? '',
-                $p['fallback_img'] ?? '',
-                $p['shop_name'] ?? '',
-                $p['category'] ?? '',
-                $p['title'] ?? '',
-                $p['listing_type'] ?? 'product'
-            );
-        }
-    } catch(Exception $e) {}
-}
+try {
+    $stmt_all_products = $pdo->query("
+        SELECT p.*,
+               COALESCE(pt.business_name, 'Fast Site Official') AS shop_name,
+               COALESCE(pt.is_official, 1) AS is_official,
+               (SELECT image_url FROM partner_product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumb,
+               (SELECT image_url FROM partner_product_images WHERE product_id = p.id ORDER BY id ASC LIMIT 1) AS fallback_img
+        FROM partner_products p
+        LEFT JOIN partners pt ON pt.id = p.partner_id
+        WHERE p.is_published = 1 
+        ORDER BY p.id DESC, p.created_at DESC 
+        LIMIT 15
+    ");
+    $latest_marketplace_products = $stmt_all_products ? $stmt_all_products->fetchAll(PDO::FETCH_ASSOC) : [];
+    foreach ($latest_marketplace_products as $k => $p) {
+        $latest_marketplace_products[$k]['display_thumb'] = resolveProductArtwork(
+            $p['thumb'] ?? '',
+            $p['fallback_img'] ?? '',
+            $p['shop_name'] ?? '',
+            $p['category'] ?? '',
+            $p['title'] ?? '',
+            $p['listing_type'] ?? 'product'
+        );
+    }
+} catch(Exception $e) {}
 
 // Agent / Affiliate Data
 $isAgent = false;
@@ -754,47 +759,84 @@ if ($refCount >= 100) {
             </a>
         </div>
     <?php else: ?>
-        <!-- Latest Marketplace Products for Non-Partners -->
-        <h4 style="color:var(--muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:1rem;">Latest Marketplace Products</h4>
-        <?php if(empty($latest_marketplace_products)): ?>
-            <div style="text-align:center; padding: 2rem; background:rgba(255,255,255,0.02); border-radius:12px; border:1px dashed rgba(255,255,255,0.1);">
-                <div style="font-size:3rem; margin-bottom:1rem;">🏪</div>
-                <p style="color:#fff; font-weight:600; font-size:1.1rem; margin-bottom:0.5rem;">Start Selling on Fast Site</p>
-                <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.5rem; max-width:300px; margin-left:auto; margin-right:auto;">Create your storefront today and start earning money by selling products and services.</p>
-                <a href="/user/create_shop.php" class="btn" style="background:var(--brand); color:#fff; padding:0.8rem 1.5rem; text-decoration:none; border-radius:8px; font-weight:700;">Create Shop</a>
-            </div>
-        <?php else: ?>
-            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:1rem; margin-bottom:1.5rem;">
-                <?php foreach($latest_marketplace_products as $prod): 
-                    $isAff = ($prod['listing_type'] ?? '') === 'affiliate' || !empty($prod['affiliate_url']) || !empty($prod['affiliate_link']);
-                    $affUrl = !empty($prod['affiliate_url']) ? $prod['affiliate_url'] : ($prod['affiliate_link'] ?? '');
-                    $cardHref = ($isAff && !empty($affUrl)) ? htmlspecialchars($affUrl) : "/product_detail.php?id={$prod['id']}";
-                    $cardTarget = ($isAff && !empty($affUrl)) ? 'target="_blank" rel="noopener noreferrer"' : '';
-                ?>
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; position:relative;">
-                    <a href="<?= $cardHref ?>" <?= $cardTarget ?> style="position:absolute; inset:0; z-index:5;"></a>
-                    <div style="height:100px; background:rgba(0,0,0,0.5); position:relative;">
-                        <img src="<?= htmlspecialchars($prod['display_thumb']) ?>" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='/assets/images/services/default_service.svg';">
-                        <?php if($isAff): ?>
-                            <span style="position:absolute; top:6px; right:6px; background:linear-gradient(135deg, #10b981, #00b0ff); color:#fff; font-size:0.58rem; font-weight:800; padding:2px 6px; border-radius:4px;">AFFILIATE ↗</span>
-                        <?php else: ?>
-                            <span style="position:absolute; top:6px; right:6px; background:var(--brand); color:#fff; font-size:0.6rem; font-weight:800; padding:2px 6px; border-radius:4px;">NEW</span>
-                        <?php endif; ?>
-                    </div>
-                    <div style="padding: 0.75rem;">
-                        <div style="font-size:0.8rem; font-weight:700; margin-bottom:0.3rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#fff;"><?= htmlspecialchars($prod['title']) ?></div>
-                        <div style="color:var(--gold); font-weight:800; font-size:0.85rem;">৳ <?= number_format($prod['price']) ?></div>
-                    </div>
+        <!-- NEW PRODUCTS FEATURING SLIDEABLE BAR (PHASE 98) -->
+        <div style="margin-bottom: 1.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; flex-wrap:nowrap; gap:0.5rem;">
+                <div style="display:flex; align-items:center; gap:0.5rem; min-width:0;">
+                    <h4 style="color:#fff; font-size:0.95rem; font-weight:800; margin:0; white-space:nowrap; display:flex; align-items:center; gap:6px;">
+                        <span>✨</span> New Products Featuring
+                    </h4>
+                    <span style="font-size:0.65rem; font-weight:800; background:rgba(252,185,0,0.15); color:var(--gold); padding:2px 7px; border-radius:20px; border:1px solid rgba(252,185,0,0.3); white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">
+                        <span style="display:inline-block; width:5px; height:5px; border-radius:50%; background:#00e676;"></span> Fresh Drops
+                    </span>
                 </div>
-                <?php endforeach; ?>
+                <div class="user-slide-arrows" style="display:flex; gap:5px; flex-shrink:0;">
+                    <button type="button" aria-label="Slide Left" onclick="slideUserDashboardProducts('left')" style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:1rem; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(6px); transition:all 0.2s;">‹</button>
+                    <button type="button" aria-label="Slide Right" onclick="slideUserDashboardProducts('right')" style="width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:1rem; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(6px); transition:all 0.2s;">›</button>
+                </div>
             </div>
-            
-            <div style="text-align:center; padding: 1.5rem; background:rgba(33, 150, 243, 0.05); border-radius:12px; border:1px dashed rgba(33, 150, 243, 0.2);">
-                <p style="color:#fff; font-weight:600; font-size:1rem; margin-bottom:0.5rem;">Want to sell your own items?</p>
-                <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1rem;">Open a free shop and start earning.</p>
-                <a href="/user/create_shop.php" class="btn" style="background:linear-gradient(135deg, var(--brand), #007bb5); color:#fff; padding:0.6rem 1.2rem; text-decoration:none; border-radius:8px; font-weight:700; box-shadow:0 4px 15px rgba(33,150,243,0.3);">Create My Shop</a>
-            </div>
-        <?php endif; ?>
+
+            <?php if(empty($latest_marketplace_products)): ?>
+                <div style="text-align:center; padding: 2rem; background:rgba(255,255,255,0.02); border-radius:12px; border:1px dashed rgba(255,255,255,0.1);">
+                    <div style="font-size:3rem; margin-bottom:1rem;">🏪</div>
+                    <p style="color:#fff; font-weight:600; font-size:1.1rem; margin-bottom:0.5rem;">Start Selling on Fast Site</p>
+                    <p style="color:var(--muted); font-size:0.9rem; margin-bottom:1.5rem; max-width:300px; margin-left:auto; margin-right:auto;">Create your storefront today and start earning money by selling products and services.</p>
+                    <a href="/user/create_shop.php" class="btn" style="background:var(--brand); color:#fff; padding:0.8rem 1.5rem; text-decoration:none; border-radius:8px; font-weight:700;">Create Shop</a>
+                </div>
+            <?php else: ?>
+                <div id="userProductsTrack" style="display:flex; gap:0.85rem; overflow-x:auto; padding-bottom:0.8rem; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; scroll-behavior:smooth;">
+                    <?php foreach($latest_marketplace_products as $prod): 
+                        $priceBdt = floatval(preg_replace('/[^0-9.]/', '', $prod['price']));
+                        $priceCoins = ceil($priceBdt / max(1, $exchange_rate));
+                        $isAff = ($prod['listing_type'] ?? '') === 'affiliate' || !empty($prod['affiliate_url']) || !empty($prod['affiliate_link']);
+                        $affUrl = !empty($prod['affiliate_url']) ? $prod['affiliate_url'] : ($prod['affiliate_link'] ?? '');
+                        $cardHref = ($isAff && !empty($affUrl)) ? htmlspecialchars($affUrl) : "/product_detail.php?id={$prod['id']}";
+                        $cardTarget = ($isAff && !empty($affUrl)) ? 'target="_blank" rel="noopener noreferrer"' : '';
+                    ?>
+                    <a href="<?= $cardHref ?>" <?= $cardTarget ?> class="user-slide-card" style="flex:0 0 215px; max-width:215px; scroll-snap-align:start; background:rgba(18, 22, 43, 0.85); backdrop-filter:blur(16px); border:1px solid rgba(255,255,255,0.08); border-radius:14px; overflow:hidden; text-decoration:none; display:flex; flex-direction:column; transition:transform 0.25s, box-shadow 0.25s, border-color 0.25s;">
+                        <div style="height:120px; background:#0c0e18; position:relative; overflow:hidden;">
+                            <img src="<?= htmlspecialchars($prod['display_thumb']) ?>" alt="<?= htmlspecialchars($prod['title']) ?>" loading="lazy" style="width:100%; height:100%; object-fit:cover; transition:transform 0.35s ease;" class="card-img-zoom" onerror="this.onerror=null; this.src='/assets/images/logo.png';">
+                            <span style="position:absolute; top:6px; left:6px; background:linear-gradient(135deg, #fcb900, #ff9100); color:#000; font-size:0.6rem; font-weight:800; padding:2px 6px; border-radius:16px; box-shadow:0 2px 8px rgba(252,185,0,0.35); text-transform:uppercase;">✨ NEW</span>
+                            <?php if($isAff): ?>
+                                <span style="position:absolute; top:6px; right:6px; background:linear-gradient(135deg, #10b981, #00b0ff); color:#fff; font-size:0.58rem; font-weight:800; padding:2px 6px; border-radius:4px;">AFFILIATE ↗</span>
+                            <?php elseif(!empty($prod['category'])): ?>
+                                <span style="position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.65); border:1px solid rgba(255,255,255,0.15); color:#e0e0e0; border-radius:14px; font-size:0.6rem; font-weight:700; padding:2px 6px; backdrop-filter:blur(4px); max-width:85px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><?= htmlspecialchars($prod['category']) ?></span>
+                            <?php endif; ?>
+                            <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(10,13,26,0.95) 0%, rgba(10,13,26,0.5) 60%, transparent 100%); padding:1rem 0.6rem 0.3rem;">
+                                <div style="font-size:0.8rem; font-weight:700; line-height:1.2; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; color:#fff;"><?= htmlspecialchars($prod['title']) ?></div>
+                            </div>
+                        </div>
+                        <div style="padding:0.65rem; display:flex; flex-direction:column; gap:0.35rem; flex-grow:1; justify-content:space-between; background:rgba(14, 18, 36, 0.6);">
+                            <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:700; display:flex; align-items:center; gap:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                <span style="color:#00e676;">●</span> 
+                                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><?= htmlspecialchars($prod['shop_name'] ?? 'Fast Site Official') ?></span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
+                                <div style="font-size:0.78rem; color:#cbd5e1; font-weight:700;">৳ <?= number_format($priceBdt) ?></div>
+                                <div style="font-size:0.85rem; font-weight:900; color:var(--gold);">🪙 <?= number_format($priceCoins) ?></div>
+                            </div>
+                        </div>
+                    </a>
+                    <?php endforeach; ?>
+                </div>
+                <style>
+                    #userProductsTrack::-webkit-scrollbar { display:none; }
+                    .user-slide-card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(252,185,0,0.18); border-color:rgba(252,185,0,0.35); }
+                    .user-slide-card:hover .card-img-zoom { transform:scale(1.06); }
+                    @media (max-width: 640px) {
+                        .user-slide-arrows { display:none !important; }
+                    }
+                </style>
+                <script>
+                function slideUserDashboardProducts(dir) {
+                    var track = document.getElementById('userProductsTrack');
+                    if (!track) return;
+                    var delta = dir === 'left' ? -230 : 230;
+                    track.scrollBy({ left: delta, behavior: 'smooth' });
+                }
+                </script>
+            <?php endif; ?>
+        </div>
     <?php endif; ?>
 
     <!-- ── 1.2 MY WISHLIST (SUB-SECTION INSIDE SHOP) ── -->

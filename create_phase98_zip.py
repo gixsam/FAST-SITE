@@ -48,6 +48,7 @@ Option B: MANUAL FILE MANAGER ZIP UPLOAD
 2. EXACT FOLDER PATHS ON HOSTINGER
 --------------------------------------------------------------------------------
 - public_html/home.php                 (UPDATED: New Products Featuring Slideable Bar)
+- public_html/user/dashboard.php       (UPDATED: User Dashboard New Products Slideable Bar)
 - public_html/PROJECT_STATE.md         (UPDATED: Phase {PHASE_NUM} Specifications)
 - public_html/NOTE.md                  (UPDATED: Master Status Report)
 - public_html/DEPLOYMENT_GUIDE.txt     (This canonical instructions file)
@@ -59,10 +60,13 @@ Step 1: Open the Main Storefront on Hostinger:
         https://fastsite.best-travel.ltd/
         (Verify that the '✨ New Products Featuring' Slideable Bar appears directly
         beneath the search bar with smooth touch swiping and desktop chevrons).
-Step 2: Verify Product Photos & Badges:
+Step 2: Open the User Dashboard on Hostinger:
+        https://fastsite.best-travel.ltd/user/dashboard.php
+        (Verify the new swipeable '✨ New Products Featuring' carousel).
+Step 3: Verify Product Photos & Badges:
         (All cards render high-definition imagery via resolveProductArtwork(),
         with '✨ NEW' gold pills, shop verification dots, and dual BDT/Coins prices).
-Step 3: Test Desktop / Mobile Responsiveness:
+Step 4: Test Desktop / Mobile Responsiveness:
         (On mobile screens <640px, the track swipes natively with momentum and
         scroll-snap; on desktop, the ‹ and › chevron buttons slide smoothly).
 
@@ -78,6 +82,7 @@ print(f"Generated fresh DEPLOYMENT_GUIDE.txt for Phase {PHASE_NUM}.")
 
 TARGET_FILES = [
     'home.php',
+    'user/dashboard.php',
     'PROJECT_STATE.md',
     'NOTE.md',
     'DEPLOYMENT_GUIDE.txt'

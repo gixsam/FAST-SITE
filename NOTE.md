@@ -28,10 +28,10 @@ The platform is currently at **Phase 98: New Products Featuring Slideable Bar In
 
 ### Current Core Capabilities Live in the Codebase:
 1. **New Products Featuring Slideable Bar (Phase 98 100% Complete):**
-   - Engineered dedicated, high-performance data query in `home.php` selecting the top 15 newest published products (`ORDER BY p.id DESC, p.created_at DESC`), joined with partner shop verification status and thumbnails.
+   - Engineered dedicated, high-performance data queries in both `home.php` (Storefront) and `user/dashboard.php` (User Dashboard) selecting the top 15 newest published products (`ORDER BY p.id DESC, p.created_at DESC`), joined with partner shop verification status and thumbnails.
    - Every product thumbnail is resolved via `resolveProductArtwork()`, ensuring authentic HD imagery across all ecosystem shops (Best Travel, Ayra Mart, Enzor Motor) and official services with graceful fallback.
-   - Built touch-swipeable track (`#newProductsTrack`) with CSS flexbox, `scroll-snap-type: x mandatory`, `-webkit-overflow-scrolling: touch`, and hidden scrollbar for a clean native mobile APK experience.
-   - Deployed desktop chevron navigation buttons (`‹` / `›`) with Nocturne Aurum frosted glass styling that smoothly scroll the carousel by ±260px.
+   - **Storefront Carousel (`home.php`):** Interactive swipe track (`#newProductsTrack`) with CSS scroll-snap, hidden scrollbars, and desktop chevron navigation buttons (`‹` / `›`).
+   - **User Dashboard Carousel (`user/dashboard.php`):** Replaced legacy static 2-column box with a fluid, swipeable Slideable Bar (`#userProductsTrack`) for all logged-in members.
    - Nocturne Aurum card tokens: glowing `[ ✨ NEW ]` badge pill, audio/category tags, official/partner verification dots, and dual-currency pricing (BDT `৳` and Fast Site Coins `🪙`).
 2. **Universal Partner & Ecosystem Product Photo Sync Architecture (Phase 97):**
    - **Root Causes Eliminated:**
