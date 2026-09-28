@@ -335,12 +335,13 @@ try {
     
     <!-- 1. Admin Shop Direct SSO Button -->
     <a href="impersonate_official.php?redirect=dashboard.php" class="nav-btn-shop" title="Access <?= htmlspecialchars($official_shop_name) ?> Hub">
-      <span>🏪 <?= htmlspecialchars($official_shop_name) ?></span>
+      <span class="shop-btn-icon">🏪</span>
+      <span class="shop-btn-text"><?= htmlspecialchars($official_shop_name) ?></span>
     </a>
 
     <!-- 2. Notification Icon -->
     <div class="admin-notif-dropdown">
-      <button onclick="document.getElementById('admin-notif-menu').classList.toggle('show-notif')" class="nav-icon-btn" title="Notification Alerts">
+      <button onclick="toggleNotifMenu(event)" class="nav-icon-btn" title="Notification Alerts" aria-label="Notification Alerts">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
         <?php if ($admin_notif_count > 0): ?>
           <span class="notif-pill-badge"><?= $admin_notif_count ?></span>
@@ -367,7 +368,7 @@ try {
     
     <!-- 3. Fast Site Omni App Directory -->
     <div class="app-hub-dropdown">
-      <button onclick="document.getElementById('app-hub-menu').classList.toggle('show-hub')" class="nav-icon-btn" title="Fast Site Omni Ecosystem Apps">
+      <button onclick="toggleHubMenu(event)" class="nav-icon-btn" title="Fast Site Omni Ecosystem Apps" aria-label="Omni Ecosystem Apps">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
       </button>
       <div id="app-hub-menu" class="hub-menu">
@@ -413,17 +414,34 @@ try {
     
     <!-- 4. Logout Button -->
     <a href="logout.php" class="nav-btn-logout" title="Sign Out">
-      <span>Logout</span>
+      <span class="logout-icon" style="display:none; font-size:1rem;">🚪</span>
+      <span class="logout-text">Logout</span>
     </a>
 
     <!-- Mobile Drawer Trigger -->
-    <button class="hamburger-btn" onclick="toggleDrawer(true)">☰</button>
+    <button class="hamburger-btn" onclick="toggleDrawer(true)" aria-label="Open Navigation Menu">☰</button>
 
   </div>
   </div>
 </nav>
 
 <script>
+function toggleNotifMenu(e) {
+  if (e) e.stopPropagation();
+  const notifMenu = document.getElementById('admin-notif-menu');
+  const hubMenu = document.getElementById('app-hub-menu');
+  if (hubMenu) hubMenu.classList.remove('show-hub');
+  if (notifMenu) notifMenu.classList.toggle('show-notif');
+}
+
+function toggleHubMenu(e) {
+  if (e) e.stopPropagation();
+  const notifMenu = document.getElementById('admin-notif-menu');
+  const hubMenu = document.getElementById('app-hub-menu');
+  if (notifMenu) notifMenu.classList.remove('show-notif');
+  if (hubMenu) hubMenu.classList.toggle('show-hub');
+}
+
 // Click outside listener for dropdowns
 document.addEventListener('click', function(e) {
   const hubDropdown = document.querySelector('.app-hub-dropdown');
@@ -445,9 +463,16 @@ function toggleDrawer(open) {
   if (open) {
     overlay.style.display = 'block';
     drawer.style.transform = 'translateX(0)';
+    drawer.classList.add('active');
+    overlay.classList.add('active');
+    if (typeof window.pushModalBackState === 'function') {
+      window.pushModalBackState();
+    }
   } else {
     overlay.style.display = 'none';
     drawer.style.transform = 'translateX(-100%)';
+    drawer.classList.remove('active');
+    overlay.classList.remove('active');
   }
 }
 </script>

@@ -1,7 +1,7 @@
 # 📘 FAST SITE — MASTER COMPREHENSIVE NOTE & STATUS REPORT (NOTE.md)
 **Project Name:** FAST SITE (Ecosystem Escrow Hub & Universal Marketplace)  
 **Main Domain:** `https://fastsite.best-travel.ltd`  
-**Current Active Version:** Phase 94 100% Complete & Production-Verified  
+**Current Active Version:** Phase 95 100% Complete & Production-Verified  
 **Document Classification:** Canonical Website State, Historical Log & Future Roadmap  
 **Target Audience:** AI Agents (Google Antigravity, Claude Sonnet, Gemini, GPT) and Human Developers / Project Managers  
 
@@ -23,11 +23,20 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 94 Complete & Production-Verified
-The platform is currently at **Phase 94: Professional Mobile Phone & Native APK App Responsive Optimization (4 Pillars Architecture)**.
+### Active Status: Phase 95 Complete & Production-Verified
+The platform is currently at **Phase 95: Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Professional Mobile Phone & Native APK App Responsive Optimization (Phase 94):**
+1. **Admin Navbar Mobile Overflow Fix & Action Alert Modal Dropdown (Phase 95):**
+   - **Root Cause Eliminated:** On smartphone viewports (< 640px), the combined width of the admin brand container, long official shop text (`🏪 FAST SITE`), action alerts bell, ecosystem hub button, logout button, and hamburger icon exceeded screen width (410px+ vs 360-390px viewport), forcing the Omni Ecosystem Apps, Logout, and Hamburger buttons completely out of the right screen border.
+   - **Mobile Layout Precision:**
+     - Collapsed `.shop-btn-text` on screens `< 640px` (showing a clean, compact `🏪` icon pill) while keeping full text on desktop.
+     - Converted the wide `Logout` text link into a sleek `🚪` icon button on mobile.
+     - Suppressed `.nav-tag` on screens `< 768px` to keep brand identity compact.
+     - Result: All 5 utility controls (`🏪 Shop`, `🔔 Alerts`, `🌐 Omni Apps`, `🚪 Logout`, `☰ Hamburger Menu`) fit neatly on any smartphone screen without horizontal scroll or border clipping.
+   - **Action Alerts Modal Dropdown:** Both `.notif-menu` and `.hub-menu` upgraded to fixed floating viewport geometry on mobile (`position: fixed; top: 56px; left: 10px; right: 10px; width: auto; max-width: calc(100vw - 20px)`), completely eliminating clipping and negative margin offsets (`right: -40px`). Implemented mutually exclusive dropdown toggle handlers (`toggleNotifMenu` and `toggleHubMenu`).
+   - **Staff Panel Authentication:** Clarified that staff members log in at the exact same portal (`https://fastsite.best-travel.ltd/admin/login.php`) using credentials created in `admin/staff_access.php`, receiving scoped permissions based on their assigned role.
+2. **Professional Mobile Phone & Native APK App Responsive Optimization (Phase 94):**
    - **Pillar 1: Viewport & Universal Screen Standards:** Enforced `<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>` across all portal entry points (`home.php`, `user/login.php`, `user/register.php`, `user/dashboard.php`, `partner/dashboard.php`, `admin/dashboard.php`). Implemented dynamic `100dvh` viewport height with `--dvh` fallback, hardware safe-area insets (`env(safe-area-inset-top/bottom)`), and `touch-action: manipulation !important` eliminating mobile tap delays.
    - **Pillar 2: Mobile-First Breakpoints & Content Layout:** Mobile-first layout standards (<640px, sm: 640px, md: 768px, lg: 1024px). Automated table wrapping engine in `app_environment.js` wrapping bare tables in `.table-responsive.overflow-x-auto` with touch momentum scrolling. Dialogs, bottom sheets, and modals constrained to `w-[calc(100vw-2rem)]` on mobile screens.
    - **Pillar 3: Native APK & Standalone App Detection:** Comprehensive detection engine in `assets/js/app_environment.js` detecting Android WebView APK (`[FAST SITE]AndroidApp`, `window.AndroidApp`) and standalone PWA mode. Automatically hides redundant download cards (`.apk-download-card.hide-in-apk`, `.pwa-install-prompt`). Intercepts Android physical back-button via `popstate` to close active side drawers and modals rather than exiting the application.

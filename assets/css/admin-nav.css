@@ -419,7 +419,7 @@ nav.enterprise-nav {
   gap: 0.5rem;
 }
 
-.hub-link {
+.hub-link, .hub-app-card {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
@@ -434,17 +434,18 @@ nav.enterprise-nav {
   gap: 4px;
 }
 
-.hub-link:hover, .hub-link.active-hub {
+.hub-link:hover, .hub-link.active-hub, .hub-app-card:hover {
   background: rgba(252, 185, 0, 0.12);
   border-color: var(--gold);
   color: #fff;
+  transform: translateY(-2px);
 }
 
-.hub-emoji {
+.hub-emoji, .app-icon {
   font-size: 1.25rem;
 }
 
-.hub-label {
+.hub-label, .app-name {
   font-size: 0.72rem;
   font-weight: 700;
 }
@@ -459,6 +460,14 @@ nav.enterprise-nav {
   border-radius: 8px;
   padding: 0.35rem 0.65rem;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.hamburger-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 /* Responsive Breakpoints */
@@ -471,36 +480,125 @@ nav.enterprise-nav {
 
 @media (max-width: 1040px) {
   .nav-links {
-    display: none;
+    display: none !important;
   }
   .hamburger-btn {
-    display: block;
+    display: inline-flex !important;
   }
 }
 
-@media (max-width: 600px) {
-  nav.enterprise-nav {
-    padding: 0 0.6rem !important;
+@media (max-width: 768px) {
+  .nav-tag {
+    display: none !important;
   }
   .nav-inner-container {
+    height: 52px !important;
     gap: 0.4rem !important;
   }
+  .nav-utility-bar {
+    gap: 0.35rem !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  nav.enterprise-nav {
+    padding: 0 0.5rem !important;
+    overflow: visible !important;
+  }
+  .nav-inner-container {
+    padding: 0 !important;
+    gap: 0.25rem !important;
+  }
+  .nav-brand-container {
+    max-width: 110px !important;
+    overflow: hidden !important;
+  }
   .logo-main-text {
-    font-size: 1rem !important;
+    font-size: 0.95rem !important;
+    letter-spacing: 0 !important;
   }
-  .action-pill {
-    padding: 0.35rem 0.6rem !important;
-    font-size: 0.72rem !important;
+  .nav-logo-img {
+    height: 24px !important;
   }
-  .notif-menu {
-    right: -40px !important;
-    width: 290px !important;
+
+  /* Compact Admin Shop Button */
+  .nav-btn-shop {
+    padding: 0.32rem 0.5rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 8px !important;
+    gap: 0 !important;
+    min-width: 32px !important;
+    justify-content: center !important;
+  }
+  .shop-btn-text {
+    display: none !important;
+  }
+
+  /* Compact Logout Button */
+  .nav-btn-logout {
+    padding: 0 !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.95rem !important;
+    flex-shrink: 0 !important;
+  }
+  .logout-text {
+    display: none !important;
+  }
+  .logout-icon {
+    display: inline !important;
+  }
+
+  /* Utility Icon Buttons */
+  .nav-icon-btn {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+    flex-shrink: 0 !important;
+  }
+  .hamburger-btn {
+    width: 34px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.15rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Full-width Floating Dropdowns for Action Alerts & Omni Directory */
+  .notif-menu, .hub-menu {
+    position: fixed !important;
+    top: 56px !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
     max-width: calc(100vw - 20px) !important;
+    margin: 0 auto !important;
+    z-index: 10001 !important;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.9) !important;
+    border-radius: 16px !important;
   }
-  .hub-menu {
-    right: -20px !important;
-    width: 270px !important;
-    max-width: calc(100vw - 20px) !important;
+}
+
+@media (max-width: 380px) {
+  .nav-utility-bar {
+    gap: 0.2rem !important;
+  }
+  .nav-brand-container {
+    max-width: 90px !important;
+  }
+  .logo-main-text {
+    font-size: 0.88rem !important;
+  }
+  .nav-logo-img {
+    height: 22px !important;
   }
 }
 

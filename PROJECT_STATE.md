@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 94 100% COMPLETE — Professional Mobile Phone & Native APK App Responsive Optimization
+**Last Updated:** Phase 95 100% COMPLETE — Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation
 
 ---
 
@@ -81,6 +81,12 @@
 | 92 | Highlighted VIP Guest Auth Card & Dual-Tab Switcher in Side Drawer |
 | 93 | Hardcoded Google API Key Removal & Secret Scanning Alert Resolution |
 | 94 | Professional Mobile Phone & Native APK App Responsive Optimization (4 Pillars Architecture) |
+| 95 | Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation |
+
+### Phase 95 Details — Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation
+- **1. Admin Navbar Mobile Overflow Fix (`admin/nav.php`, `assets/css/admin-nav.css`):** Resolved the viewport boundary clipping that pushed the Omni Ecosystem Apps button, Logout button, and Hamburger toggle outside the screen on mobile devices (< 640px). Collapsed the shop button to a compact icon (`🏪`), converted the wide Logout button to a sleek icon (`🚪`), and suppressed `.nav-tag` on screens < 768px. All 5 controls now fit cleanly side-by-side with zero horizontal scroll.
+- **2. Action Alert Modal Dropdown & Click Synchronization (`admin/nav.php`, `assets/css/admin-nav.css`):** Upgraded both `.notif-menu` and `.hub-menu` to use fixed floating viewport geometry on mobile (`position: fixed; top: 56px; left: 10px; right: 10px; width: auto; max-width: calc(100vw - 20px)`), completely eliminating clipping and negative margin offsets (`right: -40px`). Implemented mutually exclusive dropdown toggle handlers (`toggleNotifMenu` and `toggleHubMenu`).
+- **3. Staff Panel Authentication Architecture (`admin/login.php`, `admin/staff_access.php`):** Clarified and validated the staff login mechanism. Staff users log in directly via the unified admin login portal (`https://fastsite.best-travel.ltd/admin/login.php`) using credentials provisioned in `admin/staff_access.php`, automatically receiving scoped module permissions.
 
 ### Phase 94 Details — Professional Mobile Phone & Native APK App Responsive Optimization
 - **1. Pillar 1: Viewport & Universal Screen Standards:** Enforced `<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>` across all entry points (`home.php`, `user/login.php`, `user/register.php`, `user/dashboard.php`, `partner/dashboard.php`, `admin/dashboard.php`). Configured dynamic `100dvh` viewport height with `--dvh` CSS variable fallback, safe-area hardware insets (`env(safe-area-inset-top/bottom)`), and `touch-action: manipulation !important` eliminating mobile tap delays.
