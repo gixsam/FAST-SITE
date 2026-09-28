@@ -28,17 +28,17 @@
 - **Digital Auto-Fulfillment:** Instant secure file streaming (`download.php?order_id=X`)
 - **Dynamic Root-Relative Media Engine:** Intelligent cross-environment image & media resolution (`/uploads/...`, `/assets/...`) stripping localhost leaks, normalizing POSIX paths, and eliminating Hostinger WAF 422 errors via direct 404 rewrite handling (`resolveProductArtwork`, `resolveShopMedia`, `resolveMediaUrl`, `resolveUserAvatar`).
 - **UI / CSS / Graphics Design Engine:** Google Stitch (StitchMCP) integration for high-fidelity component generation, Tailwind design systems, and responsive layout styling.
-- **Automated CI/CD Deployment:** Connected official GitHub repository [gixsam/FAST-SITE](https://github.com/gixsam/FAST-SITE) with GitHub Actions CI/CD workflow (`.github/workflows/deploy.yml`) synchronizing codebase updates directly to Hostinger production via FTPS.
+- **Automated CI/CD & Hostinger Git Engine:** Connected official GitHub repository [gixsam/FAST-SITE](https://github.com/gixsam/FAST-SITE) directly to Hostinger's native Git deployment engine (`Advanced > GIT`) with `Auto-deployment` enabled. Pushes to `main` automatically deploy to `public_html/` within 5 seconds.
 - **Canonical Status & Note Engine (`NOTE.md`):** Dual-synchronized master note file maintained simultaneously in local root and Google Drive (`G:\My Drive\ALL WEBSITE WORKPLACE\FAST SITE WORKPLACE\NOTE.md`).
 
 ---
 
 ## 📤 HOSTINGER DEPLOYMENT INSTRUCTIONS
 
-### Method 1: Automated GitHub Deployment (Instant CI/CD)
+### Method 1: Automated GitHub Deployment (Native Hostinger Git Webhook)
 1. Push any update: `git push origin main`
-2. GitHub Actions automatically executes `.github/workflows/deploy.yml`, runs pre-flight security checks, connects via Hostinger FTPS, and uploads modified files directly to `public_html/`.
-3. Production `.env` credentials are permanently excluded and safe.
+2. Hostinger immediately receives the GitHub push webhook and pulls the updated files directly into `public_html/` within ~5 seconds.
+3. Production `.env` credentials are permanently excluded and 100% safe.
 
 ### Method 2: Manual ZIP Archive Deployment (File Manager)
 1. Take the latest `.zip` (`fastsite_phase88.zip`) from `D:\TECH\WEBSITE\FAST SITE\fast site\`
