@@ -51,6 +51,10 @@ The platform is currently at **Phase 88: Strict .env Exclusion & Dynamic Root-Re
 7. **Latest Deployment Archive:**
    - Archive Name: `fastsite_phase88.zip` (53.25 KB) located in root directory.
    - Security Audit: 0 `.env` files detected, 100% clean.
+8. **Automated GitHub CI/CD Pipeline (`gixsam/FAST-SITE`):**
+   - Public Repository initialized & linked: `https://github.com/gixsam/FAST-SITE` (Branch: `main`).
+   - Automated Workflow: `.github/workflows/deploy.yml` with pre-flight asset/security validation and automated FTPS deployment to Hostinger `public_html/`.
+   - Permanent zero-tolerance protection for live `.env` credentials and local dev databases.
 
 ---
 

@@ -28,12 +28,19 @@
 - **Digital Auto-Fulfillment:** Instant secure file streaming (`download.php?order_id=X`)
 - **Dynamic Root-Relative Media Engine:** Intelligent cross-environment image & media resolution (`/uploads/...`, `/assets/...`) stripping localhost leaks, normalizing POSIX paths, and eliminating Hostinger WAF 422 errors via direct 404 rewrite handling (`resolveProductArtwork`, `resolveShopMedia`, `resolveMediaUrl`, `resolveUserAvatar`).
 - **UI / CSS / Graphics Design Engine:** Google Stitch (StitchMCP) integration for high-fidelity component generation, Tailwind design systems, and responsive layout styling.
+- **Automated CI/CD Deployment:** Connected official GitHub repository [gixsam/FAST-SITE](https://github.com/gixsam/FAST-SITE) with GitHub Actions CI/CD workflow (`.github/workflows/deploy.yml`) synchronizing codebase updates directly to Hostinger production via FTPS.
 - **Canonical Status & Note Engine (`NOTE.md`):** Dual-synchronized master note file maintained simultaneously in local root and Google Drive (`G:\My Drive\ALL WEBSITE WORKPLACE\FAST SITE WORKPLACE\NOTE.md`).
 
 ---
 
-## 📤 HOSTINGER UPLOAD INSTRUCTIONS
+## 📤 HOSTINGER DEPLOYMENT INSTRUCTIONS
 
+### Method 1: Automated GitHub Deployment (Instant CI/CD)
+1. Push any update: `git push origin main`
+2. GitHub Actions automatically executes `.github/workflows/deploy.yml`, runs pre-flight security checks, connects via Hostinger FTPS, and uploads modified files directly to `public_html/`.
+3. Production `.env` credentials are permanently excluded and safe.
+
+### Method 2: Manual ZIP Archive Deployment (File Manager)
 1. Take the latest `.zip` (`fastsite_phase88.zip`) from `D:\TECH\WEBSITE\FAST SITE\fast site\`
 2. Upload to `public_html` on Hostinger File Manager
 3. Extract and overwrite existing files (production `.env` credentials are safe and excluded)
