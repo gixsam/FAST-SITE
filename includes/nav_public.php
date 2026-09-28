@@ -325,37 +325,106 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
     .close-drawer:hover { background: rgba(255, 82, 82, 0.2); color: #ff5252; }
     
     .drawer-user-section {
-        padding: 1.25rem 1.5rem;
+        padding: 1.1rem 1.25rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+        background: linear-gradient(180deg, rgba(252, 185, 0, 0.05) 0%, rgba(13, 13, 20, 0.95) 100%);
     }
-    .btn-auth {
+    
+    /* Highlighted VIP Guest Card */
+    .drawer-auth-card {
+        background: linear-gradient(135deg, rgba(252, 185, 0, 0.12) 0%, rgba(26, 29, 45, 0.85) 100%);
+        border: 1.5px solid rgba(252, 185, 0, 0.4);
+        border-radius: 14px;
+        padding: 0.95rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(252, 185, 0, 0.18);
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        box-sizing: border-box;
+    }
+    .drawer-auth-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .drawer-auth-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(252, 185, 0, 0.25), rgba(245, 158, 11, 0.1));
+        border: 1px solid rgba(252, 185, 0, 0.5);
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.6rem;
-        width: 100%;
-        padding: 0.75rem 1.2rem;
+        font-size: 1.15rem;
+        flex-shrink: 0;
+        box-shadow: 0 0 10px rgba(252, 185, 0, 0.2);
+    }
+    .drawer-auth-meta {
+        flex: 1;
+        min-width: 0;
+    }
+    .drawer-auth-meta h4 {
+        margin: 0;
+        font-size: 0.92rem;
+        font-weight: 800;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+    }
+    .drawer-auth-meta p {
+        margin: 2px 0 0;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--nav-gold);
+    }
+    .drawer-auth-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .btn-auth-tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 0.65rem 0.5rem;
+        border-radius: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 800;
+        text-decoration: none !important;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-sizing: border-box;
+        text-align: center;
+    }
+    .btn-auth-tab.login {
         background: linear-gradient(135deg, #fcb900 0%, #f7971e 100%);
         color: #080911 !important;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.88rem;
-        font-weight: 800;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
-        border-radius: 12px;
-        text-decoration: none !important;
-        box-shadow: 0 4px 16px rgba(252, 185, 0, 0.35);
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        box-sizing: border-box;
+        border: none;
+        box-shadow: 0 4px 14px rgba(252, 185, 0, 0.4);
     }
-    .btn-auth:hover {
+    .btn-auth-tab.login:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 22px rgba(252, 185, 0, 0.5);
+        box-shadow: 0 6px 20px rgba(252, 185, 0, 0.55);
         color: #000 !important;
     }
-    .btn-auth:active {
-        transform: scale(0.97);
+    .btn-auth-tab.login:active {
+        transform: scale(0.96);
+    }
+    .btn-auth-tab.register {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fcb900 !important;
+        border: 1px solid rgba(252, 185, 0, 0.45);
+    }
+    .btn-auth-tab.register:hover {
+        background: rgba(252, 185, 0, 0.15);
+        border-color: #fcb900;
+        transform: translateY(-2px);
+    }
+    .btn-auth-tab.register:active {
+        transform: scale(0.96);
     }
     
     .user-profile-badge {
@@ -489,10 +558,25 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
                 </div>
             </a>
         <?php else: ?>
-            <a href="/user/login.php" class="btn-auth" style="display:flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; background:linear-gradient(135deg, #fcb900 0%, #f7971e 100%); color:#080911 !important; font-weight:800; font-size:0.88rem; padding:0.75rem 1.2rem; border-radius:12px; box-shadow:0 4px 16px rgba(252,185,0,0.35); text-transform:uppercase; letter-spacing:0.03em;">
-                <span style="font-size:1.05rem;">🔐</span>
-                <span>Login / Register</span>
-            </a>
+            <div class="drawer-auth-card">
+                <div class="drawer-auth-header">
+                    <div class="drawer-auth-avatar">👤</div>
+                    <div class="drawer-auth-meta">
+                        <h4>Welcome to FAST SITE</h4>
+                        <p><span>🪙</span> Free 50 Coins on Register</p>
+                    </div>
+                </div>
+                <div class="drawer-auth-tabs">
+                    <a href="/user/login.php" class="btn-auth-tab login" style="display:flex; align-items:center; justify-content:center; gap:6px; background:linear-gradient(135deg, #fcb900 0%, #f7971e 100%); color:#080911 !important; font-weight:800; font-size:0.82rem; padding:0.65rem 0.5rem; border-radius:10px; box-shadow:0 4px 14px rgba(252,185,0,0.4); text-decoration:none !important; text-transform:uppercase; letter-spacing:0.03em;">
+                        <span>🔐</span>
+                        <span>Login</span>
+                    </a>
+                    <a href="/user/register.php" class="btn-auth-tab register" style="display:flex; align-items:center; justify-content:center; gap:6px; background:rgba(255,255,255,0.06); color:#fcb900 !important; border:1px solid rgba(252,185,0,0.45); font-weight:800; font-size:0.82rem; padding:0.65rem 0.5rem; border-radius:10px; text-decoration:none !important; text-transform:uppercase; letter-spacing:0.03em;">
+                        <span>✨</span>
+                        <span>Register</span>
+                    </a>
+                </div>
+            </div>
         <?php endif; ?>
     </div>
     

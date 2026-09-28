@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 91 100% COMPLETE — Removal of Crowded Navbar Open Shop Button & Side Drawer Auth Styling Enhancement
+**Last Updated:** Phase 92 100% COMPLETE — Highlighted VIP Guest Auth Card & Dual-Tab Switcher in Side Drawer
 
 ---
 
@@ -77,12 +77,17 @@
 | 88 | Strict .env Exclusion & Dynamic Root-Relative Image Architecture (Zero-Tolerance Deployment Audit, Hostinger WAF 422 Direct 404 Fix) |
 | 89 | Elimination of Categories & Filter Drawer Over-Layering Flaw (Root-Level DOM Relocation, Visibility Hardening & Print Exclusion) |
 | 90 | Resolution of MySQL Implicit Commit Registration Transaction Error & Self-Healing Account Recovery |
-| 91 | Removal of Crowded Navbar Open Shop Button & Side Drawer Auth Styling Enhancement |
+| 91 | Removal of Crowded Navbar Open Shop Button |
+| 92 | Highlighted VIP Guest Auth Card & Dual-Tab Switcher in Side Drawer |
 
-### Phase 91 Details — Removal of Crowded Navbar Open Shop Button & Side Drawer Auth Styling Enhancement
+### Phase 92 Details — Highlighted VIP Guest Auth Card & Dual-Tab Switcher in Side Drawer
+- **1. Highlighted VIP Guest Card Architecture (`includes/nav_public.php`):** Transformed the unhighlighted drawer login link into an eye-catching, glassmorphic VIP Guest Card (`.drawer-auth-card`) with a 1.5px luminous gold border, ambient gold glow (`rgba(252, 185, 0, 0.18)`), and 14px rounded curvature.
+- **2. High-Converting Visual Hierarchy:** Added a welcoming gold avatar (`👤`), crisp white heading (`Welcome to FAST SITE`), and an incentive subtitle (`🪙 Free 50 Coins on Register`).
+- **3. Dual-Tab Highlighted Switcher (`.drawer-auth-tabs`):** Positioned side-by-side action tabs: `[ 🔐 LOGIN ]` (solid glowing gold gradient) and `[ ✨ REGISTER ]` (frosted gold glass), complete with active scale feedback and comprehensive inline CSS fallbacks.
+
+### Phase 91 Details — Removal of Crowded Navbar Open Shop Button
 - **1. Removal of Crowded Navbar Open Shop Button (`includes/nav_public.php`):** Completely removed the redundant and cramped `[➕ Open Shop]` pill from top navigation Zone 3, preventing mobile text truncation (`Open S...`) and uncluttering the header.
 - **2. Responsive Viewport Center Symmetry (`includes/nav_public.php`):** Enforced `.shop-nav-btn { display: none !important; }` on mobile (<600px). Zone 3 strictly contains the 38px hamburger button, balancing Zone 1 (coin pill) and guaranteeing the `FAST SITE` brand logo remains dead-centered with zero squeeze.
-- **3. Side Drawer Auth Button Luxury Styling (`includes/nav_public.php`):** Designed glowing gold pill styling (`.btn-auth`) with Google Stitch Nocturne Aurum tokens (`linear-gradient(135deg, #fcb900 0%, #f7971e 100%)`), lock icon (`🔐`), 12px rounded pill geometry, active touch feedback, and inline fallback styling, permanently eliminating the default unstyled blue text link.
 
 ### Phase 90 Details — Resolution of MySQL Implicit Commit Registration Transaction Error
 - **1. Elimination of DDL Transaction Collision (`user/register.php`):** Extracted `CREATE TABLE IF NOT EXISTS coin_wallets` out of the active transaction `$pdo->beginTransaction()` to the initial script migration block, preventing MySQL from triggering an implicit commit that caused `$pdo->commit()` to throw `PDOException: There is no active transaction`.
