@@ -23,11 +23,15 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 89 Complete & Production-Verified
-The platform is currently at **Phase 89: Elimination of Categories & Filter Drawer Over-Layering Flaw (Root-Level DOM Relocation, Hardware-Accelerated Visibility Hardening & Print Exclusion)**.
+### Active Status: Phase 90 Complete & Production-Verified
+The platform is currently at **Phase 90: Resolution of MySQL Implicit Commit Registration Transaction Error & Self-Healing Account Recovery**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Elimination of Drawer Over-Layering & Bleeding (Phase 89):**
+1. **Resolution of Registration Transaction Error & Self-Healing Recovery (Phase 90):**
+   - **Root Cause Eliminated:** `user/register.php` had a DDL query (`CREATE TABLE IF NOT EXISTS coin_wallets`) executing inside `$pdo->beginTransaction()`. In MySQL, any DDL triggers an immediate implicit commit, causing subsequent `$pdo->commit()` to throw `PDOException: There is no active transaction`.
+   - **Transaction Hardening:** Extracted all DDL table creation outside of transactions to the initial self-healing migration block. Replaced wallet creation inside transaction with pure DML (`INSERT ... ON DUPLICATE KEY UPDATE`) and protected the commit with `if ($pdo->inTransaction()) { $pdo->commit(); }`.
+   - **Self-Healing Interrupted Registration Recovery:** If a user submitted registration and was already inserted into the database during an interrupted transaction attempt (e.g., phone `01612669922`), resubmitting the registration form with the same password automatically validates credentials, verifies the registration number, allocates the 50 welcome coins, and immediately logs them into `/user/dashboard.php?welcome=1`.
+2. **Elimination of Drawer Over-Layering & Bleeding (Phase 89):**
    - **Root Cause Eliminated:** Relocated the `#categoryDrawer` and `#categoryDrawerScrim` DOM tree out of the content flow (previously nestled between Hero and Product grid) to the root document level right before `</body>`.
    - **Hardened Visibility Architecture:** Enforced `visibility: hidden`, `opacity: 0`, `pointer-events: none`, `transform: translateY(115%)`, and `z-index: 99999` when inactive. Completely eliminates bottom-dock peeking, shadow artifacts, and prevents iOS Safari full-page screenshot tools from rendering the drawer over product cards.
    - **Dynamic Hardware Stacking:** Configured safe-area inset padding `calc(env(safe-area-inset-bottom, 16px) + 12px)` and `@media print { display: none !important; }` ensuring clean rasterization in all viewport states.

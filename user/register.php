@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // =========================================================================
 // user/register.php — Fast Site User Registration (Ultra-Clean & Mobile-First)
 // =========================================================================
@@ -22,6 +22,7 @@ if (isset($pdo)) {
         try { $pdo->exec("ALTER TABLE users ADD COLUMN nid_number TEXT DEFAULT NULL"); } catch (Exception $e) {}
         try { $pdo->exec("ALTER TABLE users ADD COLUMN registration_number TEXT DEFAULT NULL"); } catch (Exception $e) {}
         try { $pdo->exec("ALTER TABLE users ADD COLUMN ref_by TEXT DEFAULT NULL"); } catch (Exception $e) {}
+        try { $pdo->exec("CREATE TABLE IF NOT EXISTS coin_wallets (user_id INTEGER PRIMARY KEY, balance REAL DEFAULT 0.00)"); } catch (Exception $e) {}
     } else {
         try { $pdo->exec("ALTER TABLE `users` ADD COLUMN `whatsapp` VARCHAR(50) DEFAULT NULL"); } catch (Exception $e) {}
         try { $pdo->exec("ALTER TABLE `users` ADD COLUMN `dob` DATE DEFAULT NULL"); } catch (Exception $e) {}
@@ -29,6 +30,7 @@ if (isset($pdo)) {
         try { $pdo->exec("ALTER TABLE `users` ADD COLUMN `nid_number` VARCHAR(50) DEFAULT NULL"); } catch (Exception $e) {}
         try { $pdo->exec("ALTER TABLE `users` ADD COLUMN `registration_number` VARCHAR(50) DEFAULT NULL"); } catch (Exception $e) {}
         try { $pdo->exec("ALTER TABLE `users` ADD COLUMN `ref_by` VARCHAR(50) DEFAULT NULL"); } catch (Exception $e) {}
+        try { $pdo->exec("CREATE TABLE IF NOT EXISTS `coin_wallets` (`user_id` INT PRIMARY KEY, `balance` DECIMAL(10,2) DEFAULT 0.00)"); } catch (Exception $e) {}
     }
 }
 
@@ -58,16 +60,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $err = 'Password must be at least 6 characters long.';
     } else {
         // Check Unique Phone
-        $chkP = $pdo->prepare("SELECT id FROM users WHERE phone = :p LIMIT 1");
+        $chkP = $pdo->prepare("SELECT id, name, password_hash, registration_number FROM users WHERE phone = :p LIMIT 1");
         $chkP->execute([':p' => $phone]);
-        if ($chkP->fetch()) {
-            $err = 'This phone number (' . htmlspecialchars($phone) . ') is already registered. Please login instead.';
+        $existingPhoneUser = $chkP->fetch();
+
+        if ($existingPhoneUser) {
+            // Self-healing recovery: If password matches the registered record, complete session and log in!
+            if (password_verify($pass, $existingPhoneUser['password_hash'])) {
+                $uid = (int)$existingPhoneUser['id'];
+                if (empty($existingPhoneUser['registration_number'])) {
+                    $reg_number = 'FS-USER-' . str_pad($uid, 5, '0', STR_PAD_LEFT);
+                    try { $pdo->prepare("UPDATE users SET registration_number = ? WHERE id = ?")->execute([$reg_number, $uid]); } catch (Exception $e) {}
+                }
+                try {
+                    $pdo->prepare("INSERT INTO coin_wallets (user_id, balance) VALUES (?, 50.00) ON DUPLICATE KEY UPDATE balance = balance")->execute([$uid]);
+                } catch (Exception $wEx) {}
+
+                $_SESSION['user_id'] = $uid;
+                $_SESSION['user_name'] = $existingPhoneUser['name'] ?: $name;
+                header('Location: /user/dashboard.php?welcome=1');
+                exit;
+            }
+            $err = 'This phone number (' . htmlspecialchars($phone) . ') is already registered. Please <a href="/user/login.php" style="color:var(--gold); font-weight:bold; text-decoration:underline;">login here</a>.';
         } else {
             // Check Unique Email
-            $chkE = $pdo->prepare("SELECT id FROM users WHERE email = :e LIMIT 1");
+            $chkE = $pdo->prepare("SELECT id, name, password_hash, registration_number FROM users WHERE email = :e LIMIT 1");
             $chkE->execute([':e' => $email]);
-            if ($chkE->fetch()) {
-                $err = 'This email address (' . htmlspecialchars($email) . ') is already registered.';
+            $existingEmailUser = $chkE->fetch();
+
+            if ($existingEmailUser) {
+                if (password_verify($pass, $existingEmailUser['password_hash'])) {
+                    $uid = (int)$existingEmailUser['id'];
+                    if (empty($existingEmailUser['registration_number'])) {
+                        $reg_number = 'FS-USER-' . str_pad($uid, 5, '0', STR_PAD_LEFT);
+                        try { $pdo->prepare("UPDATE users SET registration_number = ? WHERE id = ?")->execute([$reg_number, $uid]); } catch (Exception $e) {}
+                    }
+                    try {
+                        $pdo->prepare("INSERT INTO coin_wallets (user_id, balance) VALUES (?, 50.00) ON DUPLICATE KEY UPDATE balance = balance")->execute([$uid]);
+                    } catch (Exception $wEx) {}
+
+                    $_SESSION['user_id'] = $uid;
+                    $_SESSION['user_name'] = $existingEmailUser['name'] ?: $name;
+                    header('Location: /user/dashboard.php?welcome=1');
+                    exit;
+                }
+                $err = 'This email address (' . htmlspecialchars($email) . ') is already registered. Please <a href="/user/login.php" style="color:var(--gold); font-weight:bold; text-decoration:underline;">login here</a>.';
             } else {
                 // Check Unique NID Number
                 $chkN = $pdo->prepare("SELECT id FROM users WHERE nid_number = :n LIMIT 1");
@@ -138,13 +175,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $reg_number = 'FS-USER-' . str_pad($new_id, 5, '0', STR_PAD_LEFT);
                         $pdo->prepare("UPDATE users SET registration_number = ? WHERE id = ?")->execute([$reg_number, $new_id]);
 
-                        // Initialize Coin Wallet with 50 Welcome Fast Points
+                        // Initialize Coin Wallet with 50 Welcome Fast Points (DML only, no DDL inside transaction)
                         try {
-                            $pdo->exec("CREATE TABLE IF NOT EXISTS coin_wallets (user_id INT PRIMARY KEY, balance DECIMAL(10,2) DEFAULT 0.00)");
-                            $pdo->prepare("INSERT INTO coin_wallets (user_id, balance) VALUES (?, 50.00)")->execute([$new_id]);
+                            $pdo->prepare("INSERT INTO coin_wallets (user_id, balance) VALUES (?, 50.00) ON DUPLICATE KEY UPDATE balance = balance")->execute([$new_id]);
                         } catch (Exception $wEx) {}
 
-                        $pdo->commit();
+                        if ($pdo->inTransaction()) {
+                            $pdo->commit();
+                        }
 
                         $_SESSION['user_id'] = $new_id;
                         $_SESSION['user_name'] = $name;

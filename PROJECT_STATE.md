@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 89 100% COMPLETE — Elimination of Categories & Filter Drawer Over-Layering Flaw
+**Last Updated:** Phase 90 100% COMPLETE — Resolution of MySQL Implicit Commit Registration Transaction Error
 
 ---
 
@@ -76,6 +76,12 @@
 | 87 | Frictionless 1-Tap Buyer Mode ⇄ Shop Mode Switcher & Navigation Dock Sync (Google Stitch Nocturne Aurum Standards) |
 | 88 | Strict .env Exclusion & Dynamic Root-Relative Image Architecture (Zero-Tolerance Deployment Audit, Hostinger WAF 422 Direct 404 Fix) |
 | 89 | Elimination of Categories & Filter Drawer Over-Layering Flaw (Root-Level DOM Relocation, Visibility Hardening & Print Exclusion) |
+| 90 | Resolution of MySQL Implicit Commit Registration Transaction Error & Self-Healing Account Recovery |
+
+### Phase 90 Details — Resolution of MySQL Implicit Commit Registration Transaction Error
+- **1. Elimination of DDL Transaction Collision (`user/register.php`):** Extracted `CREATE TABLE IF NOT EXISTS coin_wallets` out of the active transaction `$pdo->beginTransaction()` to the initial script migration block, preventing MySQL from triggering an implicit commit that caused `$pdo->commit()` to throw `PDOException: There is no active transaction`.
+- **2. Defensive Transaction Guard (`user/register.php`):** Injected `if ($pdo->inTransaction()) { $pdo->commit(); }` and replaced wallet seeding with pure DML (`INSERT ... ON DUPLICATE KEY UPDATE balance = balance`).
+- **3. Self-Healing Interrupted Registration Recovery (`user/register.php`):** Enabled seamless login and credential reconciliation for accounts created during an interrupted registration attempt (such as Sayam's phone `01612669922`), automatically allocating welcome coins and directing the user to `/user/dashboard.php?welcome=1`.
 
 ### Phase 89 Details — Elimination of Categories & Filter Drawer Over-Layering Flaw
 - **1. Root-Level DOM Relocation (`home.php`):** Extracted the `#categoryDrawer` and `#categoryDrawerScrim` markup and scripts from the document content flow (previously nestled between Hero and Products grid) to the root document level immediately before `</body>`.
