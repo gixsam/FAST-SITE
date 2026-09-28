@@ -1,0 +1,66 @@
+name: Fast Site Automated Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  verify-and-deploy:
+    name: Verify Codebase & Auto-Sync to Hostinger
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 🔍 Pre-Flight Security & Asset Verification
+        run: |
+          echo "=========================================================="
+          echo "🚀 Fast Site CI/CD Pipeline — Hostinger Deployment"
+          echo "Target Domain: https://fastsite.best-travel.ltd"
+          echo "=========================================================="
+          test -f index.php && echo "✅ index.php is present and valid"
+          test -f config.php && echo "✅ config.php core engine is present"
+          test -f .htaccess && echo "✅ .htaccess security rules present"
+          test -f NOTE.md && echo "✅ NOTE.md master documentation present"
+          test -f PROJECT_STATE.md && echo "✅ PROJECT_STATE.md state tracker present"
+          
+          # Absolute security check: Ensure .env is NEVER committed to repository
+          if [ -f .env ]; then
+            echo "❌ CRITICAL SECURITY ERROR: .env file detected in repo! Aborting deploy."
+            exit 1
+          fi
+          echo "🛡️ Security Check Passed: No .env found in repository. Production credentials safe."
+
+      - name: 🚀 Sync Files to Hostinger via FTPS
+        if: env.FTP_SERVER != '' && env.FTP_USERNAME != ''
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          server-dir: ${{ secrets.FTP_DIR || 'public_html/' }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/.env*
+            **/.agents/**
+            **/*.db
+            **/*.sqlite*
+            **/*.log
+            **/scratch/**
+            **/node_modules/**
+            **/__pycache__/**
+            build_hostinger_zip.py
+            build_phase_zip.py
+            *.py
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}

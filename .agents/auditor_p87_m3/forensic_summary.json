@@ -1,0 +1,26 @@
+{
+  "zip_integrity": {
+    "size": 98658,
+    "sha256": "f0b4a188ddd09fe66a2cb3236c25b35aae54866973ef70ba8c2ec978732ba983",
+    "crc_test_passed": true,
+    "entry_count": 13,
+    "backslash_paths": [],
+    "all_paths_normalized_unix": true,
+    "mismatches": [],
+    "files_match_disk": true
+  },
+  "deployment_guide": {
+    "rule_3_paths": true,
+    "rule_3_workflow": true,
+    "rule_3_phase": true,
+    "rule_5_live_host": true,
+    "manifest_errors": [],
+    "manifest_accurate": true
+  },
+  "project_state": {},
+  "test_integrity": {},
+  "code_authenticity": {
+    "issues": [],
+    "authentic": true
+  }
+}

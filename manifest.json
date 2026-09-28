@@ -1,0 +1,21 @@
+{
+  "name": "Fast Site Storefront",
+  "short_name": "Fast Site",
+  "description": "Fast governmental and private portal assistant in Bangladesh.",
+  "start_url": "./index.php",
+  "display": "standalone",
+  "background_color": "#0d0d14",
+  "theme_color": "#fcb900",
+  "icons": [
+    {
+      "src": "fast site logo only.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "fast site logo only.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg_logo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a0845"/>
+      <stop offset="100%" stop-color="#0b0214"/>
+    </linearGradient>
+    <linearGradient id="pinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg_logo)"/>
+  <rect x="80" y="50" width="440" height="300" rx="16" fill="rgba(244,63,94,0.08)" stroke="url(#pinkGrad)" stroke-width="2"/>
+  <text x="300" y="110" text-anchor="middle" fill="url(#pinkGrad)" font-family="'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="900">PREMIUM LOGO &amp; BRAND DESIGN</text>
+  <text x="300" y="140" text-anchor="middle" fill="#fbcfe8" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600">প্রিমিয়াম লোগো ও ব্র্যান্ডিং সার্ভিস</text>
+  <circle cx="300" cy="205" r="35" fill="rgba(244,63,94,0.2)" stroke="#f43f5e" stroke-width="2"/>
+  <text x="300" y="217" text-anchor="middle" fill="#f43f5e" font-size="30">🎨</text>
+  <text x="300" y="275" text-anchor="middle" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700">VECTOR • 3D MOCKUP • BRANDING</text>
+  <rect x="150" y="295" width="300" height="30" rx="6" fill="rgba(0,0,0,0.6)"/>
+  <text x="300" y="315" text-anchor="middle" fill="#f43f5e" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800">100% UNIQUE ARTWORK</text>
+</svg>

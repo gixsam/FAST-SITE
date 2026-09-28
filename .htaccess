@@ -1,0 +1,33 @@
+RewriteEngine On
+RewriteBase /
+
+# Force HTTPS (Optional but recommended)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# If the request is a real file or directory (e.g. assets, images), serve it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Direct Portal Clean Access
+RewriteRule ^admin/?$ admin/index.php [L,QSA]
+RewriteRule ^partner/?$ partner/index.php [L,QSA]
+RewriteRule ^user/?$ user/index.php [L,QSA]
+
+# Clean Partner Shop URL Rewrite Rule (/shop/shofiq_store -> shop.php?slug=shofiq_store)
+RewriteRule ^shop/([a-zA-Z0-9_-]+)/?$ shop.php?slug=$1 [L,QSA]
+
+# Prevent missing static media files from being rewritten to index.php (prevents Hostinger WAF 422 errors)
+RewriteCond %{REQUEST_URI} \.(jpg|jpeg|png|gif|webp|svg|ico|mp3|wav|ogg)$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule .* - [R=404,L]
+
+# Otherwise, send the request to index.php (only if not a file/dir)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+# Prevent access to .env files
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg_def" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#181a28"/>
+      <stop offset="100%" stop-color="#080911"/>
+    </linearGradient>
+    <linearGradient id="gold_def" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcb900"/>
+      <stop offset="100%" stop-color="#ff9100"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg_def)"/>
+  <circle cx="300" cy="180" r="130" fill="#fcb900" opacity="0.1" filter="blur(40px)"/>
+  
+  <rect x="80" y="60" width="440" height="280" rx="20" fill="rgba(255,255,255,0.03)" stroke="rgba(252, 185, 0, 0.35)" stroke-width="2"/>
+  
+  <circle cx="300" cy="150" r="45" fill="rgba(252, 185, 0, 0.15)" stroke="url(#gold_def)" stroke-width="2"/>
+  <text x="300" y="162" text-anchor="middle" fill="url(#gold_def)" font-size="36">⚡</text>
+  
+  <text x="300" y="235" text-anchor="middle" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="900" letter-spacing="1">FAST SITE VERIFIED</text>
+  <text x="300" y="260" text-anchor="middle" fill="url(#gold_def)" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="700">PREMIUM DIGITAL SERVICE &amp; ASSET</text>
+
+  <rect x="150" y="285" width="300" height="30" rx="6" fill="rgba(0,0,0,0.5)"/>
+  <text x="300" y="305" text-anchor="middle" fill="#94a3b8" font-family="'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700">100% ESCROW PROTECTED TRANSACTION</text>
+</svg>

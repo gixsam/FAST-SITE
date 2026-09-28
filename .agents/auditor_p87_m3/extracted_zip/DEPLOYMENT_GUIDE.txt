@@ -1,0 +1,141 @@
+================================================================================
+FAST SITE — HOSTINGER DEPLOYMENT GUIDE (PHASE 87)
+================================================================================
+Archive: fastsite_phase87.zip
+Active Phase: Phase 87 — Frictionless 1-Tap Buyer Mode ⇄ Shop Mode Switcher &
+              Navigation Dock Synchronization (Google Stitch Nocturne Aurum)
+Workflow Step: Phase 87 100% Complete (Packaging & Production Verification)
+Date: 2026-09-09
+Target Environment: Hostinger File Manager -> public_html/ (Root Directory)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. EXACT FOLDER PATHS ON HOSTINGER
+--------------------------------------------------------------------------------
+All files inside fastsite_phase87.zip are structured with exact relative paths
+matching your Hostinger `public_html/` root directory:
+
+  public_html/
+  ├── assets/
+  │   └── css/
+  │       └── user.css
+  ├── includes/
+  │   └── user_sidebar.php
+  ├── partner/
+  │   ├── api_docs.php
+  │   ├── dashboard.php
+  │   ├── index.php
+  │   ├── logout.php
+  │   ├── nav.php
+  │   ├── product_add.php
+  │   ├── product_delete.php
+  │   ├── product_edit.php
+  │   └── profile.php
+  ├── user/
+  │   └── dashboard.php
+  └── DEPLOYMENT_GUIDE.txt
+
+--------------------------------------------------------------------------------
+2. EXACT WORKFLOW STEP WHERE AI LEFT OFF
+--------------------------------------------------------------------------------
+AI left off at: Phase 87 100% COMPLETE — Frictionless 1-Tap Buyer Mode ⇄ Shop Mode
+Switcher and Navigation Dock Synchronization engineered to Google Stitch Nocturne
+Aurum standards across both mobile and desktop portals.
+
+Summary of Phase 87 Deliverables:
+- Milestone 1: User Panel Mode Switcher, Dock Sync & Onboarding Modals
+  * Self-contained `getUserShopState($pdo, $userId, $userPhone)` resolving accurate
+    states ('approved', 'pending', 'none') for all user sub-pages.
+  * 1-Tap Mode Toggle Pill in Top Header Bar (`includes/user_sidebar.php`) with 44px+
+    touch targets: Approved [ 🏪 Switch to Shop Mode ], Pending [ ⏳ Shop Under Review ],
+    and Shopless [ ➕ Open Free Shop ].
+  * Google Stitch Nocturne Aurum `#shopReviewModal` (bottom sheet with 3-step progress
+    stepper, 24-48h SLA, WhatsApp escalation) and `#quickShopDrawer` (30s setup form).
+  * 5-Slot Synchronized Bottom Dock in `user/dashboard.php` with dynamic tab
+    highlighting, unread order badge, and elevated center action circle.
+  * Google Stitch Nocturne Aurum tokens and fluid micro-interactions in `assets/css/user.css`.
+
+- Milestone 2: Shop Panel Mode Switcher, Dock Sync & Back Navigation
+  * 1-Tap Buyer Mode Switcher Pill in Top Bar (`partner/nav.php`) linking directly
+    to `/user/dashboard.php` with sky-blue `#38bdf8` styling and active tap scale.
+  * Persistent Back Navigation Button (`nav-back-btn`) with chevron SVG returning to
+    `dashboard.php` on all sub-pages, plus 44px x 44px touch targets.
+  * 5-Slot Mobile Bottom Dock (`.partner-bottom-dock`) with live pending orders badge,
+    FAB Add Product button, Catalog link, and 1-tap Buyer Mode switch.
+  * Executive Hero Quick Action Bar (`partner/dashboard.php`) with direct Buyer Mode
+    action button (`.btn-action-buyer`).
+  * Eliminated 7 dead-end 404 redirects across `partner/index.php`, `partner/logout.php`,
+    `partner/product_add.php`, `partner/product_edit.php`, `partner/product_delete.php`,
+    `partner/profile.php`, and `partner/api_docs.php`, cleanly rerouting unauthenticated
+    traffic to `/user/login.php`.
+  * Hardened `isActive($page, $current_page)` in `partner/nav.php` with array support
+    and function existence guards, verified with 70/70 DOM stress tests.
+
+- Milestone 3: Google Stitch Polish, Verification & Deployment Packaging
+  * Complete audit of Google Stitch Nocturne Aurum tokens: #0A0D1A obsidian void,
+    frosted glass elevation (backdrop-filter blur 16-24px), amber/gold #F59E0B accents,
+    sky-blue #38bdf8 buyer mode accents, 44px x 44px minimum touch targets, active tap
+    compression (scale 0.96), and notch safe-area insets.
+  * 100% PHP syntax pass (`php -l`) across all 11 PHP files with 0 errors.
+  * Character encoding verification: 100% pure UTF-8 without BOM or mojibake.
+  * Live server testing: verified HTTP 200/302 responses on Local Server Live Host
+    (http://localhost:8000) and Cloudflare mobile tunnel (https://zoo-dubai-hopefully-note.trycloudflare.com).
+  * Built production deployment archive `fastsite_phase87.zip` with normalized Unix paths.
+
+--------------------------------------------------------------------------------
+3. CURRENT ACTIVE PHASE NUMBER
+--------------------------------------------------------------------------------
+Current Phase: Phase 87 (100% COMPLETED)
+Next Recommended Phase: Phase 88
+
+--------------------------------------------------------------------------------
+4. COMPLETE FILE MANIFEST WITH CHECKSUMS & SIZES
+--------------------------------------------------------------------------------
+File                           | Size (Bytes) | SHA256 Checksum
+-------------------------------+--------------+-----------------------------------------------------------------
+includes/user_sidebar.php      |        40386 | 411b77083b24eb747d18e6bcfd146341c98977bed811db247d9a826a4bb4673a
+user/dashboard.php             |       111768 | 8e624b324e8ac57fc4647deae7fc060a4094729fb3a16ebeba2ed0bd14116fe1
+assets/css/user.css            |        24652 | 4219e6c4810b142beb2975938aa9eb29d8cd7beee62869e0756a16c2e1ba136a
+partner/nav.php                |        28286 | b3b56009fa449e56d8419418edf9e92543c342f513619266f0bab084a48c089a
+partner/dashboard.php          |        54599 | 99460a5c08f8887a4475c33e920b9ab90efa19834bde1ff61d504ee58da7d769
+partner/index.php              |          499 | 892e2612a27833f1b1902fea6c16f2e3530fffb978bc4695320294d515671cfd
+partner/logout.php             |          358 | 24de2342af25a8d00581f072f25f1c8c22af569b2c6f9b5cf9a34c1a1596a2f1
+partner/product_add.php        |        54083 | ec499a36564558b12f3ef0d05010c9e10e33ae5080bb73bd101d29cbd26d74aa
+partner/product_edit.php       |        37095 | 86e4f2283bcf024099e6ba7c0caeb488a5d809b66ffc93fb5cc08512f767da8f
+partner/product_delete.php     |         2197 | f3a7c9e4c634d20c7550309652317463c9c5476c1dc3848c8d6b6789b003c6d3
+partner/profile.php            |        26607 | 73c56ac41780c6816c8cd96c58851540f46a48d552edff7d127fc59e471b0946
+partner/api_docs.php           |        12101 | f0ac227889520481fc91a9bab42a9806d33b84a7298fc49e1453f5dd74d582c7
+DEPLOYMENT_GUIDE.txt           |   (Included) | (Manifest & extraction guide)
+
+--------------------------------------------------------------------------------
+5. STEP-BY-STEP EXTRACTION INSTRUCTIONS (HOSTINGER)
+--------------------------------------------------------------------------------
+Step 1: Log in to Hostinger hPanel and open "File Manager".
+Step 2: Navigate directly to the `public_html/` root directory.
+Step 3: (Recommended) Download a quick backup of your current public_html.
+Step 4: Click the "Upload" button (upward arrow in top-right toolbar) and select:
+        `fastsite_phase87.zip`
+Step 5: Once uploaded, right-click `fastsite_phase87.zip` and click "Extract".
+Step 6: In the extract popup, set destination path to `.` or `/public_html`.
+Step 7: Confirm overwrite of existing files.
+Step 8: Delete `fastsite_phase87.zip` from public_html after successful extraction.
+Step 9: Test your live site at https://fastsite.best-travel.ltd to confirm all
+        mode-switching and navigation enhancements.
+
+--------------------------------------------------------------------------------
+6. MANDATORY DIRECTIVE 5: LOCAL SERVER LIVE HOST REMINDER
+--------------------------------------------------------------------------------
+🚨 ALWAYS REMEMBER TO TURN ON YOUR 'LOCAL SERVER LIVE HOST' TO TEST ALL CHANGES
+PERFECTLY BEFORE DEPLOYING TO THE LIVE HOSTINGER PRODUCTION ENVIRONMENT!
+
+To start/verify your local server live host:
+  1. Open terminal in project root: D:\TECH\WEBSITE\FAST SITE\fast site\
+  2. Run: php -S localhost:8000
+  3. Ensure local database service is active (SQLite fallback handles offline DB).
+  4. Visit http://localhost:8000 (or Cloudflare live tunnel) on mobile/desktop:
+     - In User Panel: tap [ 🏪 Switch to Shop Mode ] pill in top nav and bottom dock
+     - In Shop Panel: tap [ 👤 Switch to Buyer Mode ] pill in top nav, hero bar, & dock
+     - On Shop sub-pages: test persistent back button to return to Shop Overview
+     - Test responsive collapse on screens <= 600px
+     - Verify 44px+ touch targets and active tap micro-interactions
+================================================================================

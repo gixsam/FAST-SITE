@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#062919"/>
+      <stop offset="50%" stop-color="#0d1829"/>
+      <stop offset="100%" stop-color="#050811"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe259"/>
+      <stop offset="100%" stop-color="#ffa751"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(16, 185, 129, 0.25)"/>
+      <stop offset="100%" stop-color="rgba(5, 150, 105, 0.08)"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg)"/>
+  <circle cx="500" cy="80" r="140" fill="#10b981" opacity="0.12" filter="blur(40px)"/>
+  <circle cx="100" cy="320" r="160" fill="#fcb900" opacity="0.08" filter="blur(50px)"/>
+  
+  <!-- Smart Card Shape -->
+  <rect x="75" y="60" width="450" height="280" rx="20" fill="url(#cardGrad)" stroke="rgba(252, 185, 0, 0.4)" stroke-width="2"/>
+  
+  <!-- Header Bar -->
+  <rect x="75" y="60" width="450" height="55" rx="20" fill="rgba(0,0,0,0.4)"/>
+  <circle cx="110" cy="88" r="16" fill="#10b981"/>
+  <text x="135" y="93" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="900" letter-spacing="1">PEOPLE'S REPUBLIC OF BANGLADESH</text>
+  
+  <!-- Microchip -->
+  <rect x="110" y="145" width="55" height="45" rx="8" fill="url(#goldGrad)" stroke="#d97706" stroke-width="1.5"/>
+  <line x1="110" y1="167" x2="165" y2="167" stroke="#78350f" stroke-width="1.5"/>
+  <line x1="137" y1="145" x2="137" y2="190" stroke="#78350f" stroke-width="1.5"/>
+
+  <!-- Photo Box -->
+  <rect x="400" y="130" width="95" height="115" rx="10" fill="rgba(0,0,0,0.5)" stroke="rgba(255,255,255,0.2)"/>
+  <circle cx="447" cy="170" r="22" fill="#94a3b8" opacity="0.6"/>
+  <path d="M420 225 C420 195, 475 195, 475 225 Z" fill="#94a3b8" opacity="0.6"/>
+
+  <!-- Details Text -->
+  <text x="180" y="160" fill="url(#goldGrad)" font-family="'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="800">NATIONAL ID CARD</text>
+  <text x="180" y="185" fill="#e2e8f0" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600">SMART NID SERVICES</text>
+  <text x="180" y="210" fill="#94a3b8" font-family="'Segoe UI', Roboto, sans-serif" font-size="11">NID NO: 1994 2692 8840 0012</text>
+  
+  <!-- Footer Tag -->
+  <rect x="100" y="290" width="400" height="35" rx="8" fill="rgba(0,0,0,0.6)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+  <text x="300" y="313" text-anchor="middle" fill="#00e676" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="800" letter-spacing="1">⚡ FAST SITE VERIFIED SERVICE</text>
+</svg>

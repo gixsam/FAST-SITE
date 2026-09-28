@@ -1,0 +1,403 @@
+/* =========================================================================
+   assets/css/mobile_responsive.css — Master Mobile & APK Precision Layouts
+   Enforces strict screen boundaries, eliminates horizontal overflow,
+   and optimizes touch UI for Android APK & Mobile Browsers.
+   ========================================================================= */
+
+/* 1. Global Viewport & Boundary Enforcement */
+html, body {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. Container & Card Bounds */
+.container,
+.dashboard-container,
+.dashboard-layout,
+.main-content,
+.admin-hero,
+.card,
+.box,
+.pcard,
+.shop-card,
+.modal-content,
+.gc-box {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 3. Universal Table Responsive Wrapper */
+.table-responsive,
+.responsive-table-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  margin-bottom: 1.2rem;
+  border-radius: 12px;
+  position: relative;
+}
+
+/* Slim Custom Scrollbar for Mobile Tables */
+.table-responsive::-webkit-scrollbar,
+.responsive-table-wrap::-webkit-scrollbar {
+  height: 5px;
+}
+.table-responsive::-webkit-scrollbar-track,
+.responsive-table-wrap::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+.table-responsive::-webkit-scrollbar-thumb,
+.responsive-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(252, 185, 0, 0.35);
+  border-radius: 10px;
+}
+
+/* 4. Text & Code Wrap Guards */
+p, span, h1, h2, h3, h4, h5, h6, td, th, div, a {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+code, pre, .tx-hash, .address-text {
+  word-break: break-all !important;
+  white-space: pre-wrap !important;
+}
+
+/* 5. Mobile APK Responsive Queries (< 768px) */
+@media (max-width: 768px) {
+  /* Spacing Compression */
+  .main-content {
+    padding: 1rem 0.75rem !important;
+  }
+
+  .dashboard-container {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  .admin-hero {
+    padding: 1.2rem 1rem !important;
+    border-radius: 14px !important;
+  }
+
+  .admin-hero-title {
+    font-size: 1.35rem !important;
+  }
+
+  /* Grid Conversions for Mobile */
+  .kpi-grid,
+  .stats-grid,
+  .grid-2,
+  .grid-3,
+  .grid-4,
+  .product-grid-4,
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+    gap: 0.75rem !important;
+  }
+
+  /* KPI Stat Box Compaction */
+  .kpi-box,
+  .stat-box,
+  .stat-card {
+    padding: 1rem 0.75rem !important;
+  }
+
+  .kpi-num,
+  .stat-num,
+  .stat-val {
+    font-size: 1.5rem !important;
+  }
+
+  .kpi-label,
+  .stat-label {
+    font-size: 0.72rem !important;
+  }
+
+  /* Forms & Buttons Full Width */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents auto-zoom on iOS & Android WebViews */
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .btn-group {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .btn-group .btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Mobile Bottom Navigation Margin */
+  body {
+    padding-bottom: 2rem !important;
+  }
+  body.dashboard-mode {
+    padding-top: calc(var(--top-nav-height, 60px) + var(--notice-height, 0px) + 12px) !important;
+    padding-bottom: calc(var(--bottom-nav-height, 65px) + 35px) !important;
+  }
+}
+
+/* 6. Extra-Small Screen Adjustments (< 400px) */
+@media (max-width: 400px) {
+  .kpi-grid,
+  .product-grid-4,
+  .product-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .shop-header-wrap {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .shop-avatar {
+    width: 90px !important;
+    height: 90px !important;
+  }
+}
+
+/* ================================================================
+   7. PARTNER PORTAL — Mobile APK Overflow Precision Fix
+   ================================================================ */
+
+/* Partner dashboard stat cards — prevent horizontal scroll */
+@media (max-width: 768px) {
+  /* Force all container layouts to stay within viewport */
+  .content-wrapper,
+  .hub-container,
+  .wallet-container {
+    max-width: 100vw !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .content-wrapper > *,
+  .hub-container > *,
+  .wallet-container > * {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Partner Dashboard Executive Hero */
+  .executive-hero {
+    padding: 1.2rem 1rem !important;
+    border-radius: 16px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1.2rem !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+
+  .quick-action-bar {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+  }
+
+  .btn-action-hero {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+  }
+
+  /* KPI Stat Cards Grid — strictly 2 columns on mobile */
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .kpi-card {
+    padding: 0.9rem 0.75rem !important;
+    border-radius: 14px !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .kpi-val {
+    font-size: 1.3rem !important;
+    word-break: break-all !important;
+  }
+
+  .kpi-lbl, .kpi-sub {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Tab Navigation in Partner & Orders Pages */
+  .hub-tabs-bar,
+  .tabs-bar,
+  .wallet-tabs,
+  .tabs-nav {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex-wrap: nowrap !important;
+    gap: 0.4rem !important;
+    padding-bottom: 0.4rem !important;
+    scrollbar-width: none;
+    box-sizing: border-box !important;
+  }
+
+  .hub-tabs-bar::-webkit-scrollbar,
+  .tabs-bar::-webkit-scrollbar,
+  .wallet-tabs::-webkit-scrollbar,
+  .tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hub-tab-btn,
+  .tab-link,
+  .w-tab-btn {
+    padding: 0.55rem 0.85rem !important;
+    font-size: 0.78rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Wallet Card & Actions */
+  .premium-wallet-card {
+    padding: 1.2rem 1rem !important;
+    border-radius: 18px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .pw-balance {
+    font-size: 2.2rem !important;
+    word-break: break-all !important;
+  }
+
+  .pw-actions {
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+    width: 100% !important;
+  }
+
+  .btn-deposit-toggle,
+  .btn-withdraw-toggle {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 0.85rem 1rem !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+  }
+
+  /* Shareable ref link section — prevent overflow */
+  [style*="YOUR CUSTOM SHAREABLE"],
+  [style*="shareable"] {
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* Partner product add form — mobile fixes */
+  .gc-box,
+  .form-section {
+    padding: 1rem !important;
+    max-width: 100% !important;
+  }
+
+  /* File upload drag zones */
+  .gc-dropzone,
+  [style*="dashed"] {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Product listing type buttons */
+  [style*="listing-type"],
+  .listing-type-btn {
+    width: 100% !important;
+  }
+}
+
+/* ================================================================
+   8. Android APK WebView — Touch Target & Input Fixes
+   ================================================================ */
+
+/* Ensure file input labels trigger properly in Android WebView */
+label[for] {
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(252, 185, 0, 0.15);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Prevent inputs from being zoomed in on Android */
+input[type="file"] {
+  font-size: 16px !important;
+}
+
+/* Touch-friendly minimum tap target */
+button, .btn, a.btn, input[type="submit"], label[for],
+.drawer-link, .tab-btn, .view-option-btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* ================================================================
+   9. High-Speed 60–120 FPS Mobile GPU Touch Scrolling
+   ================================================================ */
+html, body {
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth;
+  touch-action: pan-y pinch-zoom;
+}
+
+@media (max-width: 768px) {
+  /* Disable heavy GPU-taxing backdrop filters on mobile WebViews to eliminate scroll stutter */
+  *, *::before, *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .top-nav, .public-nav, .header, .modal-box, .drawer-content, .mobile-bottom-nav {
+    background-color: #08080c !important;
+  }
+
+  /* Prevent heavy rasterization lag during scroll gestures */
+  .public-nav,
+  .hero-section,
+  .quick-categories-bar,
+  .products-grid,
+  .service-card,
+  .product-card,
+  .pcard,
+  .trending-card,
+  .partner-shop-card,
+  .executive-hero,
+  .hub-container {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform, scroll-position;
+  }
+}
+

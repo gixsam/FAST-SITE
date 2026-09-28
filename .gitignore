@@ -1,0 +1,40 @@
+# Security & Credentials (NEVER commit to GitHub)
+.env
+.env.*
+*.env
+
+# Local Databases (Do not push dev SQLite DBs to GitHub)
+fast_site_local.db
+*.sqlite
+*.sqlite3
+*.db
+
+# Dev Tools & Large Binaries
+_dev_tools/
+cloudflared.exe
+*.exe
+
+# Deployment Archives & Build Directories
+*.zip
+_build_archives/
+build/
+
+# System & Session Caches
+sessions/
+scratch/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+Thumbs.db
+node_modules/
+
+# WhatsApp Bot Auth Sessions & Tokens
+whatsapp-bot/auth_info_baileys/
+whatsapp-bot/auth_info*/
+auth_info_baileys/
+
+# Android Local Folders
+APK FILE USER/
+apk file ADMIN/
+FastSiteApp/

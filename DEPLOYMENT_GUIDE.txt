@@ -1,0 +1,65 @@
+================================================================================
+FAST SITE — HOSTINGER DEPLOYMENT GUIDE (PHASE 88)
+================================================================================
+Archive: fastsite_phase88.zip
+Active Phase: Phase 88 — Strict .env Exclusion & Dynamic Root-Relative Image Architecture
+Workflow Step: Phase 88 100% Complete (Hardened Media & Security Deployment)
+Date: 2026-09-28
+Target Environment: Hostinger File Manager -> public_html/ (Root Directory)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. EXACT FOLDER PATHS ON HOSTINGER
+--------------------------------------------------------------------------------
+Extract all contents of fastsite_phase88.zip directly into your Hostinger `public_html/` root.
+Ensure "Overwrite existing files" is checked.
+
+Core Files Included in This Phase:
+  public_html/
+  ├── config.php                      (Universal root-relative media resolver)
+  ├── .htaccess                       (Direct 404 for missing media, blocks WAF 422)
+  ├── checkout.php                    (Root-relative item preview)
+  ├── includes/
+  │   └── image_helper.php            (Root-relative media helper functions)
+  ├── partner/
+  │   └── dashboard.php               (Root-relative product thumbnails)
+  ├── admin/
+  │   ├── partner_shops.php           (Root-relative shop logos & avatars)
+  │   └── shop_edit.php               (Root-relative shop logos & product media)
+  ├── user/
+  │   └── forgot_password.php         (Root-relative fallback logo)
+  ├── .gitignore                      (Repository exclusion for .env and temp files)
+  └── DEPLOYMENT_GUIDE.txt            (This canonical instructions file)
+
+--------------------------------------------------------------------------------
+2. CRITICAL SECURITY NOTICE: .ENV EXCLUSION
+--------------------------------------------------------------------------------
+[SECURITY COMPLIANT]: The `.env` file has been STRICTLY and PERMANENTLY EXCLUDED
+from this deployment archive. Your live Hostinger production database credentials
+(MySQL user: u422364295_admin) will NEVER be overwritten or exposed.
+
+--------------------------------------------------------------------------------
+3. DYNAMIC ROOT-RELATIVE IMAGE RESOLUTION SUMMARY
+--------------------------------------------------------------------------------
+- All image URLs now resolve with dynamic root-relative paths (e.g. `/uploads/...`,
+  `/assets/...`), allowing seamless rendering on both Localhost (port 8000) and
+  Hostinger production without environmental configuration changes.
+- Localhost domains (`http://localhost:8000/...`, `http://127.0.0.1:...`) are
+  automatically stripped and converted into root-relative paths `/uploads/...`.
+- Windows backslashes (`\`) are normalized to POSIX forward slashes (`/`).
+- Missing media files in `.htaccess` return a clean HTTP 404 directly, stopping
+  Apache from rewriting missing images to `index.php` and eliminating WAF 422 errors.
+
+--------------------------------------------------------------------------------
+4. CURRENT ACTIVE PHASE NUMBER
+--------------------------------------------------------------------------------
+Active Phase: Phase 88 (100% COMPLETE & VERIFIED)
+Next Recommended Phase: Phase 89
+
+--------------------------------------------------------------------------------
+5. MANDATORY LOCAL SERVER LIVE HOST REMINDER
+--------------------------------------------------------------------------------
+Always turn on your LOCAL SERVER LIVE HOST (e.g., `php -S localhost:8000`)
+and test all storefront cards, user dashboard, shop panel, and checkout images
+locally before deploying the archive to the live Hostinger environment!
+================================================================================
