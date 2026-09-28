@@ -1,7 +1,7 @@
 # 📘 FAST SITE — MASTER COMPREHENSIVE NOTE & STATUS REPORT (NOTE.md)
 **Project Name:** FAST SITE (Ecosystem Escrow Hub & Universal Marketplace)  
 **Main Domain:** `https://fastsite.best-travel.ltd`  
-**Current Active Version:** Phase 95 100% Complete & Production-Verified  
+**Current Active Version:** Phase 96 100% Complete & Production-Verified  
 **Document Classification:** Canonical Website State, Historical Log & Future Roadmap  
 **Target Audience:** AI Agents (Google Antigravity, Claude Sonnet, Gemini, GPT) and Human Developers / Project Managers  
 
@@ -23,11 +23,22 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 95 Complete & Production-Verified
-The platform is currently at **Phase 95: Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation**.
+### Active Status: Phase 96 Complete & Production-Verified
+The platform is currently at **Phase 96: Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Admin Navbar Mobile Overflow Fix & Action Alert Modal Dropdown (Phase 95):**
+1. **Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding (Phase 96):**
+   - **Root Causes Eliminated:**
+     - **Blank Tabs Resolved (Staff Access & Advanced Settings):** In `admin/settings_partials/tab_partners.php`, line 8 opened a section wrapper for *Client & Referral Management* that was never closed before line 17 opened *Affiliate Agent Program*. Consequently, line 89 closed line 8 instead of `#sec-all-partners-program`. Because `tab_staff.php` and `tab_advanced.php` are included right after `tab_partners.php`, the DOM parser treated `#sec-staff` and `#sec-advance-settings` as children inside `#sec-all-partners-program`. When switching tabs, `#sec-all-partners-program` was hidden (`display: none`), rendering its swallowed children completely invisible. In addition, `tab_advanced.php` had unclosed tags in Sub-Section 3 and Sub-Section 5, and `tab_staff.php` was missing an unconditional DOM container.
+     - **Right Border Crossing / Horizontal Overflow Eliminated (Logo/Media & General/SEO):** In `assets/css/admin.css`, `.grid2` used `repeat(auto-fit, minmax(300px, 1fr))` without mobile overrides. In `tab_logo_media.php`, `tab_general.php`, and `tab_advanced.php`, multiple field wrappers used `style="grid-column: span 2;"` and nested `.grid2`, requiring at least 622px width. Combined with container and card padding (`padding: 2rem !important`), total required width reached 718px on a 360px smartphone screen, forcing form controls and preview cards 350px+ past the screen boundary.
+     - **Dashboard Unclosed Divs Resolved:** Fixed 2 unclosed container tags (`.dashboard-container` and `.wrap`) in `admin/dashboard.php` and `admin/dashboard_updated.php`.
+   - **Comprehensive Fixes Applied:**
+     - **Tag Balancing (Diff = 0):** Added closing `</div>` tags in `tab_partners.php:17` and `tab_advanced.php` (Sub-Section 3 line 334, Sub-Section 5 line 641), and cleaned up redundant div at line 663. Wrapped `tab_staff.php` with an unconditional `#sec-staff` container with a clean permission guard card when non-admin. All 7 partials and dashboard now report exact `diff = 0`.
+     - **Universal Mobile Responsive Shielding (`assets/css/admin.css`):** Added `@media (max-width: 768px)` rules collapsing `.grid2` into single-column vertical flex (`flex-direction: column !important; width: 100% !important;`), resetting `grid-column: span 2` to `grid-column: auto !important`, and enforcing `max-width: 100% !important; box-sizing: border-box !important` across all inputs, selects, textareas, and cards.
+     - **Padding Optimization:** Reduced mobile `.section-body` padding from `2rem` (64px) to `1.2rem 0.85rem` (<768px) and `1rem 0.6rem` (<480px), reclaiming 40px of screen real estate.
+     - **Swipeable Mobile Tabs Carousel:** Refactored `.tabs-nav` on mobile into a smooth, horizontal swipeable strip (`overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none;`).
+     - **Inline Grid Migration:** Migrated rigid inline `minmax(...)` grids in `tab_general.php` and `tab_advanced.php` to use the responsive `.grid2` class.
+2. **Admin Navbar Mobile Overflow Fix & Action Alert Modal Dropdown (Phase 95):**
    - **Root Cause Eliminated:** On smartphone viewports (< 640px), the combined width of the admin brand container, long official shop text (`🏪 FAST SITE`), action alerts bell, ecosystem hub button, logout button, and hamburger icon exceeded screen width (410px+ vs 360-390px viewport), forcing the Omni Ecosystem Apps, Logout, and Hamburger buttons completely out of the right screen border.
    - **Mobile Layout Precision:**
      - Collapsed `.shop-btn-text` on screens `< 640px` (showing a clean, compact `🏪` icon pill) while keeping full text on desktop.

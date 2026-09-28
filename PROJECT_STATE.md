@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 95 100% COMPLETE — Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation
+**Last Updated:** Phase 96 100% COMPLETE — Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding
 
 ---
 
@@ -82,6 +82,12 @@
 | 93 | Hardcoded Google API Key Removal & Secret Scanning Alert Resolution |
 | 94 | Professional Mobile Phone & Native APK App Responsive Optimization (4 Pillars Architecture) |
 | 95 | Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation |
+| 96 | Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding (Tag Balancing diff=0, Mobile .grid2 Collapse, Swipeable Tabs) |
+
+### Phase 96 Details — Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding
+- **1. Blank Tabs Resolved (Staff Access & Advanced Settings):** Restored unclosed container in `admin/settings_partials/tab_partners.php:17` and balanced sub-sections 3 and 5 in `tab_advanced.php`, preventing `#sec-staff` and `#sec-advance-settings` from being swallowed as children inside `#sec-all-partners-program`. Wrapped `tab_staff.php` with an unconditional `#sec-staff` container with a clean permission guard card when non-admin. All 7 partials now report exact tag balance `diff = 0`.
+- **2. Mobile Grid Overflow & Border Crossing Eliminated (`assets/css/admin.css`):** Added mobile-first `@media (max-width: 768px)` rules collapsing `.grid2` from desktop 2-column minmax(300px, 1fr) into single-column vertical flex (`flex-direction: column !important`), resetting `grid-column: span 2` to `grid-column: auto !important`, and clamping inputs, selects, textareas, and cards to `max-width: 100% !important; box-sizing: border-box !important`. Reduced `.section-body` padding from 64px (`2rem`) to 24px (`1.2rem 0.85rem`), recapturing 40px of screen real estate. Migrated inline rigid grids in `tab_general.php` and `tab_advanced.php` to responsive `.grid2`.
+- **3. Swipeable Mobile Tabs Carousel & Dashboard Tag Balance:** Refactored `.tabs-nav` on mobile into a smooth, horizontal swipeable strip (`overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none;`). Balanced container divs in `admin/dashboard.php` and `admin/dashboard_updated.php` ensuring 100% valid DOM tree.
 
 ### Phase 95 Details — Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation
 - **1. Admin Navbar Mobile Overflow Fix (`admin/nav.php`, `assets/css/admin-nav.css`):** Resolved the viewport boundary clipping that pushed the Omni Ecosystem Apps button, Logout button, and Hamburger toggle outside the screen on mobile devices (< 640px). Collapsed the shop button to a compact icon (`🏪`), converted the wide Logout button to a sleek icon (`🚪`), and suppressed `.nav-tag` on screens < 768px. All 5 controls now fit cleanly side-by-side with zero horizontal scroll.

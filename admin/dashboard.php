@@ -720,6 +720,8 @@ function hex2rgb($hex) {
     <a href="guide.php" style="color: var(--gold); text-decoration: none; margin: 0 10px;">Guide & Help</a>
     <div style="margin-top: 10px;">&copy; <?= date('Y') ?> <?= htmlspecialchars($site_name ?? 'Fast Site') ?>. All rights reserved.</div>
 </div>
+</div>
+</div>
 
 <script>
 function switchTab(evt, tabId) {

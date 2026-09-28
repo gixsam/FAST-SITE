@@ -14,6 +14,7 @@
         </div>
         <a href="dashboard.php" class="view-link"> View Orders</a>
       </div>
+      </div>
       <div style="border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:1.5rem;">
         <h3 style="color:var(--gold); font-size:1.05rem; font-weight:800; margin-bottom:1rem;"> AFFILIATE AGENT PROGRAM</h3>
         <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">

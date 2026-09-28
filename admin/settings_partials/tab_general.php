@@ -20,7 +20,7 @@
         <?php endif; ?>
       </div>
       
-      <div style="border-top:1px solid rgba(255,255,255,0.06); margin-top:1.5rem; padding-top:1.5rem; display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem;">
+      <div class="grid2" style="border-top:1px solid rgba(255,255,255,0.06); margin-top:1.5rem; padding-top:1.5rem; gap:1.2rem;">
         <!-- ADMIN APK PREVIEW -->
         <div style="background:rgba(16,18,28,0.95); border:1px solid var(--gold); padding:1rem; border-radius:14px;">
           <h4 style="color:var(--gold); font-size:0.95rem; font-weight:800; margin-bottom:0.8rem;"> 🛡️ FAST SITE HQ (ADMIN PANEL APK)</h4>

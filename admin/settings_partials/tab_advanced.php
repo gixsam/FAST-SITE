@@ -89,7 +89,7 @@
               ?>
                 <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:1rem; border-radius:10px;">
                   <strong style="color:var(--gold); font-size:0.8rem; display:block; margin-bottom:0.75rem; text-transform:uppercase;"><?= htmlspecialchars($sinfo['label']) ?> Section Settings</strong>
-                  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
+                  <div class="grid2" style="gap:1rem;">
                     <?php if($sinfo['has_label']): ?>
                       <div class="field">
                         <label>Section Tag Label</label>
@@ -155,7 +155,7 @@
 
         <h3 style="color:var(--gold); font-size:0.95rem; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:0.3rem; margin-top:1.5rem; margin-bottom:1rem;">Government Service Slideplay (Sub-sections) Customization</h3>
         
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1rem; margin-bottom:1.5rem;">
+        <div class="grid2" style="gap:1rem; margin-bottom:1.5rem;">
           
           <!-- Slide 1 -->
           <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:1rem; border-radius:8px; display:flex; flex-direction:column; gap:8px;">
@@ -240,7 +240,7 @@
           ?>
             <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
               <strong style="color:var(--gold); font-size:0.8rem; display:block; margin-bottom:0.75rem; text-transform:uppercase;"><?= htmlspecialchars($info['title']) ?></strong>
-              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+              <div class="grid2" style="gap: 1rem;">
                 <div class="field">
                   <label>Rename Label</label>
                   <input type="text" name="<?= htmlspecialchars($info['setting']) ?>" value="<?= htmlspecialchars($lbl_val) ?>" style="font-size:0.85rem;"/>
@@ -332,6 +332,7 @@
         <button type="submit" class="btn"> Save Reorder Configuration</button>
       </form>
     </div>
+  </div>
 
       <!-- SUB-SECTION 4: SET UP BKASH MERCHANT AND MOBILE APP APK -->
       <div class="sub-section-card collapsed" id="subsec-bkash-and-apk" style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; background:rgba(0,0,0,0.15); overflow:hidden;">
@@ -638,6 +639,7 @@
 
           </div>
         </div>
+      </div>
 
       <!-- SUB-SECTION 6: TERMS AND CONDITIONS -->
       <div class="sub-section-card collapsed" id="subsec-tnc" style="border:1px solid rgba(255,255,255,0.06); border-radius:12px; background:rgba(0,0,0,0.15); overflow:hidden;">
@@ -659,8 +661,7 @@
         <button type="submit" class="btn"> Save Terms</button>
       </form>
     </div>
-        </div>
-      </div>
+  </div>
 
     </div>
   </div>
