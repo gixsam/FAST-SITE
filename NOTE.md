@@ -23,11 +23,15 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 92 Complete & Production-Verified
-The platform is currently at **Phase 92: Highlighted VIP Guest Auth Card & Dual-Tab Switcher in Side Drawer**.
+### Active Status: Phase 93 Complete & Production-Verified
+The platform is currently at **Phase 93: Hardcoded Google API Key Removal & Secret Scanning Alert Resolution**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Highlighted VIP Guest Auth Card & Dual-Tab Switcher (`includes/nav_public.php` - Phase 92):**
+1. **Hardcoded Google API Key Removal (`config.php` - Phase 93):**
+   - **Root Cause Eliminated:** GitHub Secret Scanning detected a hardcoded Google Gemini API key (`AIzaSyDghzIYFlhGYNyUMbXKRzRkWXRzpWwcAdA`) at line 279 in `config.php`, which had been committed during initial repository initialization (`commit 6f30295b`).
+   - **Credential Decoupling:** Purged the raw secret key from `config.php` and replaced it with dynamic environment reading (`getenv('GEMINI_API_KEY') ?: ''`). All API keys are now securely managed either in private server environment variables or configured in the Admin Panel (`Settings > Marketplace > Gemini API Key`).
+   - **Resolution Protocol:** Provided user with exact 2-step verification protocol to revoke the exposed key in Google AI Studio / Google Cloud Console and resolve the security alert on GitHub.
+2. **Highlighted VIP Guest Auth Card & Dual-Tab Switcher (`includes/nav_public.php` - Phase 92):**
    - **Root Cause Eliminated:** In the storefront side drawer (`#drawerMenu`), the guest authentication section previously lacked visual prominence and in older builds was rendered as an unstyled raw blue hyperlink (`#0000ee`).
    - **Google Stitch Nocturne Aurum Overhaul:** Replaced the plain link with an interactive, high-visibility VIP Guest Card (`.drawer-auth-card`):
      - Frosted obsidian-gold chassis with luminous gold border (`1.5px solid rgba(252, 185, 0, 0.4)`), gold glow (`box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 16px rgba(252, 185, 0, 0.18)`), and 14px rounded curvature.
@@ -176,6 +180,9 @@ The platform is currently at **Phase 92: Highlighted VIP Guest Auth Card & Dual-
 - **Phase 92 (Highlighted VIP Guest Auth Card & Dual-Tab Switcher in Side Drawer)**:
   - Replaced the plain, unhighlighted guest login link in the side drawer with a glowing Google Stitch *Nocturne Aurum* VIP Guest Card (`.drawer-auth-card`).
   - Added welcome avatar (`👤`), bonus incentive badge (`🪙 Free 50 Coins on Register`), and a high-contrast 2-tab highlighted switcher (`[ 🔐 LOGIN ]` glowing gold + `[ ✨ REGISTER ]` frosted gold glass) with active micro-interactions and inline fallback CSS.
+- **Phase 93 (Hardcoded Google API Key Removal & Secret Scanning Alert Resolution)**:
+  - Purged hardcoded Google Gemini API key from `config.php:279` and transitioned to `getenv('GEMINI_API_KEY') ?: ''`.
+  - Resolved GitHub Secret Scanning security alert for commit `6f30295b` and established secure protocol for key rotation.
 
 ---
 

@@ -276,7 +276,7 @@ if ($_force_migrate || !isset($_SESSION[$_migration_session_key])) {
                 'nav_positioning' => 'dashboard,service,partners,all_user,payouts,view_option,settings',
                 'affi_bangla_url' => 'http://affibangla.best-travel.ltd',
                 'cashback_pct' => '2',
-                'gemini_api_key' => 'AIzaSyDghzIYFlhGYNyUMbXKRzRkWXRzpWwcAdA'
+                'gemini_api_key' => getenv('GEMINI_API_KEY') ?: ''
             ];
             $stmt = $pdo->prepare("INSERT INTO homepage_settings (setting_key, setting_value) VALUES (?, ?)");
             foreach ($seeds as $k => $v) {

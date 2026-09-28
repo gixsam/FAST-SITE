@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 92 100% COMPLETE — Highlighted VIP Guest Auth Card & Dual-Tab Switcher in Side Drawer
+**Last Updated:** Phase 93 100% COMPLETE — Hardcoded Google API Key Removal & Secret Scanning Alert Resolution
 
 ---
 
@@ -79,6 +79,11 @@
 | 90 | Resolution of MySQL Implicit Commit Registration Transaction Error & Self-Healing Account Recovery |
 | 91 | Removal of Crowded Navbar Open Shop Button |
 | 92 | Highlighted VIP Guest Auth Card & Dual-Tab Switcher in Side Drawer |
+| 93 | Hardcoded Google API Key Removal & Secret Scanning Alert Resolution |
+
+### Phase 93 Details — Hardcoded Google API Key Removal & Secret Scanning Alert Resolution
+- **1. Secret Removal (`config.php`):** Removed hardcoded Google Gemini API key (`AIzaSyDghzIY...`) from `config.php:279`, replacing it with secure environment resolution (`getenv('GEMINI_API_KEY') ?: ''`).
+- **2. Security Hardening:** Ensured that credentials are exclusively read from `.env` or set dynamically in the Admin Panel (`Settings > Marketplace > Gemini API Key`), never committed to the GitHub repository.
 
 ### Phase 92 Details — Highlighted VIP Guest Auth Card & Dual-Tab Switcher in Side Drawer
 - **1. Highlighted VIP Guest Card Architecture (`includes/nav_public.php`):** Transformed the unhighlighted drawer login link into an eye-catching, glassmorphic VIP Guest Card (`.drawer-auth-card`) with a 1.5px luminous gold border, ambient gold glow (`rgba(252, 185, 0, 0.18)`), and 14px rounded curvature.
