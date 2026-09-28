@@ -57,6 +57,8 @@ The platform is currently at **Phase 88: Strict .env Exclusion & Dynamic Root-Re
    - Hostinger Native Git Integration Activated: Connected via Hostinger hPanel Advanced Git to `gixsam/FAST-SITE` with `Auto-deployment` enabled deploying directly into `public_html/` (Verified live status: `Completed` in 5 seconds).
    - Live Production Verification: `https://fastsite.best-travel.ltd` responding HTTP 200 OK with zero errors.
    - Permanent zero-tolerance protection for live `.env` credentials and local dev databases.
+9. **Mandatory Direct URL Links Directive (Rule 7):**
+   - Enforced in `.agents/AGENTS.md`: Every AI model and developer must provide direct clickable URL links to both the User Panel and Admin Panel (Local & Live Hostinger) at the conclusion of every update response for immediate verification.
 
 ---
 

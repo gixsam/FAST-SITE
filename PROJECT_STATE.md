@@ -30,6 +30,18 @@
 - **UI / CSS / Graphics Design Engine:** Google Stitch (StitchMCP) integration for high-fidelity component generation, Tailwind design systems, and responsive layout styling.
 - **Automated CI/CD & Hostinger Git Engine:** Connected official GitHub repository [gixsam/FAST-SITE](https://github.com/gixsam/FAST-SITE) directly to Hostinger's native Git deployment engine (`Advanced > GIT`) with `Auto-deployment` enabled. Pushes to `main` automatically deploy to `public_html/` within 5 seconds.
 - **Canonical Status & Note Engine (`NOTE.md`):** Dual-synchronized master note file maintained simultaneously in local root and Google Drive (`G:\My Drive\ALL WEBSITE WORKPLACE\FAST SITE WORKPLACE\NOTE.md`).
+- **Direct Panel Links Standard:** Mandatory direct links rendered at the end of each session for User Panel, Admin Panel, Shop Panel, and Storefront.
+
+---
+
+## 🔗 QUICK DIRECTORY & VERIFICATION LINKS
+
+| Portal | Local Server URL | Live Production URL |
+| :--- | :--- | :--- |
+| **User Panel (Dashboard)** | [http://localhost:8000/user/dashboard.php](http://localhost:8000/user/dashboard.php) | [https://fastsite.best-travel.ltd/user/dashboard.php](https://fastsite.best-travel.ltd/user/dashboard.php) |
+| **Admin Panel (Command Center)** | [http://localhost:8000/admin/dashboard.php](http://localhost:8000/admin/dashboard.php) | [https://fastsite.best-travel.ltd/admin/dashboard.php](https://fastsite.best-travel.ltd/admin/dashboard.php) |
+| **Partner / Shop Portal** | [http://localhost:8000/partner/dashboard.php](http://localhost:8000/partner/dashboard.php) | [https://fastsite.best-travel.ltd/partner/dashboard.php](https://fastsite.best-travel.ltd/partner/dashboard.php) |
+| **Public Storefront** | [http://localhost:8000/](http://localhost:8000/) | [https://fastsite.best-travel.ltd/](https://fastsite.best-travel.ltd/) |
 
 ---
 

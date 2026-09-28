@@ -38,3 +38,19 @@ When updating files or creating the 'FINAL (.ZIP)' files for perfection, you MUS
 
 ## 6. Google Stitch UI, CSS, Graphics & Tailwind Directive
 Whenever you do any work, design, or updates regarding **UI, CSS, graphics, Tailwind CSS, screens, or frontend visual design**, you **MUST** always utilize **Google Stitch (StitchMCP)** tools (such as `generate_screen_from_text`, `edit_screens`, `create_design_system`, `apply_design_system`, and variants) to ensure all interfaces are crafted with the highest standard of modern aesthetics, clean component hierarchy, and responsive styling.
+
+## 7. Direct URL Links Directive
+After every single update, and **AT THE END OF EVERY CONVERSATION RESPONSE**, you **MUST** always provide the direct, clickable URL links for both the **User Panel** and the **Admin Panel** (including both Local and Live Hostinger links) so the user can immediately click and verify:
+- **User Panel (Dashboard):**
+  - Live Hostinger: `https://fastsite.best-travel.ltd/user/dashboard.php` (or `https://fastsite.best-travel.ltd/dashboard`)
+  - Local Server: `http://localhost:8000/user/dashboard.php` (or `http://localhost:8000/dashboard`)
+- **Admin Panel (Command Center):**
+  - Live Hostinger: `https://fastsite.best-travel.ltd/admin/dashboard.php` (or `https://fastsite.best-travel.ltd/admin/`)
+  - Local Server: `http://localhost:8000/admin/dashboard.php` (or `http://localhost:8000/admin/`)
+- **Partner / Shop Panel:**
+  - Live Hostinger: `https://fastsite.best-travel.ltd/partner/dashboard.php`
+  - Local Server: `http://localhost:8000/partner/dashboard.php`
+- **Main Storefront:**
+  - Live Hostinger: `https://fastsite.best-travel.ltd/`
+  - Local Server: `http://localhost:8000/`
+
