@@ -171,15 +171,36 @@ foreach ($ecosystem as $shop) {
     }
 }
 
-// Automatically clean any duplicated domain URLs in partner_product_images
+// Automatically clean any duplicated or nested domain URLs in partner_product_images & partner_products
 $cleaned_db_urls = 0;
 try {
-    $imgs = $pdo->query("SELECT id, image_url FROM partner_product_images WHERE image_url LIKE '%https://atayramart.com/https://atayramart.com/%'")->fetchAll();
+    $imgs = $pdo->query("SELECT id, image_url FROM partner_product_images WHERE image_url LIKE '%http://%http://%' OR image_url LIKE '%https://%https://%'")->fetchAll(PDO::FETCH_ASSOC);
     if (!empty($imgs)) {
-        $stmt_clean = $pdo->prepare("UPDATE partner_product_images SET image_url = REPLACE(image_url, 'https://atayramart.com/https://atayramart.com/', 'https://atayramart.com/') WHERE id = :id");
+        $stmt_clean = $pdo->prepare("UPDATE partner_product_images SET image_url = ? WHERE id = ?");
         foreach ($imgs as $img_row) {
-            $stmt_clean->execute([':id' => $img_row['id']]);
-            $cleaned_db_urls++;
+            $cleaned = $img_row['image_url'];
+            while (preg_match('#^https?://[^/]+/(https?://.+)#i', $cleaned, $m)) {
+                $cleaned = $m[1];
+            }
+            if ($cleaned !== $img_row['image_url']) {
+                $stmt_clean->execute([$cleaned, $img_row['id']]);
+                $cleaned_db_urls++;
+            }
+        }
+    }
+    // Also clean partner_products.image
+    $prods = $pdo->query("SELECT id, image FROM partner_products WHERE image LIKE '%http://%http://%' OR image LIKE '%https://%https://%'")->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($prods)) {
+        $stmt_prod_clean = $pdo->prepare("UPDATE partner_products SET image = ? WHERE id = ?");
+        foreach ($prods as $p_row) {
+            $cleaned = $p_row['image'];
+            while (preg_match('#^https?://[^/]+/(https?://.+)#i', $cleaned, $m)) {
+                $cleaned = $m[1];
+            }
+            if ($cleaned !== $p_row['image']) {
+                $stmt_prod_clean->execute([$cleaned, $p_row['id']]);
+                $cleaned_db_urls++;
+            }
         }
     }
 } catch (Exception $e) {}

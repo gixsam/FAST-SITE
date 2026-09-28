@@ -99,13 +99,62 @@ try {
     $pQuery->execute([':email' => $partnerEmail]);
     $partnerId = $pQuery->fetchColumn();
 
-    if (!$partnerId) {
-        throw new Exception("Partner with email '$partnerEmail' is not registered.");
+    // Sanitize image URL against double domain prefixes
+    $imageUrl = trim($imageUrl);
+    if (preg_match('#^https?://[^/]+/(https?://.+)#i', $imageUrl, $nestedM)) {
+        $imageUrl = $nestedM[1];
     }
 
-    // Insert product
-    $stmt = $pdo->prepare("INSERT INTO partner_products (partner_id, title, description, price, category, is_published, redirect_url, original_website) 
-                           VALUES (:partner_id, :title, :description, :price, :category, 1, :redirect_url, :original_website)");
+    // Check for existing product to avoid duplicates
+    $checkStmt = $pdo->prepare("SELECT id FROM partner_products WHERE partner_id = :partner_id AND title = :title LIMIT 1");
+    $checkStmt->execute([':partner_id' => $partnerId, ':title' => $title]);
+    $existingId = $checkStmt->fetchColumn();
+
+    if ($existingId) {
+        $productId = $existingId;
+        $updStmt = $pdo->prepare("UPDATE partner_products SET 
+            description = :description, 
+            price = :price, 
+            category = :category, 
+            redirect_url = :redirect_url, 
+            original_website = :original_website,
+            image = :image,
+            is_published = 1 
+            WHERE id = :id");
+        $updStmt->execute([
+            ':description' => $description,
+            ':price' => $price,
+            ':category' => $category,
+            ':redirect_url' => $redirectUrl,
+            ':original_website' => $originalWebsite,
+            ':image' => $imageUrl,
+            ':id' => $productId
+        ]);
+
+        if (!empty($imageUrl)) {
+            $chkImg = $pdo->prepare("SELECT id FROM partner_product_images WHERE product_id = ? AND is_thumbnail = 1 LIMIT 1");
+            $chkImg->execute([$productId]);
+            if ($chkImg->fetchColumn()) {
+                $pdo->prepare("UPDATE partner_product_images SET image_url = ? WHERE product_id = ? AND is_thumbnail = 1")
+                    ->execute([$imageUrl, $productId]);
+            } else {
+                $pdo->prepare("INSERT INTO partner_product_images (product_id, image_url, is_thumbnail) VALUES (?, ?, 1)")
+                    ->execute([$productId, $imageUrl]);
+            }
+        }
+
+        echo json_encode([
+            'status' => 'success',
+            'action' => 'updated',
+            'message' => 'Product updated successfully on Fast Site Marketplace.',
+            'product_id' => $productId
+        ]);
+        exit;
+    }
+
+    // Insert new product
+    $stmt = $pdo->prepare("INSERT INTO partner_products (partner_id, title, description, price, category, is_published, redirect_url, original_website, image) 
+                           VALUES (:partner_id, :title, :description, :price, :category, 1, :redirect_url, :original_website, :image)");
     $stmt->execute([
         ':partner_id' => $partnerId,
         ':title' => $title,
@@ -113,7 +162,8 @@ try {
         ':price' => $price,
         ':category' => $category,
         ':redirect_url' => $redirectUrl,
-        ':original_website' => $originalWebsite
+        ':original_website' => $originalWebsite,
+        ':image' => $imageUrl
     ]);
     
     $productId = $pdo->lastInsertId();
@@ -129,6 +179,7 @@ try {
 
     echo json_encode([
         'status' => 'success',
+        'action' => 'created',
         'message' => 'Product crossposted successfully to Fast Site Marketplace.',
         'product_id' => $productId
     ]);

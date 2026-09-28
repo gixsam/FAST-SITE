@@ -1,65 +1,52 @@
 ================================================================================
-FAST SITE — HOSTINGER DEPLOYMENT GUIDE (PHASE 88)
+FAST SITE — HOSTINGER DEPLOYMENT GUIDE (PHASE 97)
 ================================================================================
-Archive: fastsite_phase88.zip
-Active Phase: Phase 88 — Strict .env Exclusion & Dynamic Root-Relative Image Architecture
-Workflow Step: Phase 88 100% Complete (Hardened Media & Security Deployment)
+Current Active Phase: Phase 97
+Phase Title: Universal Partner & Ecosystem Product Photo Sync Architecture
+             (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution)
+Deployment Target: Hostinger Production (public_html)
+Repository: https://github.com/gixsam/FAST-SITE (Branch: main)
 Date: 2026-09-28
-Target Environment: Hostinger File Manager -> public_html/ (Root Directory)
 ================================================================================
 
+1. DEPLOYMENT INSTRUCTIONS
 --------------------------------------------------------------------------------
-1. EXACT FOLDER PATHS ON HOSTINGER
---------------------------------------------------------------------------------
-Extract all contents of fastsite_phase88.zip directly into your Hostinger `public_html/` root.
-Ensure "Overwrite existing files" is checked.
+Option A: AUTOMATED GIT DEPLOYMENT (Recommended & Already Active)
+   - Every push to 'main' automatically deploys to Hostinger public_html within ~5 seconds.
+   - Production .env credentials remain 100% safe and excluded.
 
-Core Files Included in This Phase:
-  public_html/
-  ├── config.php                      (Universal root-relative media resolver)
-  ├── .htaccess                       (Direct 404 for missing media, blocks WAF 422)
-  ├── checkout.php                    (Root-relative item preview)
-  ├── includes/
-  │   └── image_helper.php            (Root-relative media helper functions)
-  ├── partner/
-  │   └── dashboard.php               (Root-relative product thumbnails)
-  ├── admin/
-  │   ├── partner_shops.php           (Root-relative shop logos & avatars)
-  │   └── shop_edit.php               (Root-relative shop logos & product media)
-  ├── user/
-  │   └── forgot_password.php         (Root-relative fallback logo)
-  ├── .gitignore                      (Repository exclusion for .env and temp files)
-  └── DEPLOYMENT_GUIDE.txt            (This canonical instructions file)
+Option B: MANUAL FILE MANAGER ZIP UPLOAD
+   - Upload 'fastsite_phase97.zip' directly to the root of 'public_html/' on Hostinger.
+   - Extract and choose "Overwrite existing files".
+   - Your production .env file is permanently safe (never touched or overwritten).
 
+2. EXACT FOLDER PATHS ON HOSTINGER
 --------------------------------------------------------------------------------
-2. CRITICAL SECURITY NOTICE: .ENV EXCLUSION
---------------------------------------------------------------------------------
-[SECURITY COMPLIANT]: The `.env` file has been STRICTLY and PERMANENTLY EXCLUDED
-from this deployment archive. Your live Hostinger production database credentials
-(MySQL user: u422364295_admin) will NEVER be overwritten or exposed.
+- public_html/admin/sync_best_travel.php         (NEW: 1-Click Sync & Photo Repair Tool)
+- public_html/admin/shop_edit.php                 (UPDATED: 1-Tap Sync & Photo Repair Button)
+- public_html/admin/sync_hub.php                  (UPDATED: Best Travel & Photo Linker Cards)
+- public_html/admin/seed_ecosystem_shops.php      (UPDATED: Universal Nested Domain Cleaner)
+- public_html/api/receive_crosspost.php           (UPDATED: cURL Ingestion & Remote Fallback)
+- public_html/api/marketplace_crosspost.php       (UPDATED: URL Clean & Upsert Sync)
+- public_html/config.php                          (UPDATED: resolveProductArtwork Ecosystem & Travel)
+- public_html/PROJECT_STATE.md                    (UPDATED: Phase 97 Specifications)
+- public_html/NOTE.md                             (UPDATED: Master Status Report)
 
+3. WORKFLOW STEP WHERE AI LEFT OFF & VERIFICATION PROTOCOL
 --------------------------------------------------------------------------------
-3. DYNAMIC ROOT-RELATIVE IMAGE RESOLUTION SUMMARY
---------------------------------------------------------------------------------
-- All image URLs now resolve with dynamic root-relative paths (e.g. `/uploads/...`,
-  `/assets/...`), allowing seamless rendering on both Localhost (port 8000) and
-  Hostinger production without environmental configuration changes.
-- Localhost domains (`http://localhost:8000/...`, `http://127.0.0.1:...`) are
-  automatically stripped and converted into root-relative paths `/uploads/...`.
-- Windows backslashes (`\`) are normalized to POSIX forward slashes (`/`).
-- Missing media files in `.htaccess` return a clean HTTP 404 directly, stopping
-  Apache from rewriting missing images to `index.php` and eliminating WAF 422 errors.
+After uploading or automated Git push:
+Step 1: Open the Admin Panel on Hostinger:
+        https://fastsite.best-travel.ltd/admin/sync_best_travel.php
+        (Clicking this URL runs the 1-click photo restorer. It instantly links the 
+        authentic HD photos to all 15 Best Travel packages and visa services).
+Step 2: Verify Best Travel Shop Moderation:
+        https://fastsite.best-travel.ltd/admin/shop_edit.php?id=2
+        (All 15 packages will now display their real high-resolution travel photos 
+        instead of the generic digital service vector fallback).
+Step 3: Verify the Public Storefront:
+        https://fastsite.best-travel.ltd/shop/best_travel
+        (Check that all packages appear with beautiful HD cover photos).
 
---------------------------------------------------------------------------------
-4. CURRENT ACTIVE PHASE NUMBER
---------------------------------------------------------------------------------
-Active Phase: Phase 88 (100% COMPLETE & VERIFIED)
-Next Recommended Phase: Phase 89
-
---------------------------------------------------------------------------------
-5. MANDATORY LOCAL SERVER LIVE HOST REMINDER
---------------------------------------------------------------------------------
-Always turn on your LOCAL SERVER LIVE HOST (e.g., `php -S localhost:8000`)
-and test all storefront cards, user dashboard, shop panel, and checkout images
-locally before deploying the archive to the live Hostinger environment!
+================================================================================
+FAST SITE ECOSYSTEM — DUAL-SYNCED & DEPLOYMENT-READY
 ================================================================================

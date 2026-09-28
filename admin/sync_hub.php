@@ -56,6 +56,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php endif; ?>
 
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+    <!-- Best Travel Packages & HD Photos Sync -->
+    <div class="sync-card" style="border-color: rgba(252, 185, 0, 0.4); background: radial-gradient(circle at top, rgba(252, 185, 0, 0.08) 0%, rgba(20,20,31,0.9) 100%);">
+      <h3 style="color: var(--gold);">✈️ Best Travel Packages &amp; HD Photos</h3>
+      <p>Synchronize all 15 authentic tour packages &amp; visa services with guaranteed high-resolution photography.</p>
+      <a href="sync_best_travel.php" class="btn" style="background: linear-gradient(135deg, var(--gold), #f59e0b); color: #000; font-weight: 800; text-decoration: none; display: block; text-align: center; padding: 0.8rem;">⚡ 1-Click Sync Best Travel</a>
+    </div>
+
+    <!-- Partner Photos Auto-Linker -->
+    <div class="sync-card" style="border-color: rgba(56, 189, 248, 0.3);">
+      <h3 style="color: #38bdf8;">📸 Partner Photos &amp; Uploads Linker</h3>
+      <p>Scan and auto-link all physical images in uploads/partners/ to partner shops and products in DB.</p>
+      <a href="sync_partner_photos.php" class="btn" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 700; text-decoration: none; display: block; text-align: center; padding: 0.8rem;">Scan &amp; Link Partner Photos</a>
+    </div>
+
     <!-- Single Product Sync -->
     <div class="sync-card">
       <h3>Single Product Sync</h3>

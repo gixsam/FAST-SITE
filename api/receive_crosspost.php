@@ -92,16 +92,18 @@ try {
 
     $partner_id = $shop['id'];
 
-    // 2. IMAGE STRATEGY: Since all sites share the same Hostinger account,
-    //    we store the photo_url directly. If it's a relative path, we keep it.
-    //    If it's a full URL from same server, we keep it.
-    //    Only download if it's from an entirely different server.
+    // 2. IMAGE STRATEGY:
+    // Sanitize any nested or doubled domain URLs (e.g. https://best-travel.ltd/https://...)
+    $photo_url = trim($photo_url);
+    if (preg_match('#^https?://[^/]+/(https?://.+)#i', $photo_url, $nestedMatch)) {
+        $photo_url = $nestedMatch[1];
+    }
+
     $final_image_url = '';
 
     if (!empty($photo_url)) {
-        // Check if it's already a full URL or a relative path
         if (strpos($photo_url, 'http') === 0) {
-            // Check if it's from a known Hostinger subdomain (same account)
+            // Check if it's from a known Hostinger ecosystem subdomain
             $same_server_domains = [
                 'best-travel.ltd',
                 'atayramart.com',
@@ -120,19 +122,41 @@ try {
             }
 
             if ($is_same_server) {
-                // Same Hostinger account — use URL directly, no re-download needed
+                // Same Hostinger account — keep direct URL
                 $final_image_url = $photo_url;
             } else {
-                // External URL — download and save locally
-                $image_data = @file_get_contents($photo_url);
-                if ($image_data !== false) {
-                    $ext = pathinfo(parse_url($photo_url, PHP_URL_PATH), PATHINFO_EXTENSION);
-                    if (empty($ext) || strlen($ext) > 5) $ext = 'jpg';
-                    $filename = 'crosspost_' . time() . '_' . rand(1000, 9999) . '.' . strtolower($ext);
-                    $savePath = __DIR__ . '/../uploads/products/' . $filename;
-                    if (!is_dir(dirname($savePath))) mkdir(dirname($savePath), 0755, true);
-                    file_put_contents($savePath, $image_data);
-                    $final_image_url = 'uploads/products/' . $filename;
+                // External CDN / URL (e.g. Unsplash) — attempt high-fidelity cURL download
+                $download_success = false;
+                if (function_exists('curl_init')) {
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $photo_url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+                    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+                    $image_data = curl_exec($ch);
+                    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    curl_close($ch);
+
+                    if ($http_code >= 200 && $http_code < 300 && !empty($image_data) && strlen($image_data) > 100) {
+                        $ext = pathinfo(parse_url($photo_url, PHP_URL_PATH), PATHINFO_EXTENSION);
+                        if (empty($ext) || strlen($ext) > 5) $ext = 'jpg';
+                        $filename = 'crosspost_' . time() . '_' . rand(1000, 9999) . '.' . strtolower($ext);
+                        $savePath = __DIR__ . '/../uploads/products/' . $filename;
+                        if (!is_dir(dirname($savePath))) mkdir(dirname($savePath), 0755, true);
+                        if (file_put_contents($savePath, $image_data) !== false) {
+                            $final_image_url = 'uploads/products/' . $filename;
+                            $download_success = true;
+                        }
+                    }
+                }
+
+                // Resilient Fallback: If cURL failed or timed out, NEVER discard the photo!
+                // Browsers render remote HTTPS URLs directly with zero issues.
+                if (!$download_success) {
+                    $final_image_url = $photo_url;
                 }
             }
         } else {
@@ -155,8 +179,21 @@ try {
 
         // Update image if provided
         if (!empty($final_image_url)) {
-            $pdo->prepare("UPDATE partner_product_images SET image_url = ? WHERE product_id = ? AND is_thumbnail = 1")
-                ->execute([$final_image_url, $existing['id']]);
+            // Update or insert into partner_product_images
+            $chkImg = $pdo->prepare("SELECT id FROM partner_product_images WHERE product_id = ? AND is_thumbnail = 1 LIMIT 1");
+            $chkImg->execute([$existing['id']]);
+            if ($chkImg->fetchColumn()) {
+                $pdo->prepare("UPDATE partner_product_images SET image_url = ? WHERE product_id = ? AND is_thumbnail = 1")
+                    ->execute([$final_image_url, $existing['id']]);
+            } else {
+                $pdo->prepare("INSERT INTO partner_product_images (product_id, image_url, is_thumbnail) VALUES (?, ?, 1)")
+                    ->execute([$existing['id'], $final_image_url]);
+            }
+
+            // Also keep partner_products.image synchronized
+            try {
+                $pdo->prepare("UPDATE partner_products SET image = ? WHERE id = ?")->execute([$final_image_url, $existing['id']]);
+            } catch (Exception $e) {}
         }
 
         echo json_encode([
@@ -168,10 +205,9 @@ try {
     }
 
     // 4. Insert the product into Fast Site Marketplace
-    //    FIXED: now uses correct partner_products columns
     $insert = $pdo->prepare("INSERT INTO partner_products 
-        (partner_id, title, description, price, category, listing_type, is_published, created_at) 
-        VALUES (?, ?, ?, ?, ?, ?, 1, NOW())");
+        (partner_id, title, description, price, category, listing_type, image, is_published, created_at) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)");
 
     $insert->execute([
         $partner_id,
@@ -179,7 +215,9 @@ try {
         $description,
         $price,
         $category,
-        $listing_type
+        $listing_type,
+        $final_image_url,
+        date('Y-m-d H:i:s')
     ]);
 
     $new_product_id = $pdo->lastInsertId();

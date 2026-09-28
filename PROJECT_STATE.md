@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 96 100% COMPLETE — Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding
+**Last Updated:** Phase 97 100% COMPLETE — Universal Partner & Ecosystem Product Photo Sync Architecture (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution)
 
 ---
 
@@ -83,6 +83,12 @@
 | 94 | Professional Mobile Phone & Native APK App Responsive Optimization (4 Pillars Architecture) |
 | 95 | Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation |
 | 96 | Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding (Tag Balancing diff=0, Mobile .grid2 Collapse, Swipeable Tabs) |
+| 97 | Universal Partner & Ecosystem Product Photo Sync Architecture (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution) |
+
+### Phase 97 Details — Universal Partner & Ecosystem Product Photo Sync Architecture
+- **1. Remote Image Dropping & Double-Domain Elimination (`api/receive_crosspost.php`, `best-travel.ltd/admin/index.php`):** Identified that Unsplash CDN image URLs sent during sync were rejected by plain `@file_get_contents` due to missing User-Agent headers, leaving `$final_image_url = ''` and completely discarding photo records. Upgraded `api/receive_crosspost.php` to use cURL with browser headers (`User-Agent: Mozilla/5.0...`), multi-layer nested domain sanitization (`while(preg_match(...))`), and guaranteed remote HTTPS URL fallback so photos are NEVER lost. Patched `best-travel.ltd/admin/index.php` to prevent double-domain prefixing (`https://best-travel.ltd/https://...`).
+- **2. Universal Ecosystem Artwork Fallbacks & Multi-Partner Mappings (`config.php` `resolveProductArtwork`):** Extended `resolveProductArtwork()` with direct remote path resolution for all 7 ecosystem partner sites (`Best Travel`, `Ayra Mart`, `Enzor Motor`, `Affi Bangla`, `Manza`, `GixSam`). Implemented authentic HD travel destination fallbacks (Cox's Bazar, Sajek Valley, Sreemangal, Sundarbans, Kashmir, Thailand, Dubai, Vietnam, Umrah, Visas) preventing ugly digital circuit board fallbacks on travel listings.
+- **3. Dedicated 1-Click Best Travel Sync & Auto-Repair Engine (`admin/sync_best_travel.php`):** Engineered a high-speed catalog synchronizer matching all 15 authentic tour packages and visa services with verified HD photography, cross-database portable datetime compatibility (MySQL & SQLite), dual-table synchronization (`partner_product_images` and `partner_products.image`), and global nested URL database repair. Added 1-tap launcher cards in `admin/shop_edit.php` and `admin/sync_hub.php`.
 
 ### Phase 96 Details — Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding
 - **1. Blank Tabs Resolved (Staff Access & Advanced Settings):** Restored unclosed container in `admin/settings_partials/tab_partners.php:17` and balanced sub-sections 3 and 5 in `tab_advanced.php`, preventing `#sec-staff` and `#sec-advance-settings` from being swallowed as children inside `#sec-all-partners-program`. Wrapped `tab_staff.php` with an unconditional `#sec-staff` container with a clean permission guard card when non-admin. All 7 partials now report exact tag balance `diff = 0`.

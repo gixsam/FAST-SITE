@@ -1991,11 +1991,11 @@ if (!function_exists('resolveProductArtwork')) {
             // Strip localhost / 127.0.0.1 domain & port to ensure local URLs never break on Hostinger production
             $raw = preg_replace('#^https?://(localhost|127\.0\.0\.1)(:\d+)?#i', '', $raw);
 
-            // Clean duplicate domain prefixes (e.g. https://atayramart.com/https://...)
-            if (preg_match('/^https?:\/\/[^\/]+\/(https?:\/\/.*)$/i', $raw, $m)) {
+            // Clean duplicate / nested domain prefixes (e.g. https://best-travel.ltd/https://... or https://atayramart.com/https://...)
+            while (preg_match('#^https?://[^/]+/(https?://.+)#i', $raw, $m)) {
                 $raw = $m[1];
             }
-            // Clean double slashes in paths
+            // Clean double slashes in paths (excluding protocol ://)
             $raw = preg_replace('#([^:])//+#', '$1/', $raw);
 
             // If it is a legitimate remote HTTP URL or data URI
@@ -2030,6 +2030,14 @@ if (!function_exists('resolveProductArtwork')) {
                 return 'https://atayramart.com/uploads/products/' . basename($cleanRelative);
             } elseif ($shopName === 'Enzor Motor' || $shopName === 'Enzor Motors') {
                 return 'https://enzor.best-travel.ltd/uploads/products/' . basename($cleanRelative);
+            } elseif ($shopName === 'Best Travel') {
+                return 'https://best-travel.ltd/uploads/' . basename($cleanRelative);
+            } elseif ($shopName === 'Affi Bangla') {
+                return 'https://affibangla.best-travel.ltd/uploads/' . basename($cleanRelative);
+            } elseif ($shopName === 'Manza') {
+                return 'https://manza.best-travel.ltd/uploads/' . basename($cleanRelative);
+            } elseif ($shopName === 'GixSam') {
+                return 'https://gixsam.best-travel.ltd/uploads/' . basename($cleanRelative);
             }
 
             // If it has a standard image extension, return dynamic root-relative path (e.g. /uploads/...)
@@ -2051,9 +2059,42 @@ if (!function_exists('resolveProductArtwork')) {
             }
         }
 
-        // Smart Category & Title Vector Artwork Fallbacks (only when NO image was uploaded)
-        $t = mb_strtolower($title . ' ' . $category, 'UTF-8');
+        // Smart Category, Destination & Title Visual Artwork Fallbacks (when NO image was provided or image is loading)
+        $t = mb_strtolower($title . ' ' . $category . ' ' . $shopName, 'UTF-8');
         
+        // Travel & Tour Package Authentic HD Fallbacks
+        if (strpos($t, 'cox') !== false || strpos($t, 'bazar') !== false || strpos($t, 'inani') !== false) {
+            return 'https://images.unsplash.com/photo-1608958435020-e8a7109ba809?auto=format&fit=crop&w=800&q=80';
+        }
+        if (strpos($t, 'sajek') !== false || strpos($t, 'konglak') !== false || strpos($t, 'ruilui') !== false) {
+            return 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=800&q=80';
+        }
+        if (strpos($t, 'sreemangal') !== false || strpos($t, 'tea capital') !== false || strpos($t, 'lawachara') !== false) {
+            return 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=800&q=80';
+        }
+        if (strpos($t, 'sundarban') !== false || strpos($t, 'mangrove') !== false || strpos($t, 'kotka') !== false) {
+            return 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80';
+        }
+        if (strpos($t, 'kashmir') !== false || strpos($t, 'ladakh') !== false || strpos($t, 'gulmarg') !== false || strpos($t, 'srinagar') !== false) {
+            return 'https://images.unsplash.com/photo-1566837945700-30057527ade0?auto=format&fit=crop&w=800&q=80';
+        }
+        if (strpos($t, 'thailand') !== false || strpos($t, 'phuket') !== false || strpos($t, 'krabi') !== false || strpos($t, 'bangkok') !== false) {
+            return 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=800&q=80';
+        }
+        if (strpos($t, 'dubai') !== false || strpos($t, 'burj') !== false || strpos($t, 'desert safari') !== false || strpos($t, 'uae') !== false) {
+            return 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80';
+        }
+        if (strpos($t, 'vietnam') !== false || strpos($t, 'ha long') !== false || strpos($t, 'hanoi') !== false) {
+            return 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=80';
+        }
+        if (strpos($t, 'umrah') !== false || strpos($t, 'hajj') !== false || strpos($t, 'makkah') !== false || strpos($t, 'madinah') !== false) {
+            return 'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&w=800&q=80';
+        }
+        if (strpos($t, 'tour') !== false || strpos($t, 'travel') !== false || strpos($t, 'holiday') !== false || strpos($t, 'package') !== false) {
+            return 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80';
+        }
+
+        // Official Government & Citizen Services Fallbacks
         if (strpos($t, 'nid') !== false || strpos($t, 'পরিচয়পত্র') !== false || strpos($t, 'national id') !== false) {
             return '/assets/images/services/nid_service.svg';
         }

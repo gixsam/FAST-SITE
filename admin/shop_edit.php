@@ -212,7 +212,15 @@ $products = $prodStmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Section B: Products Moderation -->
     <div class="admin-card" style="margin-top:2rem;">
-      <h3 style="margin-top:0; color:#60a5fa;">📦 Section B: Shop Products Moderation</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.8rem; margin-bottom:1.2rem;">
+        <h3 style="margin:0; color:#60a5fa;">📦 Section B: Shop Products Moderation</h3>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <?php if (strpos(strtolower($shop['business_name'] ?? ''), 'best travel') !== false): ?>
+            <a href="sync_best_travel.php" class="btn-sm" style="background:linear-gradient(135deg, var(--gold), #f59e0b); color:#000; font-weight:800; text-decoration:none; padding:0.5rem 1rem; border-radius:8px; display:inline-flex; align-items:center; gap:0.4rem;">✈️ Auto-Sync / Restore HD Photos</a>
+          <?php endif; ?>
+          <a href="sync_partner_photos.php" class="btn-sm" style="background:rgba(255,255,255,0.08); border:1px solid var(--border); color:#fff; text-decoration:none; padding:0.5rem 1rem; border-radius:8px; font-weight:700;">📸 Auto-Link Photos</a>
+        </div>
+      </div>
       <?php if (empty($products)): ?>
         <p style="color:#94a3b8;">This shop has not published any products yet.</p>
       <?php else: ?>

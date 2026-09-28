@@ -1,7 +1,7 @@
 # 📘 FAST SITE — MASTER COMPREHENSIVE NOTE & STATUS REPORT (NOTE.md)
 **Project Name:** FAST SITE (Ecosystem Escrow Hub & Universal Marketplace)  
 **Main Domain:** `https://fastsite.best-travel.ltd`  
-**Current Active Version:** Phase 96 100% Complete & Production-Verified  
+**Current Active Version:** Phase 97 100% Complete & Production-Verified  
 **Document Classification:** Canonical Website State, Historical Log & Future Roadmap  
 **Target Audience:** AI Agents (Google Antigravity, Claude Sonnet, Gemini, GPT) and Human Developers / Project Managers  
 
@@ -23,10 +23,16 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 96 Complete & Production-Verified
-The platform is currently at **Phase 96: Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding**.
+### Active Status: Phase 97 Complete & Production-Verified
+The platform is currently at **Phase 97: Universal Partner & Ecosystem Product Photo Sync Architecture (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution)**.
 
 ### Current Core Capabilities Live in the Codebase:
+1. **Universal Partner & Ecosystem Product Photo Sync Architecture (Phase 97):**
+   - **Root Causes Eliminated:**
+     - **Remote Image Dropping & 403 Forbidden (`api/receive_crosspost.php`):** Identified that Unsplash CDN image URLs sent during sync were rejected by plain `@file_get_contents` due to missing User-Agent headers, returning false and leaving `$final_image_url = ''`. This caused `partner_product_images` insertion to be completely skipped, discarding photo records. Upgraded `api/receive_crosspost.php` to use cURL with browser headers (`User-Agent: Mozilla/5.0...`), multi-layer nested domain sanitization (`while(preg_match(...))`), and guaranteed remote HTTPS URL fallback so photos are NEVER lost.
+     - **Double-Domain Malformation in Source Site (`best-travel.ltd/admin/index.php`):** Best Travel admin prepended `https://best-travel.ltd/` to image URLs even when the URL was already a complete HTTPS Unsplash link, creating invalid nested URLs like `https://best-travel.ltd/https://images.unsplash.com/...`. Added URL scheme verification before prepending.
+     - **Artwork Resolver Ecosystem Gap (`config.php` `resolveProductArtwork`):** Extended `resolveProductArtwork()` with direct remote path resolution for all 7 ecosystem partner sites (`Best Travel`, `Ayra Mart`, `Enzor Motor`, `Affi Bangla`, `Manza`, `GixSam`). Implemented authentic HD travel destination fallbacks (Cox's Bazar, Sajek Valley, Sreemangal, Sundarbans, Kashmir, Thailand, Dubai, Vietnam, Umrah, Visas) preventing ugly digital circuit board fallbacks on travel listings.
+     - **Existing Live Database State:** Created `admin/sync_best_travel.php` 1-click catalog synchronizer matching all 15 authentic tour packages and visa services with verified HD photography, cross-database portable datetime compatibility (MySQL & SQLite), dual-table synchronization (`partner_product_images` and `partner_products.image`), and global nested URL database repair. Added 1-tap launcher cards in `admin/shop_edit.php` and `admin/sync_hub.php`.
 1. **Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding (Phase 96):**
    - **Root Causes Eliminated:**
      - **Blank Tabs Resolved (Staff Access & Advanced Settings):** In `admin/settings_partials/tab_partners.php`, line 8 opened a section wrapper for *Client & Referral Management* that was never closed before line 17 opened *Affiliate Agent Program*. Consequently, line 89 closed line 8 instead of `#sec-all-partners-program`. Because `tab_staff.php` and `tab_advanced.php` are included right after `tab_partners.php`, the DOM parser treated `#sec-staff` and `#sec-advance-settings` as children inside `#sec-all-partners-program`. When switching tabs, `#sec-all-partners-program` was hidden (`display: none`), rendering its swallowed children completely invisible. In addition, `tab_advanced.php` had unclosed tags in Sub-Section 3 and Sub-Section 5, and `tab_staff.php` was missing an unconditional DOM container.
