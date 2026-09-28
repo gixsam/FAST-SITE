@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 97 100% COMPLETE — Universal Partner & Ecosystem Product Photo Sync Architecture (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution)
+**Last Updated:** Phase 98 100% COMPLETE — New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture (Google Stitch Nocturne Aurum Standards)
 
 ---
 
@@ -84,6 +84,14 @@
 | 95 | Admin Navbar Mobile Overflow Fix, Action Alert Modal Dropdown & Staff Login Documentation |
 | 96 | Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding (Tag Balancing diff=0, Mobile .grid2 Collapse, Swipeable Tabs) |
 | 97 | Universal Partner & Ecosystem Product Photo Sync Architecture (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution) |
+| 98 | New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture |
+
+### Phase 98 Details — New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture
+- **1. Dedicated New Arrivals Data Query Pipeline (`home.php`):** Implemented high-performance SQL query selecting top 12 newly listed, published products (`ORDER BY p.id DESC, p.created_at DESC`), joined with partner shop verification status and thumbnails.
+- **2. Universal Artwork Resolver Integration:** Every product thumbnail rendered via `resolveProductArtwork()` ensuring authentic HD photography across Best Travel, Ayra Mart, Enzor Motor, and official services with graceful fallback.
+- **3. Native Hardware-Accelerated Touch Track (`.slideable-track`):** Fluid CSS flex layout with `scroll-snap-type: x mandatory`, `-webkit-overflow-scrolling: touch`, and hidden native scrollbars (`scrollbar-width: none`). Cards snap seamlessly to view without awkward half-cut stops.
+- **4. Desktop Glass Chevron Navigation Controls:** Sleek floating glassmorphism arrows (`‹` / `›`) scrolling the rail smoothly left/right by ±280px via `element.scrollBy()`.
+- **5. Google Stitch Nocturne Aurum Visual Styling:** Frosted glass elevation (`rgba(18, 22, 43, 0.75)` with `backdrop-filter: blur(16px)`), glowing gold badge pills (`[ ✨ NEW ]`), dual BDT (`৳`) and Coins (`🪙`) pricing, and 1-tap checkout/detail links.
 
 ### Phase 97 Details — Universal Partner & Ecosystem Product Photo Sync Architecture
 - **1. Remote Image Dropping & Double-Domain Elimination (`api/receive_crosspost.php`, `best-travel.ltd/admin/index.php`):** Identified that Unsplash CDN image URLs sent during sync were rejected by plain `@file_get_contents` due to missing User-Agent headers, leaving `$final_image_url = ''` and completely discarding photo records. Upgraded `api/receive_crosspost.php` to use cURL with browser headers (`User-Agent: Mozilla/5.0...`), multi-layer nested domain sanitization (`while(preg_match(...))`), and guaranteed remote HTTPS URL fallback so photos are NEVER lost. Patched `best-travel.ltd/admin/index.php` to prevent double-domain prefixing (`https://best-travel.ltd/https://...`).

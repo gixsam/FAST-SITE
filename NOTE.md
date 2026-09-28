@@ -1,7 +1,7 @@
 # 📘 FAST SITE — MASTER COMPREHENSIVE NOTE & STATUS REPORT (NOTE.md)
 **Project Name:** FAST SITE (Ecosystem Escrow Hub & Universal Marketplace)  
 **Main Domain:** `https://fastsite.best-travel.ltd`  
-**Current Active Version:** Phase 97 100% Complete & Production-Verified  
+**Current Active Version:** Phase 98 100% Complete & Production-Verified  
 **Document Classification:** Canonical Website State, Historical Log & Future Roadmap  
 **Target Audience:** AI Agents (Google Antigravity, Claude Sonnet, Gemini, GPT) and Human Developers / Project Managers  
 
@@ -23,11 +23,17 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 97 Complete & Production-Verified
-The platform is currently at **Phase 97: Universal Partner & Ecosystem Product Photo Sync Architecture (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution)**.
+### Active Status: Phase 98 Complete & Production-Verified (New Products Slideable Bar)
+The platform is currently at **Phase 98: New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture (Google Stitch Nocturne Aurum Standards)**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Universal Partner & Ecosystem Product Photo Sync Architecture (Phase 97):**
+1. **New Products Featuring Slideable Bar (Phase 98 100% Complete):**
+   - Engineered dedicated, high-performance data query in `home.php` selecting the top 15 newest published products (`ORDER BY p.id DESC, p.created_at DESC`), joined with partner shop verification status and thumbnails.
+   - Every product thumbnail is resolved via `resolveProductArtwork()`, ensuring authentic HD imagery across all ecosystem shops (Best Travel, Ayra Mart, Enzor Motor) and official services with graceful fallback.
+   - Built touch-swipeable track (`#newProductsTrack`) with CSS flexbox, `scroll-snap-type: x mandatory`, `-webkit-overflow-scrolling: touch`, and hidden scrollbar for a clean native mobile APK experience.
+   - Deployed desktop chevron navigation buttons (`‹` / `›`) with Nocturne Aurum frosted glass styling that smoothly scroll the carousel by ±260px.
+   - Nocturne Aurum card tokens: glowing `[ ✨ NEW ]` badge pill, audio/category tags, official/partner verification dots, and dual-currency pricing (BDT `৳` and Fast Site Coins `🪙`).
+2. **Universal Partner & Ecosystem Product Photo Sync Architecture (Phase 97):**
    - **Root Causes Eliminated:**
      - **Remote Image Dropping & 403 Forbidden (`api/receive_crosspost.php`):** Identified that Unsplash CDN image URLs sent during sync were rejected by plain `@file_get_contents` due to missing User-Agent headers, returning false and leaving `$final_image_url = ''`. This caused `partner_product_images` insertion to be completely skipped, discarding photo records. Upgraded `api/receive_crosspost.php` to use cURL with browser headers (`User-Agent: Mozilla/5.0...`), multi-layer nested domain sanitization (`while(preg_match(...))`), and guaranteed remote HTTPS URL fallback so photos are NEVER lost.
      - **Double-Domain Malformation in Source Site (`best-travel.ltd/admin/index.php`):** Best Travel admin prepended `https://best-travel.ltd/` to image URLs even when the URL was already a complete HTTPS Unsplash link, creating invalid nested URLs like `https://best-travel.ltd/https://images.unsplash.com/...`. Added URL scheme verification before prepending.

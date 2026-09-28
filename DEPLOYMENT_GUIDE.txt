@@ -1,9 +1,9 @@
 ================================================================================
-FAST SITE — HOSTINGER DEPLOYMENT GUIDE (PHASE 97)
+FAST SITE — HOSTINGER DEPLOYMENT GUIDE (PHASE 98)
 ================================================================================
-Current Active Phase: Phase 97
-Phase Title: Universal Partner & Ecosystem Product Photo Sync Architecture
-             (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution)
+Archive: fastsite_phase98.zip
+Current Active Phase: Phase 98
+Phase Title: New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture
 Deployment Target: Hostinger Production (public_html)
 Repository: https://github.com/gixsam/FAST-SITE (Branch: main)
 Date: 2026-09-28
@@ -16,36 +16,30 @@ Option A: AUTOMATED GIT DEPLOYMENT (Recommended & Already Active)
    - Production .env credentials remain 100% safe and excluded.
 
 Option B: MANUAL FILE MANAGER ZIP UPLOAD
-   - Upload 'fastsite_phase97.zip' directly to the root of 'public_html/' on Hostinger.
+   - Upload 'fastsite_phase98.zip' directly to the root of 'public_html/' on Hostinger.
    - Extract and choose "Overwrite existing files".
    - Your production .env file is permanently safe (never touched or overwritten).
 
 2. EXACT FOLDER PATHS ON HOSTINGER
 --------------------------------------------------------------------------------
-- public_html/admin/sync_best_travel.php         (NEW: 1-Click Sync & Photo Repair Tool)
-- public_html/admin/shop_edit.php                 (UPDATED: 1-Tap Sync & Photo Repair Button)
-- public_html/admin/sync_hub.php                  (UPDATED: Best Travel & Photo Linker Cards)
-- public_html/admin/seed_ecosystem_shops.php      (UPDATED: Universal Nested Domain Cleaner)
-- public_html/api/receive_crosspost.php           (UPDATED: cURL Ingestion & Remote Fallback)
-- public_html/api/marketplace_crosspost.php       (UPDATED: URL Clean & Upsert Sync)
-- public_html/config.php                          (UPDATED: resolveProductArtwork Ecosystem & Travel)
-- public_html/PROJECT_STATE.md                    (UPDATED: Phase 97 Specifications)
-- public_html/NOTE.md                             (UPDATED: Master Status Report)
+- public_html/home.php                 (UPDATED: New Products Featuring Slideable Bar)
+- public_html/PROJECT_STATE.md         (UPDATED: Phase 98 Specifications)
+- public_html/NOTE.md                  (UPDATED: Master Status Report)
+- public_html/DEPLOYMENT_GUIDE.txt     (This canonical instructions file)
 
 3. WORKFLOW STEP WHERE AI LEFT OFF & VERIFICATION PROTOCOL
 --------------------------------------------------------------------------------
 After uploading or automated Git push:
-Step 1: Open the Admin Panel on Hostinger:
-        https://fastsite.best-travel.ltd/admin/sync_best_travel.php
-        (Clicking this URL runs the 1-click photo restorer. It instantly links the 
-        authentic HD photos to all 15 Best Travel packages and visa services).
-Step 2: Verify Best Travel Shop Moderation:
-        https://fastsite.best-travel.ltd/admin/shop_edit.php?id=2
-        (All 15 packages will now display their real high-resolution travel photos 
-        instead of the generic digital service vector fallback).
-Step 3: Verify the Public Storefront:
-        https://fastsite.best-travel.ltd/shop/best_travel
-        (Check that all packages appear with beautiful HD cover photos).
+Step 1: Open the Main Storefront on Hostinger:
+        https://fastsite.best-travel.ltd/
+        (Verify that the '✨ New Products Featuring' Slideable Bar appears directly
+        beneath the search bar with smooth touch swiping and desktop chevrons).
+Step 2: Verify Product Photos & Badges:
+        (All cards render high-definition imagery via resolveProductArtwork(),
+        with '✨ NEW' gold pills, shop verification dots, and dual BDT/Coins prices).
+Step 3: Test Desktop / Mobile Responsiveness:
+        (On mobile screens <640px, the track swipes natively with momentum and
+        scroll-snap; on desktop, the ‹ and › chevron buttons slide smoothly).
 
 ================================================================================
 FAST SITE ECOSYSTEM — DUAL-SYNCED & DEPLOYMENT-READY

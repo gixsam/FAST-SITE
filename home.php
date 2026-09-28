@@ -133,6 +133,41 @@ try {
 } catch (Exception $e) {}
 
 // ===============================================================
+// FETCH NEW PRODUCTS FEATURING / FRESH ARRIVALS (PHASE 98)
+// ===============================================================
+$new_featured_products = [];
+try {
+    $n_sql = "SELECT p.*, 
+        COALESCE(pt.business_name, 'Fast Site Official') AS shop_name, 
+        COALESCE(pt.status, 'active') AS shop_status, 
+        COALESCE(pt.is_official, 1) AS is_official, 
+        pt.profile_pic AS shop_profile_pic,
+        (SELECT image_url FROM partner_product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumb,
+        (SELECT image_url FROM partner_product_images WHERE product_id = p.id ORDER BY id ASC LIMIT 1) AS fallback_img
+        FROM partner_products p
+        LEFT JOIN partners pt ON p.partner_id = pt.id
+        WHERE p.is_published = 1 
+          AND (COALESCE(pt.status, 'approved') != 'suspended' OR p.partner_id = 0)
+        ORDER BY p.id DESC, p.created_at DESC
+        LIMIT 15";
+    $new_featured_products = $pdo->query($n_sql)->fetchAll();
+    
+    // Normalize thumbnails for new featured products
+    foreach ($new_featured_products as $k => $np) {
+        $new_featured_products[$k]['display_thumb'] = resolveProductArtwork(
+            $np['thumb'] ?? '',
+            $np['fallback_img'] ?? '',
+            $np['shop_name'] ?? '',
+            $np['category'] ?? '',
+            $np['title'] ?? '',
+            $np['listing_type'] ?? 'product'
+        );
+    }
+} catch (Exception $e) {
+    error_log("FastSite New Products DB Error: " . $e->getMessage());
+}
+
+// ===============================================================
 // REAL DB SPLIT: Group by Shops for Market View
 // ===============================================================
 $shops = [];
@@ -1665,16 +1700,28 @@ if ($show_banner !== 'none'):
 
 <section class="grid-section">
 
-<?php if (empty($search) && $selectedCategory === 'All' && !empty($trending_products)): ?>
-<!-- TRENDING SECTION (PHASE 59) -->
-<div class="trending-container" style="margin-bottom: 2rem;">
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom: 1rem; flex-wrap:nowrap;">
-    <h2 style="font-size:clamp(1.05rem, 3.8vw, 1.25rem); font-weight:800; color:#fff; white-space:nowrap; margin:0; line-height:1.2;">🔥 Trending Right Now</h2>
-    <span style="font-size:0.72rem; background:rgba(252,185,0,0.15); color:var(--gold); padding:0.2rem 0.6rem; border-radius:50px; border:1px solid rgba(252,185,0,0.3); white-space:nowrap; flex-shrink:0;">Top Picks</span>
+<?php 
+// Select products for Slideable Bar: New Featured drops if available, fallback to trending
+$slideable_items = !empty($new_featured_products) ? $new_featured_products : $trending_products;
+if (empty($search) && $selectedCategory === 'All' && !empty($slideable_items)): 
+?>
+<!-- NEW PRODUCTS FEATURING SLIDEABLE BAR (PHASE 98) -->
+<div class="new-featured-container" style="margin-bottom: 2.25rem;">
+  <div class="new-featured-header" style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; margin-bottom: 1rem; flex-wrap:nowrap;">
+    <div style="display:flex; align-items:center; gap:0.6rem; min-width:0;">
+      <h2 style="font-size:clamp(1.1rem, 3.8vw, 1.35rem); font-weight:800; color:#fff; white-space:nowrap; margin:0; line-height:1.2; letter-spacing:-0.02em;">✨ New Products Featuring</h2>
+      <span style="font-size:0.7rem; font-weight:700; background:rgba(252,185,0,0.15); color:var(--gold, #fcb900); padding:0.2rem 0.6rem; border-radius:50px; border:1px solid rgba(252,185,0,0.35); white-space:nowrap; display:inline-flex; align-items:center; gap:4px; box-shadow:0 0 10px rgba(252,185,0,0.15);">
+        <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#00e676; animation:pulse-dot 1.8s infinite;"></span> Fresh Drops
+      </span>
+    </div>
+    <div class="slide-arrows" style="display:flex; gap:6px; flex-shrink:0;">
+      <button type="button" aria-label="Slide Left" class="slide-btn" onclick="slideNewProducts('left')" style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:1.1rem; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; backdrop-filter:blur(8px);">‹</button>
+      <button type="button" aria-label="Slide Right" class="slide-btn" onclick="slideNewProducts('right')" style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#fff; font-size:1.1rem; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; backdrop-filter:blur(8px);">›</button>
+    </div>
   </div>
   
-  <div class="trending-scroller" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--brand) var(--dark-card);">
-    <?php foreach ($trending_products as $item): 
+  <div id="newProductsTrack" class="new-products-scroller" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.8rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; scroll-behavior: smooth;">
+    <?php foreach ($slideable_items as $item): 
         $priceBdt  = floatval(preg_replace('/[^0-9.]/', '', $item['price']));
         $priceCoins = ceil($priceBdt / $exchange_rate);
         $isAff = ($item['listing_type'] ?? '') === 'affiliate' || !empty($item['affiliate_url']) || !empty($item['affiliate_link']);
@@ -1682,29 +1729,52 @@ if ($show_banner !== 'none'):
         $itemHref = ($isAff && !empty($destUrl)) ? htmlspecialchars($destUrl) : "product_detail.php?id={$item['id']}";
         $itemTarget = ($isAff && !empty($destUrl)) ? 'target="_blank" rel="noopener noreferrer"' : '';
     ?>
-    <a href="<?= $itemHref ?>" <?= $itemTarget ?> class="trending-card" style="flex: 0 0 260px; scroll-snap-align: start; background: var(--dark-card); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; text-decoration: none; transition: transform 0.3s, box-shadow 0.3s;">
-      <div style="height: 140px; position: relative; background: #111;">
+    <a href="<?= $itemHref ?>" <?= $itemTarget ?> class="new-slide-card" style="flex: 0 0 240px; max-width: 240px; scroll-snap-align: start; background: rgba(18, 22, 43, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;">
+      <div style="height: 140px; position: relative; background: #0c0e18; overflow: hidden;">
+        <img src="<?= htmlspecialchars($item['display_thumb'] ?? '/assets/images/logo.png') ?>" alt="<?= htmlspecialchars($item['title']) ?>" loading="lazy" onerror="this.onerror=null; this.src='/assets/images/logo.png';" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease;" class="card-img-zoom">
+        <span style="position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #fcb900, #ff9100); color: #000; font-size: 0.62rem; font-weight: 800; padding: 2px 7px; border-radius: 20px; box-shadow: 0 2px 8px rgba(252,185,0,0.35); text-transform: uppercase; letter-spacing: 0.03em;">✨ NEW</span>
         <?php if (!empty($item['audio_file'])): ?>
-          <div style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); border: 1px solid #00e676; color: #00e676; border-radius: 20px; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; backdrop-filter: blur(4px);">🎵 Audio Demo</div>
+          <div style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.75); border: 1px solid #00e676; color: #00e676; border-radius: 20px; font-size: 0.65rem; font-weight: 800; padding: 2px 8px; backdrop-filter: blur(4px);">🎵 Demo</div>
+        <?php elseif (!empty($item['category'])): ?>
+          <div style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.15); color: #e0e0e0; border-radius: 20px; font-size: 0.62rem; font-weight: 700; padding: 2px 7px; backdrop-filter: blur(4px); max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?= htmlspecialchars($item['category']) ?></div>
         <?php endif; ?>
-        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 1.5rem 0.8rem 0.5rem;">
-          <div style="color: #fff; font-weight: 700; font-size: 0.85rem; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;"><?= htmlspecialchars($item['title']) ?></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(10,13,26,0.95) 0%, rgba(10,13,26,0.6) 60%, transparent 100%); padding: 1.2rem 0.75rem 0.4rem;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.84rem; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;"><?= htmlspecialchars($item['title']) ?></div>
         </div>
       </div>
-      <div style="padding: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
-        <div style="font-size: 0.65rem; color: var(--muted); text-transform: uppercase; font-weight: 700;"><span style="color:var(--green)">●</span> <?= htmlspecialchars($item['shop_name']) ?></div>
-        <div style="font-size: 0.9rem; font-weight: 900; color: var(--gold);">🪙 <?= number_format($priceCoins) ?></div>
+      <div style="padding: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem; flex-grow: 1; justify-content: space-between; background: rgba(14, 18, 36, 0.6);">
+        <div style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; display: flex; align-items: center; gap: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+          <span style="color: <?= !empty($item['is_official']) ? '#fcb900' : '#00e676' ?>;">●</span> 
+          <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?= htmlspecialchars($item['shop_name']) ?></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 4px; margin-top: 2px;">
+          <div style="font-size: 0.75rem; color: #cbd5e1; font-weight: 700;">৳ <?= number_format($priceBdt) ?></div>
+          <div style="font-size: 0.88rem; font-weight: 900; color: #fcb900; text-shadow: 0 0 10px rgba(252,185,0,0.25);">🪙 <?= number_format($priceCoins) ?></div>
+        </div>
       </div>
     </a>
     <?php endforeach; ?>
   </div>
   <style>
-    .trending-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(252,185,0,0.15); border-color: rgba(252,185,0,0.3); }
-    .trending-scroller::-webkit-scrollbar { height: 6px; }
-    .trending-scroller::-webkit-scrollbar-track { background: var(--dark-card); border-radius: 10px; }
-    .trending-scroller::-webkit-scrollbar-thumb { background: var(--brand); border-radius: 10px; }
+    .new-products-scroller::-webkit-scrollbar { display: none; }
+    .new-slide-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(252,185,0,0.18); border-color: rgba(252,185,0,0.35); }
+    .new-slide-card:hover .card-img-zoom { transform: scale(1.06); }
+    .slide-btn:hover { background: rgba(252,185,0,0.2) !important; border-color: rgba(252,185,0,0.4) !important; color: #fcb900 !important; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
+    @media (max-width: 640px) {
+      .new-slide-card { flex: 0 0 205px !important; max-width: 205px !important; }
+      .slide-arrows { display: none !important; }
+    }
   </style>
 </div>
+<script>
+function slideNewProducts(dir) {
+  var track = document.getElementById('newProductsTrack');
+  if (!track) return;
+  var delta = dir === 'left' ? -260 : 260;
+  track.scrollBy({ left: delta, behavior: 'smooth' });
+}
+</script>
 <?php endif; ?>
 
 
