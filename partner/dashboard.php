@@ -219,9 +219,14 @@ try {
 <head>
   <title>Partner Command Center &mdash; Fast Site Super-App</title>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="theme-color" content="#0A0D1A"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/assets/css/native_mobile.css?v=<?= time() ?>">
   <link rel="stylesheet" href="/assets/css/admin.css">
+  <script src="/assets/js/app_environment.js" defer></script>
   <style>
     :root {
       --gold: #fcb900;

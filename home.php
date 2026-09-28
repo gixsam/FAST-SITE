@@ -241,6 +241,7 @@ $exchange_rate = floatval(getPartnerSetting('exchange_rate', '1'));
   <meta name="theme-color" content="#0A0D1A"/>
   <title>Unified Marketplace — Fast Site</title>
   <link rel="stylesheet" href="/assets/css/native_mobile.css"/>
+  <script src="/assets/js/app_environment.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@600;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -2403,6 +2404,9 @@ function toggleCategoryDrawer(show) {
         drawer.classList.add('active');
         drawer.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+        if (typeof window.pushModalBackState === 'function') {
+            window.pushModalBackState();
+        }
     } else {
         scrim.classList.remove('active');
         drawer.classList.remove('active');

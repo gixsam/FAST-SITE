@@ -16,18 +16,67 @@
   --mobile-muted: #94a3b8;
   --mobile-nav-height: 60px;
   --mobile-dock-height: 64px;
+
+  /* Safe Area Insets (Pillar 1) */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+
+  /* Standardized Z-Index Hierarchy (Pillar 4) */
+  --z-base: 1;
+  --z-sticky: 100;
+  --z-dock: 150;
+  --z-backdrop: 200;
+  --z-drawer: 205;
+  --z-modal: 210;
+  --z-toast: 9999;
 }
 
-/* ─── Touch & Ergonomics Optimizations ─── */
+/* ─── Touch, Ergonomics & Viewport Optimizations (Pillar 1) ─── */
 * {
   -webkit-tap-highlight-color: transparent !important;
   box-sizing: border-box;
 }
 
-html, body {
+/* Remove 300ms double-tap delay on mobile */
+button, a, input, select, textarea, .btn, .chip-pill, .dock-item, .clickable {
+  touch-action: manipulation !important;
+}
+
+html {
+  height: 100%;
+  height: -webkit-fill-available;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden !important;
+}
+
+body {
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
   background-color: var(--mobile-bg);
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden !important;
+}
+
+/* Universal 100dvh Utility */
+.min-h-dvh, .min-h-screen, .fullscreen-view {
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+}
+
+/* 44px Minimum Touch Targets */
+.touch-target-44, .btn-touch, .nav-touch-item {
+  min-height: 44px !important;
+  min-width: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 /* Active Tap Scale Feedback */
@@ -320,3 +369,99 @@ button:active, .btn:active, .product-card:active, .chip-pill:active, .dock-item:
     display: none !important;
   }
 }
+
+/* ─── Pillar 2: Mobile-First Breakpoints & Table/Content Auto-Collapse ─── */
+.overflow-x-auto, .table-responsive, .mobile-table-wrap {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+@media (max-width: 640px) {
+  .table-responsive table, .overflow-x-auto table {
+    min-width: 580px;
+  }
+  .modal-dialog, .modal-card, .dialog-box, .modal-content, .bottom-sheet {
+    width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* Safe Area Padding Utilities (Pillar 1) */
+.pt-safe { padding-top: var(--sat) !important; }
+.pb-safe { padding-bottom: var(--sab) !important; }
+.pl-safe { padding-left: var(--sal) !important; }
+.pr-safe { padding-right: var(--sar) !important; }
+.p-safe {
+  padding-top: var(--sat) !important;
+  padding-bottom: var(--sab) !important;
+  padding-left: var(--sal) !important;
+  padding-right: var(--sar) !important;
+}
+
+@supports not (min-height: 100dvh) {
+  .min-h-dvh, .min-h-screen, .fullscreen-view {
+    min-height: calc(var(--dvh, 1vh) * 100) !important;
+  }
+}
+
+/* ─── Pillar 3: Native APK & Standalone App Adaptation ─── */
+.is-apk-app .apk-download-card,
+.is-apk-app .apk-download-btn,
+.is-apk-app .hide-in-apk,
+.is-apk-app #apkDownloadSection {
+  display: none !important;
+}
+
+.is-standalone-app .pwa-install-prompt,
+.is-standalone-app .hide-in-pwa {
+  display: none !important;
+}
+
+.is-apk-app .public-nav,
+.is-apk-app .mobile-app-bar,
+.is-apk-app .top-header {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 6px) !important;
+}
+
+/* ─── Pillar 4: Layering, Modals & Toast Alert Stacking ─── */
+.mobile-bottom-dock {
+  z-index: var(--z-dock) !important;
+}
+.drawer-overlay, .modal-backdrop, .bottom-sheet-backdrop, .dialog-backdrop {
+  z-index: var(--z-backdrop) !important;
+}
+.drawer-menu, .category-drawer, .bottom-sheet, .modal-container {
+  z-index: var(--z-drawer) !important;
+}
+.modal-overlay {
+  z-index: var(--z-backdrop) !important;
+}
+.modal-dialog, .modal-content, .modal-card {
+  z-index: var(--z-modal) !important;
+}
+
+/* Floating Alerts, Toasts & Snackbars ALWAYS Top (z: 9999) */
+.toast-container, .alert-toast, .notification-toast, .floating-snackbar, #toastContainer, #globalToast, .toast-notification {
+  z-index: var(--z-toast) !important;
+  position: fixed !important;
+}
+
+/* ─── Pillar 4: Inline Form Validation Highlights ─── */
+input.is-invalid, select.is-invalid, textarea.is-invalid, .is-invalid {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
+}
+.form-inline-error, .invalid-feedback {
+  color: #ef4444 !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  margin-top: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+

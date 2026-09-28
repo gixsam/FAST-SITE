@@ -276,6 +276,8 @@ try {
 } catch (Exception $e) {}
 ?>
 <link rel="stylesheet" href="/assets/css/admin-nav.css?v=<?= time() ?>" />
+<link rel="stylesheet" href="/assets/css/native_mobile.css?v=<?= time() ?>" />
+<script src="/assets/js/app_environment.js" defer></script>
 
 <nav class="enterprise-nav">
   <div class="nav-inner-container">

@@ -114,6 +114,7 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
 ?>
 <!-- Unified Premium Navigation Bar -->
 <link rel="stylesheet" href="/assets/css/native_mobile.css"/>
+<script src="/assets/js/app_environment.js" defer></script>
 <style>
     :root {
         --nav-glass-bg: rgba(8, 8, 12, 0.75);
@@ -657,7 +658,7 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
           $nav_apk_name = !empty($settings['apk_app_name']) ? $settings['apk_app_name'] : 'FAST SITE WORLD';
           $nav_apk_photo = !empty($settings['apk_app_photo']) ? '/' . ltrim($settings['apk_app_photo'], '/') : '/assets/images/fast_site_world_app_icon.jpg';
         ?>
-        <a href="/fastsite_storefront.apk" class="drawer-link" style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; margin: 10px 15px; border-radius: 6px; display:flex; align-items:center; gap:10px; padding:0.75rem 1rem;" download>
+        <a href="/fastsite_storefront.apk" class="drawer-link apk-download-card hide-in-apk" style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; margin: 10px 15px; border-radius: 6px; display:flex; align-items:center; gap:10px; padding:0.75rem 1rem;" download>
             <img src="<?= htmlspecialchars($nav_apk_photo) ?>" style="width:24px; height:24px; border-radius:6px; object-fit:cover; display:inline-block; border:1px solid rgba(252,185,0,0.4);" alt="APK" onerror="this.onerror=null; this.src='/assets/images/logo.png';"/>
             <span style="font-weight:800; color:#fff; font-size:0.88rem;"><?= htmlspecialchars($nav_apk_name) ?> (APK)</span>
         </a>
@@ -684,8 +685,12 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
     function toggleDrawer() {
         const menu = document.getElementById('drawerMenu');
         const overlay = document.getElementById('drawerOverlay');
+        const willOpen = !menu.classList.contains('active');
         menu.classList.toggle('active');
         overlay.classList.toggle('active');
+        if (willOpen && typeof window.pushModalBackState === 'function') {
+            window.pushModalBackState();
+        }
     }
     
     // Dynamic Navbar Scroll Effect

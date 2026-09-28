@@ -83,8 +83,8 @@ if (!function_exists('isActive')) {
 ?>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="/assets/css/native_mobile.css?v=<?= time() ?>">
-<link rel="stylesheet" href="/assets/css/mobile_responsive.css?v=<?= time() ?>">
 <script src="/assets/js/global_loader.js"></script>
+<script src="/assets/js/app_environment.js" defer></script>
 <style>
   :root {
     --brand: #fcb900;
@@ -835,8 +835,13 @@ document.addEventListener('click', function(e) {
   const overlay = document.getElementById('drawer-overlay');
 
   function openNavDrawer() {
-    if (drawer) drawer.classList.toggle('open');
+    if (!drawer) return;
+    const willOpen = !drawer.classList.contains('open');
+    drawer.classList.toggle('open');
     if (overlay) overlay.classList.toggle('open');
+    if (willOpen && typeof window.pushModalBackState === 'function') {
+      window.pushModalBackState();
+    }
   }
 
   if (toggleBtn) {
