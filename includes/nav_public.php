@@ -324,6 +324,40 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
     }
     .close-drawer:hover { background: rgba(255, 82, 82, 0.2); color: #ff5252; }
     
+    .drawer-user-section {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+    }
+    .btn-auth {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        width: 100%;
+        padding: 0.75rem 1.2rem;
+        background: linear-gradient(135deg, #fcb900 0%, #f7971e 100%);
+        color: #080911 !important;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        border-radius: 12px;
+        text-decoration: none !important;
+        box-shadow: 0 4px 16px rgba(252, 185, 0, 0.35);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-sizing: border-box;
+    }
+    .btn-auth:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(252, 185, 0, 0.5);
+        color: #000 !important;
+    }
+    .btn-auth:active {
+        transform: scale(0.97);
+    }
+    
     .user-profile-badge {
         display: flex; align-items: center; gap: 1rem;
     }
@@ -368,12 +402,7 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
             letter-spacing: 0.02em;
         }
         .shop-nav-btn {
-            max-width: 95px;
-            padding: 0.3rem 0.5rem;
-            font-size: 0.68rem;
-        }
-        .shop-nav-name {
-            max-width: 60px;
+            display: none !important; /* Keep mobile top navbar spacious and logo perfectly centered */
         }
         .coin-badge-pill, .coin-badge {
             padding: 0.28rem 0.45rem;
@@ -391,10 +420,7 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
             height: 34px;
         }
         .shop-nav-btn {
-            max-width: 75px;
-        }
-        .shop-nav-name {
-            max-width: 48px;
+            display: none !important;
         }
     }
 
@@ -432,10 +458,6 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
                 <a href="#" onclick="alert('Your shop is pending admin approval.');" class="shop-nav-btn pending" style="background:rgba(255,255,255,0.08); color:#ccc !important; border:1px solid rgba(255,255,255,0.18); box-shadow:none;">
                    <span class="shop-icon" style="font-size:0.85rem;">⏳</span> <span class="shop-nav-name">Pending</span>
                 </a>
-            <?php else: ?>
-                <a href="<?= $is_user_logged_in ? '/user/create_shop.php' : '/user/login.php' ?>" class="shop-nav-btn create" title="Open Your Partner Shop">
-                   <span class="shop-icon" style="font-size:0.85rem;">➕</span> <span class="shop-nav-name">Open Shop</span>
-                </a>
             <?php endif; ?>
         <?php endif; ?>
         <button class="hamburger-btn" onclick="toggleDrawer()" aria-label="Open Platform Menu">
@@ -467,7 +489,10 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
                 </div>
             </a>
         <?php else: ?>
-            <a href="/user/login.php" class="btn-auth">Login / Register</a>
+            <a href="/user/login.php" class="btn-auth" style="display:flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; background:linear-gradient(135deg, #fcb900 0%, #f7971e 100%); color:#080911 !important; font-weight:800; font-size:0.88rem; padding:0.75rem 1.2rem; border-radius:12px; box-shadow:0 4px 16px rgba(252,185,0,0.35); text-transform:uppercase; letter-spacing:0.03em;">
+                <span style="font-size:1.05rem;">🔐</span>
+                <span>Login / Register</span>
+            </a>
         <?php endif; ?>
     </div>
     

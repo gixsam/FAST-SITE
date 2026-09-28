@@ -23,15 +23,22 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 90 Complete & Production-Verified
-The platform is currently at **Phase 90: Resolution of MySQL Implicit Commit Registration Transaction Error & Self-Healing Account Recovery**.
+### Active Status: Phase 91 Complete & Production-Verified
+The platform is currently at **Phase 91: Removal of Crowded Navbar Open Shop Button & Side Drawer Auth Styling Enhancement**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Resolution of Registration Transaction Error & Self-Healing Recovery (Phase 90):**
+1. **Removal of Crowded Navbar Open Shop Pill (`includes/nav_public.php` - Phase 91):**
+   - **Root Cause Eliminated:** The storefront header Zone 3 previously contained a redundant fallback `[➕ Open Shop]` pill (`shop-nav-btn create`). On mobile screens (375px–420px), this button squeezed against the hamburger menu, caused text truncation (`Open S...`), and shoved the centered brand identity (`FAST SITE` logo) off-center to the left.
+   - **Clean Uncluttered Navbar:** Completely removed the `(+ Open Shop)` button from Zone 3. Shop onboarding remains effortlessly accessible via the side drawer menu ("Become Partner" / "Open Shop") and bottom dock.
+   - **Responsive Center Symmetry:** Enforced `.shop-nav-btn { display: none !important; }` in mobile media queries (`max-width: 600px`). This ensures that on all mobile viewports, Zone 3 strictly contains only the 38px hamburger button, balancing Zone 1 (coin wallet pill) and keeping the brand logo dead-centered.
+2. **Side Drawer Auth Button Luxury Styling (`includes/nav_public.php` - Phase 91):**
+   - **Root Cause Eliminated:** In the side drawer (`#drawerMenu`), the guest `Login / Register` link was previously unstyled in CSS, causing browsers and WebViews to display it as a default raw blue hyperlink (`#0000ee`).
+   - **Google Stitch Nocturne Aurum Enhancement:** Engineered dedicated styling for `.drawer-user-section` and `.btn-auth`: glowing gold luxury gradient (`linear-gradient(135deg, #fcb900 0%, #f7971e 100%)`), bold typography, lock icon (`🔐`), 12px rounded pill geometry, active tap feedback, and inline style fallbacks to permanently prevent unstyled rendering.
+3. **Resolution of Registration Transaction Error & Self-Healing Recovery (Phase 90):**
    - **Root Cause Eliminated:** `user/register.php` had a DDL query (`CREATE TABLE IF NOT EXISTS coin_wallets`) executing inside `$pdo->beginTransaction()`. In MySQL, any DDL triggers an immediate implicit commit, causing subsequent `$pdo->commit()` to throw `PDOException: There is no active transaction`.
    - **Transaction Hardening:** Extracted all DDL table creation outside of transactions to the initial self-healing migration block. Replaced wallet creation inside transaction with pure DML (`INSERT ... ON DUPLICATE KEY UPDATE`) and protected the commit with `if ($pdo->inTransaction()) { $pdo->commit(); }`.
    - **Self-Healing Interrupted Registration Recovery:** If a user submitted registration and was already inserted into the database during an interrupted transaction attempt (e.g., phone `01612669922`), resubmitting the registration form with the same password automatically validates credentials, verifies the registration number, allocates the 50 welcome coins, and immediately logs them into `/user/dashboard.php?welcome=1`.
-2. **Elimination of Drawer Over-Layering & Bleeding (Phase 89):**
+4. **Elimination of Drawer Over-Layering & Bleeding (Phase 89):**
    - **Root Cause Eliminated:** Relocated the `#categoryDrawer` and `#categoryDrawerScrim` DOM tree out of the content flow (previously nestled between Hero and Product grid) to the root document level right before `</body>`.
    - **Hardened Visibility Architecture:** Enforced `visibility: hidden`, `opacity: 0`, `pointer-events: none`, `transform: translateY(115%)`, and `z-index: 99999` when inactive. Completely eliminates bottom-dock peeking, shadow artifacts, and prevents iOS Safari full-page screenshot tools from rendering the drawer over product cards.
    - **Dynamic Hardware Stacking:** Configured safe-area inset padding `calc(env(safe-area-inset-bottom, 16px) + 12px)` and `@media print { display: none !important; }` ensuring clean rasterization in all viewport states.
@@ -151,12 +158,16 @@ The platform is currently at **Phase 90: Resolution of MySQL Implicit Commit Reg
   - Google Stitch onboarding bottom sheets: `#quickShopDrawer` (30s setup) and `#shopReviewModal` (live tracking + WhatsApp support).
   - Cleaned 7 legacy 404 redirects into seamless HTTP 302 redirects to `/user/login.php`.
   - Independent Victory Audit confirmed with 145/145 passing checks.
-- **Phase 88 (Strict .env Exclusion & Dynamic Root-Relative Image Architecture)**:
-  - Configured zero-tolerance deployment build engine (`build_hostinger_zip.py`, `build_phase_zip.py`) with automated post-build security verification, permanently guaranteeing that `.env` files are never bundled and Hostinger MySQL credentials (`u422364295_admin`) are never overwritten.
-  - Implemented dynamic root-relative paths for all images across `config.php`, `includes/image_helper.php`, `checkout.php`, `partner/dashboard.php`, `admin/partner_shops.php`, `admin/shop_edit.php`, and `user/forgot_password.php`.
-  - Injected intelligent resolvers (`resolveProductArtwork`, `resolveShopMedia`, `resolveMediaUrl`, `resolveUserAvatar`) stripping localhost leaks, normalizing Windows backslashes to POSIX slashes, and anchoring all local media to `/uploads/...` and `/assets/...`.
-  - Added dedicated static media direct 404 rewrite guard in `.htaccess` to eliminate the Apache rewrite-to-index.php loop and prevent Hostinger WAF 422 (Unprocessable Entity) errors.
-  - Verified 7/7 automated assertions with 100% pass rate and packaged `fastsite_phase88.zip` (53.25 KB).
+- **Phase 89 (Elimination of Drawer Over-Layering & Bleeding Flaw)**:
+  - Relocated `#categoryDrawer` and `#categoryDrawerScrim` from mid-body content flow to the root document level before `</body>`.
+  - Configured strict inactive styling (`visibility: hidden`, `opacity: 0`, `pointer-events: none`, `transform: translateY(115%)`, `z-index: 99999`) and injected `@media print { display: none !important; }` to eliminate iOS Safari full-page screenshot bleeding.
+- **Phase 90 (Resolution of MySQL Implicit Commit Registration Transaction Error)**:
+  - Extracted DDL `CREATE TABLE IF NOT EXISTS coin_wallets` outside active transactions, eliminating MySQL implicit commit crashes during `$pdo->commit()`.
+  - Protected commits with `$pdo->inTransaction()` checks and added self-healing interrupted registration recovery for automatic login and welcome coin credit.
+- **Phase 91 (Removal of Crowded Navbar Open Shop Button & Side Drawer Auth Styling Enhancement)**:
+  - Completely removed the awkward, truncated `[➕ Open Shop]` pill (`shop-nav-btn create`) from the top navbar in `includes/nav_public.php`.
+  - Enforced `.shop-nav-btn { display: none !important; }` on mobile viewports (<600px), ensuring the center `FAST SITE` brand logo is dead-centered and never squished.
+  - Engineered luxurious Google Stitch *Nocturne Aurum* styling for `.btn-auth` and `.drawer-user-section` in the side drawer, turning the guest `Login / Register` link from an unstyled raw blue hyperlink into a glowing gold pill with lock icon and active touch feedback.
 
 ---
 

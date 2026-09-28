@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 90 100% COMPLETE — Resolution of MySQL Implicit Commit Registration Transaction Error
+**Last Updated:** Phase 91 100% COMPLETE — Removal of Crowded Navbar Open Shop Button & Side Drawer Auth Styling Enhancement
 
 ---
 
@@ -77,6 +77,12 @@
 | 88 | Strict .env Exclusion & Dynamic Root-Relative Image Architecture (Zero-Tolerance Deployment Audit, Hostinger WAF 422 Direct 404 Fix) |
 | 89 | Elimination of Categories & Filter Drawer Over-Layering Flaw (Root-Level DOM Relocation, Visibility Hardening & Print Exclusion) |
 | 90 | Resolution of MySQL Implicit Commit Registration Transaction Error & Self-Healing Account Recovery |
+| 91 | Removal of Crowded Navbar Open Shop Button & Side Drawer Auth Styling Enhancement |
+
+### Phase 91 Details — Removal of Crowded Navbar Open Shop Button & Side Drawer Auth Styling Enhancement
+- **1. Removal of Crowded Navbar Open Shop Button (`includes/nav_public.php`):** Completely removed the redundant and cramped `[➕ Open Shop]` pill from top navigation Zone 3, preventing mobile text truncation (`Open S...`) and uncluttering the header.
+- **2. Responsive Viewport Center Symmetry (`includes/nav_public.php`):** Enforced `.shop-nav-btn { display: none !important; }` on mobile (<600px). Zone 3 strictly contains the 38px hamburger button, balancing Zone 1 (coin pill) and guaranteeing the `FAST SITE` brand logo remains dead-centered with zero squeeze.
+- **3. Side Drawer Auth Button Luxury Styling (`includes/nav_public.php`):** Designed glowing gold pill styling (`.btn-auth`) with Google Stitch Nocturne Aurum tokens (`linear-gradient(135deg, #fcb900 0%, #f7971e 100%)`), lock icon (`🔐`), 12px rounded pill geometry, active touch feedback, and inline fallback styling, permanently eliminating the default unstyled blue text link.
 
 ### Phase 90 Details — Resolution of MySQL Implicit Commit Registration Transaction Error
 - **1. Elimination of DDL Transaction Collision (`user/register.php`):** Extracted `CREATE TABLE IF NOT EXISTS coin_wallets` out of the active transaction `$pdo->beginTransaction()` to the initial script migration block, preventing MySQL from triggering an implicit commit that caused `$pdo->commit()` to throw `PDOException: There is no active transaction`.
