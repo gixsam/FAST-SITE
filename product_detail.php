@@ -626,6 +626,56 @@ if (mb_strlen($ogDesc) > 200) $ogDesc = mb_substr($ogDesc, 0, 197) . '...';
       color: #fff;
     }
 
+    .btn-add-cart-detail {
+      flex: 1;
+      min-width: 140px;
+      background: rgba(18, 22, 43, 0.9);
+      border: 1.5px solid rgba(245, 158, 11, 0.4);
+      color: #fff;
+      font-weight: 800;
+      border-radius: 50px;
+      padding: 0.85rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+      min-height: 48px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    .btn-add-cart-detail:hover {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+    }
+    .btn-add-cart-detail:active {
+      transform: scale(0.96);
+    }
+
+    .dock-btn-cart {
+      background: rgba(18, 22, 43, 0.9);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fff;
+      border-radius: 50px;
+      padding: 0 10px;
+      height: 42px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .dock-btn-cart:active {
+      transform: scale(0.95);
+    }
+
     .btn-buy-now {
       background: linear-gradient(135deg, var(--green), #00b0ff);
       color: #000;
@@ -1348,13 +1398,21 @@ if (mb_strlen($ogDesc) > 200) $ogDesc = mb_substr($ogDesc, 0, 197) . '...';
               </div>
           <?php endif; ?>
         <?php else: ?>
-          <?php if ($isUserLoggedIn): ?>
-            <button onclick="openCheckoutModal()" class="btn-buy-now" style="background: linear-gradient(135deg, var(--gold), #ff9100);"> Proceed to Checkout</button>
-          <?php else: ?>
-            <a href="checkout.php?product_id=<?= $p['id'] ?>&partner_id=<?= $p['partner_id'] ?>" class="btn-buy-now" style="background: linear-gradient(135deg, var(--gold), #ff9100); text-decoration:none;">
-              🛒 সরাসরি অর্ডার করুন (Easy Checkout)
-            </a>
-          <?php endif; ?>
+          <div style="display:flex; gap:10px; margin-bottom:0.75rem; flex-wrap:wrap;">
+            <?php if ($isUserLoggedIn): ?>
+              <button onclick="openCheckoutModal()" class="btn-buy-now" style="flex:1; min-width:140px; background: linear-gradient(135deg, var(--gold), #ff9100);">
+                ⚡ সরাসরি অর্ডার করুন
+              </button>
+            <?php else: ?>
+              <a href="checkout.php?product_id=<?= $p['id'] ?>&partner_id=<?= $p['partner_id'] ?>" class="btn-buy-now" style="flex:1; min-width:140px; background: linear-gradient(135deg, var(--gold), #ff9100); text-decoration:none;">
+                ⚡ সরাসরি অর্ডার করুন
+              </a>
+            <?php endif; ?>
+            <button type="button" onclick="addToCart(<?= $p['id'] ?>)" class="btn-add-cart-detail" id="btnAddToCart">
+              <span>🛒</span>
+              <span>কার্টে যোগ করুন</span>
+            </button>
+          </div>
         <?php endif; ?>
         
         <!-- 1-Click WhatsApp Quick Order Button -->
@@ -1953,6 +2011,10 @@ document.addEventListener('DOMContentLoaded', () => {
       <span>💬</span>
       <span class="dock-btn-text">WhatsApp</span>
     </a>
+    <button type="button" onclick="addToCart(<?= $p['id'] ?>)" class="dock-btn-cart" title="কার্টে যোগ করুন">
+      <span>🛒</span>
+      <span class="dock-btn-text">কার্ট</span>
+    </button>
     <?php if ($isAffiliateProduct && !empty($affiliateTargetUrl)): ?>
       <a href="<?= htmlspecialchars($affiliateTargetUrl) ?>" target="_blank" rel="noopener noreferrer" class="dock-btn-buy" style="background: linear-gradient(135deg, #10b981, #00b0ff);">
         <span>🔗</span>
@@ -1972,5 +2034,64 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
+<script>
+function addToCart(pid, qty) {
+  if (!qty) qty = 1;
+  const btn = document.getElementById('btnAddToCart');
+  let originalHtml = '';
+  if (btn) {
+    originalHtml = btn.innerHTML;
+    btn.innerHTML = '<span>⏳</span><span>যোগ হচ্ছে...</span>';
+    btn.disabled = true;
+  }
+  
+  const formData = new FormData();
+  formData.append('action', 'add');
+  formData.append('product_id', pid);
+  formData.append('quantity', qty);
+  formData.append('ajax', '1');
+
+  fetch('/cart.php', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Accept': 'application/json'
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data && data.success) {
+      const cartCountBadge = document.getElementById('navCartCount');
+      if (cartCountBadge) {
+        cartCountBadge.innerText = data.cart_count;
+        cartCountBadge.style.display = data.cart_count > 0 ? 'inline-block' : 'none';
+      }
+      alert('✅ পণ্যটি সফলভাবে কার্টে যোগ করা হয়েছে!');
+      if (btn) {
+        btn.innerHTML = '<span>✓</span><span>যোগ হয়েছে!</span>';
+        btn.style.borderColor = '#10B981';
+        btn.style.color = '#10B981';
+        setTimeout(() => {
+          btn.innerHTML = originalHtml;
+          btn.disabled = false;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 2200);
+      }
+    } else {
+      alert('ত্রুটি: ' + ((data && data.error) ? data.error : 'কার্টে যোগ করা যায়নি'));
+      if (btn) {
+        btn.innerHTML = originalHtml;
+        btn.disabled = false;
+      }
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    window.location.href = '/cart.php?action=add&product_id=' + pid + '&quantity=' + qty;
+  });
+}
+</script>
 </body>
 </html>

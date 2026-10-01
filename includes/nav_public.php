@@ -239,6 +239,50 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
         min-width: 0;
     }
 
+    .cart-nav-pill {
+        position: relative;
+        background: rgba(18, 22, 43, 0.85);
+        border: 1px solid rgba(252, 185, 0, 0.35);
+        color: #fff;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+        flex-shrink: 0;
+    }
+    .cart-nav-pill:hover {
+        background: rgba(252, 185, 0, 0.15);
+        border-color: var(--nav-gold);
+        transform: translateY(-1px);
+        box-shadow: 0 0 15px var(--nav-gold-glow);
+    }
+    .cart-nav-pill:active {
+        transform: scale(0.94);
+    }
+    .cart-nav-count {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: linear-gradient(135deg, #EF4444, #DC2626);
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 900;
+        min-width: 17px;
+        height: 17px;
+        line-height: 17px;
+        border-radius: 50px;
+        text-align: center;
+        padding: 0 4px;
+        border: 1.5px solid #080911;
+        box-shadow: 0 2px 6px rgba(239, 68, 68, 0.6);
+        box-sizing: border-box;
+    }
+
     .shop-nav-btn {
         background: linear-gradient(135deg, var(--nav-gold), #ff9100);
         color: #080911 !important;
@@ -530,6 +574,17 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
                 </a>
             <?php endif; ?>
         <?php endif; ?>
+        <!-- Cart Nav Pill -->
+        <?php 
+          $nav_cart_count = 0;
+          if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+              $nav_cart_count = array_sum(array_column($_SESSION['cart'], 'quantity'));
+          }
+        ?>
+        <a href="/cart.php" class="cart-nav-pill" id="navCartPill" title="Shopping Cart">
+            <span style="font-size:1.1rem; line-height:1;">🛒</span>
+            <span class="cart-nav-count" id="navCartCount" style="<?= $nav_cart_count > 0 ? '' : 'display:none;' ?>"><?= $nav_cart_count ?></span>
+        </a>
         <button class="hamburger-btn" onclick="toggleDrawer()" aria-label="Open Platform Menu">
             <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
         </button>
@@ -584,6 +639,9 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
     <div class="drawer-nav">
         <!-- MARKETPLACE TOOLS -->
         <div style="font-size:0.7rem; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; padding: 1rem 1.5rem 0.5rem;">Marketplace Tools</div>
+        <a href="/cart.php" class="drawer-link" style="color:var(--gold); font-weight:700;">
+            <span style="font-size:1.2rem; margin-right:8px;">🛒</span> Shopping Cart (কার্ট)
+        </a>
         
         <?php if ($is_user_logged_in): ?>
             <?php if ($has_shop && in_array($shop_status, ['approved', 'active', null])): ?>

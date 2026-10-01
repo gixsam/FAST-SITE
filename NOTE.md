@@ -1,7 +1,7 @@
 # 📘 FAST SITE — MASTER COMPREHENSIVE NOTE & STATUS REPORT (NOTE.md)
 **Project Name:** FAST SITE (Ecosystem Escrow Hub & Universal Marketplace)  
 **Main Domain:** `https://fastsite.best-travel.ltd`  
-**Current Active Version:** Phase 103 100% Complete & Production-Verified  
+**Current Active Version:** Phase 104 Complete (100% Verified) — Smart Multi-Store Unified Cart & Split Escrow Checkout Engine | Next: Phase 105 (Automated Direct MFS Webhooks)  
 **Document Classification:** Canonical Website State, Historical Log & Future Roadmap  
 **Target Audience:** AI Agents (Google Antigravity, Claude Sonnet, Gemini, GPT) and Human Developers / Project Managers  
 
@@ -10,7 +10,7 @@
 ## 🧭 PURPOSE OF THIS DOCUMENT
 This document (`NOTE.md`) is the **authoritative single source of truth** for the Fast Site platform. Whenever any AI agent or human developer opens this project, this file provides an instant, unambiguous understanding of:
 1. **Current Operational Status**: What works right now, active servers, active endpoints, and live test configurations.
-2. **Historical Updates Log**: A complete chronicle of all past updates from Phase 1 through Phase 103.
+2. **Historical Updates Log**: A complete chronicle of all past updates from Phase 1 through Phase 104.
 3. **Future Updates Plan**: The strategic roadmap of upcoming features, migrations, and enhancements.
 4. **Architecture & Guidelines**: Critical rules for database failover, Hostinger deployments, Google Stitch design standards, and file maintenance.
 
@@ -23,11 +23,16 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 103 Complete & Production-Verified (Frictionless Storefront & Media Shield)
-The platform is currently at **Phase 103: Frictionless Storefront & Media Shield (1-Click WhatsApp Orders, 3-Field Guest Checkout, uploads/ Shield, Mandatory Photo Validation)**.
+### Active Status: Phase 104 Complete (100% Verified) | Next: Phase 105 (Automated Direct MFS Webhooks)
+The platform has fully completed and verified **Phase 104: Smart Multi-Store Unified Cart & Split Escrow Checkout Engine**. Next up is **Phase 105: Automated Direct MFS Webhooks & Gateway Engine**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Mandatory Product Photo Validation (Phase 103 100% Complete):**
+1. **Smart Multi-Store Unified Cart & Split Escrow Checkout (Phase 104 100% Complete):**
+   - **Unified Shopping Cart Engine (`cart.php`):** Interactive, multi-store shopping cart grouped by partner shop. Supports quantity increment/decrement, item removal, cart clearing, dynamic delivery calculation (Dhaka ৳60 / Outside ৳120 / Digital ৳0), and sticky mobile checkout dock.
+   - **Product Detail & Storefront Cart Integration (`product_detail.php`, `home.php`, `includes/nav_public.php`):** Direct "Add to Cart" button with instant non-blocking toast notification, header navigation cart icon with dynamic badge counter (`#navCartCount`), and side drawer shopping cart shortcut.
+   - **Multi-Vendor Split Escrow Checkout Engine (`checkout.php`):** Generates parent `order_group_id` upon single 3-field customer submission, automatically splitting cart orders into independent `partner_orders` rows per partner shop, and placing individual SafePay holds via `escrow_hold_funds()`.
+   - **Resilient Database & Escrow Engine Compatibility (`config.php`, `includes/escrow_engine.php`):** Added `order_group_id`, `customer_name`, `customer_phone`, and `order_items` self-healing column migrations and fixed cross-database SQLite vs MySQL compatibility.
+2. **Mandatory Product Photo Validation (Phase 103 100% Complete):**
    - **Frontend Image Gatekeeper (`partner/product_add.php`):** Added client-side validation inside `validateFields()` verifying that at least one photo is uploaded (checking both native file input and cropped base64 representations). If empty, intercepts submission, highlights the dropzone with a glowing red border, displays `⚠️ অনুগ্রহ করে পণ্যের অন্তত একটি স্পষ্ট ছবি আপলোড করুন`, and auto-scrolls to the dropzone. Added live event listener to immediately clear error state upon file selection.
    - **Backend PHP Validation Gatekeeper (`partner/product_add.php`):** Implemented strict server-side check verifying `empty($_POST['images_b64'])`, `empty($_POST['uploaded_images'])`, and `empty($_FILES['images']['name'][0])`. Rejects invalid submissions before database insertion with clear error notification, completely eliminating empty product records.
    - **Real-Time Thumbnail Synchronization (`partner/product_add.php`):** Synchronized the primary thumbnail across both `partner_product_images` and `partner_products.image`/`partner_products.thumbnail`, ensuring storefront catalog queries immediately resolve real HD photography.
@@ -277,6 +282,13 @@ The platform is currently at **Phase 103: Frictionless Storefront & Media Shield
 - **Phase 103 (Mandatory Product Photo Validation)**:
   - Deployed two-layer gatekeeper in partner/product_add.php: Frontend JS validation intercepting empty submissions with red error highlight, and Backend PHP check aborting INSERT if 0 photos provided.
   - Added automatic synchronization of partner_products.image and thumbnail to ensure instant HD storefront display.
+- **Phase 104 (Smart Multi-Store Unified Cart & Split Escrow Checkout Engine)**:
+  - Built multi-store unified shopping cart session manager in `cart.php` with shop-by-shop grouping, quantity steppers (1-99), item removal, empty states, and dynamic delivery calculation (Dhaka ৳60 / Outside ৳120 / Digital ৳0).
+  - Integrated header navigation cart icon with dynamic real-time item badge counter (`#navCartCount`) in `includes/nav_public.php` and side drawer quick shortcut.
+  - Added direct "Add to Cart" CTA (`.btn-add-cart-detail`) in `product_detail.php` with non-blocking toast notifications and mobile sticky dock integration.
+  - Built dual-mode single-product vs cart checkout engine in `checkout.php` with 3-field customer guest submission, automatic parent `order_group_id` generation, multi-shop order splitting into `partner_orders`, and independent SafePay holds in `escrow_vault`.
+  - Upgraded `includes/escrow_engine.php` and `config.php` with cross-database SQLite vs MySQL compatibility, defensive column population, and self-healing column migrations.
+
 
 ---
 

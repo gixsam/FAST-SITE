@@ -837,7 +837,7 @@ if ($_force_migrate || !isset($_SESSION[$_migration_session_key])) {
         }
 
         // Add dynamic columns to partner_orders table if missing
-        $dyn_cols_orders = ['payment_method', 'payment_status', 'sender_number', 'transaction_id', 'gateway_ref', 'delivery_location', 'delivery_charge', 'shipping_address'];
+        $dyn_cols_orders = ['payment_method', 'payment_status', 'sender_number', 'transaction_id', 'gateway_ref', 'delivery_location', 'delivery_charge', 'shipping_address', 'order_group_id', 'customer_name', 'customer_phone', 'order_items'];
         foreach ($dyn_cols_orders as $col) {
             try {
                 @$pdo->exec("ALTER TABLE partner_orders ADD COLUMN $col TEXT DEFAULT NULL");
@@ -1347,7 +1347,11 @@ if ($_force_migrate || !isset($_SESSION[$_migration_session_key])) {
             'shipping_address'    => "VARCHAR(255) DEFAULT NULL",
             'customer_submission' => "TEXT DEFAULT NULL",
             'submission_files'    => "TEXT DEFAULT NULL",
-            'customer_notes'      => "TEXT DEFAULT NULL"
+            'customer_notes'      => "TEXT DEFAULT NULL",
+            'order_group_id'      => "VARCHAR(100) DEFAULT NULL",
+            'customer_name'       => "VARCHAR(255) DEFAULT NULL",
+            'customer_phone'      => "VARCHAR(50) DEFAULT NULL",
+            'order_items'         => "TEXT DEFAULT NULL"
         ];
         foreach ($dyn_cols_orders as $col => $def) {
             try { @$pdo->exec("ALTER TABLE `partner_orders` ADD COLUMN `$col` $def"); } catch (Exception $ex) {}

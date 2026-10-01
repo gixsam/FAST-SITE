@@ -12,51 +12,97 @@ if (!defined('ESCROW_AUTO_RELEASE_HOURS')) {
 }
 
 /**
- * Ensures escrow tables exist in database
+ * Ensures escrow tables exist in database (Cross-Database: MySQL & SQLite)
  */
 function escrow_ensure_tables($pdo) {
     try {
-        $pdo->exec("CREATE TABLE IF NOT EXISTS escrow_vault (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            order_id VARCHAR(100) NOT NULL UNIQUE,
-            buyer_id INT NOT NULL,
-            seller_id INT NOT NULL,
-            amount_bdt DECIMAL(12,2) NOT NULL,
-            status ENUM('held', 'shipped', 'released', 'disputed', 'refunded') DEFAULT 'held',
-            courier_name VARCHAR(100) DEFAULT NULL,
-            tracking_code VARCHAR(150) DEFAULT NULL,
-            shipped_at DATETIME DEFAULT NULL,
-            released_at DATETIME DEFAULT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            INDEX(buyer_id),
-            INDEX(seller_id),
-            INDEX(status)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+        $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'sqlite') {
+            $pdo->exec("CREATE TABLE IF NOT EXISTS escrow_vault (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                order_id TEXT NOT NULL UNIQUE,
+                buyer_id INTEGER NOT NULL,
+                seller_id INTEGER NOT NULL,
+                amount_bdt REAL NOT NULL,
+                status TEXT DEFAULT 'held',
+                courier_name TEXT DEFAULT NULL,
+                tracking_code TEXT DEFAULT NULL,
+                shipped_at DATETIME DEFAULT NULL,
+                released_at DATETIME DEFAULT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            );");
 
-        $pdo->exec("CREATE TABLE IF NOT EXISTS escrow_disputes (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            order_id VARCHAR(100) NOT NULL,
-            opened_by_user_id INT NOT NULL,
-            reason TEXT NOT NULL,
-            status ENUM('open', 'resolved_seller', 'resolved_buyer') DEFAULT 'open',
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            resolved_at DATETIME DEFAULT NULL,
-            INDEX(order_id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+            // Dynamic columns if table was created in an older migration
+            try { @$pdo->exec("ALTER TABLE escrow_vault ADD COLUMN amount_bdt REAL DEFAULT 0.0"); } catch (Exception $ex) {}
+            try { @$pdo->exec("ALTER TABLE escrow_vault ADD COLUMN courier_name TEXT DEFAULT NULL"); } catch (Exception $ex) {}
+            try { @$pdo->exec("ALTER TABLE escrow_vault ADD COLUMN tracking_code TEXT DEFAULT NULL"); } catch (Exception $ex) {}
+
+            $pdo->exec("CREATE TABLE IF NOT EXISTS escrow_disputes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                order_id TEXT NOT NULL,
+                opened_by_user_id INTEGER NOT NULL,
+                reason TEXT NOT NULL,
+                status TEXT DEFAULT 'open',
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                resolved_at DATETIME DEFAULT NULL
+            );");
+        } else {
+            $pdo->exec("CREATE TABLE IF NOT EXISTS escrow_vault (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                order_id VARCHAR(100) NOT NULL UNIQUE,
+                buyer_id INT NOT NULL,
+                seller_id INT NOT NULL,
+                amount_bdt DECIMAL(12,2) NOT NULL,
+                status ENUM('held', 'shipped', 'released', 'disputed', 'refunded') DEFAULT 'held',
+                courier_name VARCHAR(100) DEFAULT NULL,
+                tracking_code VARCHAR(150) DEFAULT NULL,
+                shipped_at DATETIME DEFAULT NULL,
+                released_at DATETIME DEFAULT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                INDEX(buyer_id),
+                INDEX(seller_id),
+                INDEX(status)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+            $pdo->exec("CREATE TABLE IF NOT EXISTS escrow_disputes (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                order_id VARCHAR(100) NOT NULL,
+                opened_by_user_id INT NOT NULL,
+                reason TEXT NOT NULL,
+                status ENUM('open', 'resolved_seller', 'resolved_buyer') DEFAULT 'open',
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                resolved_at DATETIME DEFAULT NULL,
+                INDEX(order_id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+        }
     } catch (Exception $e) {
         error_log("Escrow Table Init Error: " . $e->getMessage());
     }
 }
 
 /**
- * Initializes escrow vault hold for a new order
+ * Initializes escrow vault hold for a new order (Cross-Database: MySQL & SQLite)
  */
 function escrow_hold_funds($pdo, $order_id, $buyer_id, $seller_id, $amount_bdt) {
     escrow_ensure_tables($pdo);
-    $stmt = $pdo->prepare("INSERT INTO escrow_vault (order_id, buyer_id, seller_id, amount_bdt, status) 
-                           VALUES (?, ?, ?, ?, 'held')
-                           ON DUPLICATE KEY UPDATE amount_bdt = VALUES(amount_bdt)");
-    return $stmt->execute([$order_id, $buyer_id, $seller_id, $amount_bdt]);
+    $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+    if ($driver === 'sqlite') {
+        $check = $pdo->prepare("SELECT id FROM escrow_vault WHERE order_id = ? LIMIT 1");
+        $check->execute([$order_id]);
+        $existing = $check->fetch(PDO::FETCH_ASSOC);
+        if ($existing) {
+            $stmt = $pdo->prepare("UPDATE escrow_vault SET amount = ?, amount_bdt = ?, buyer_id = ?, seller_id = ?, status = 'held' WHERE id = ?");
+            return $stmt->execute([$amount_bdt, $amount_bdt, $buyer_id, $seller_id, $existing['id']]);
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO escrow_vault (order_id, buyer_id, seller_id, amount, amount_bdt, status) VALUES (?, ?, ?, ?, ?, 'held')");
+            return $stmt->execute([$order_id, $buyer_id, $seller_id, $amount_bdt, $amount_bdt]);
+        }
+    } else {
+        $stmt = $pdo->prepare("INSERT INTO escrow_vault (order_id, buyer_id, seller_id, amount_bdt, status) 
+                               VALUES (?, ?, ?, ?, 'held')
+                               ON DUPLICATE KEY UPDATE amount_bdt = VALUES(amount_bdt)");
+        return $stmt->execute([$order_id, $buyer_id, $seller_id, $amount_bdt]);
+    }
 }
 
 /**

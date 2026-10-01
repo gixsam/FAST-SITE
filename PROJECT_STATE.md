@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 103 100% COMPLETE — Frictionless Storefront, WhatsApp 1-Click Orders, 3-Field Guest Checkout, Mandatory Photo Validation & uploads/ Shield
+**Last Updated:** Phase 104 Complete (100% Verified) — Smart Multi-Store Unified Cart & Split Escrow Checkout Engine | Next: Phase 105 (Automated Direct MFS Webhooks)
 
 ---
 
@@ -42,6 +42,7 @@
 | **Admin Panel (Command Center)** | [http://localhost:8000/admin/dashboard.php](http://localhost:8000/admin/dashboard.php) | [https://fastsite.best-travel.ltd/admin/dashboard.php](https://fastsite.best-travel.ltd/admin/dashboard.php) |
 | **Partner / Shop Portal** | [http://localhost:8000/partner/dashboard.php](http://localhost:8000/partner/dashboard.php) | [https://fastsite.best-travel.ltd/partner/dashboard.php](https://fastsite.best-travel.ltd/partner/dashboard.php) |
 | **Public Storefront** | [http://localhost:8000/](http://localhost:8000/) | [https://fastsite.best-travel.ltd/](https://fastsite.best-travel.ltd/) |
+| **Smart Unified Cart** | [http://localhost:8000/cart.php](http://localhost:8000/cart.php) | [https://fastsite.best-travel.ltd/cart.php](https://fastsite.best-travel.ltd/cart.php) |
 
 ---
 
@@ -53,7 +54,7 @@
 3. Production `.env` credentials are permanently excluded and 100% safe.
 
 ### Method 2: Manual ZIP Archive Deployment (File Manager)
-1. Take the latest `.zip` (`fastsite_phase88.zip`) from `D:\TECH\WEBSITE\FAST SITE\fast site\`
+1. Take the latest `.zip` (`fastsite_phase104.zip`) from `D:\TECH\WEBSITE\FAST SITE\fast site\`
 2. Upload to `public_html` on Hostinger File Manager
 3. Extract and overwrite existing files (production `.env` credentials are safe and excluded)
 4. Visit `https://fastsite.best-travel.ltd/admin/seed_ecosystem_shops.php` once to seed shops (if needed)
@@ -90,8 +91,15 @@
 | 101 | 3-Field Frictionless Phone Guest Checkout & Delivery Zone Calculation (`checkout.php`) |
 | 102 | Standardized `uploads/` Architecture & Permanent Deployment Media Shield (`build_hostinger_zip.py`, `build_phase_zip.py`) |
 | 103 | Two-Layer Mandatory Product Photo Validation (Frontend JS + Backend PHP in `partner/product_add.php`) |
+| 104 | Smart Multi-Store Unified Cart & Split Escrow Checkout Engine (`cart.php`, `checkout.php`, `includes/escrow_engine.php`) |
 
-### Phase 103 Details — Two-Layer Mandatory Product Photo Validation
+### Phase 104 Details — Smart Multi-Store Unified Cart & Split Escrow Checkout Engine
+- **1. Unified Shopping Cart Engine (`cart.php`):** Interactive, multi-store shopping cart grouped by partner shop. Supports quantity increment/decrement, item removal, cart clearing, dynamic delivery calculation (Dhaka ৳60 / Outside ৳120 / Digital ৳0), and sticky mobile checkout dock.
+- **2. Product Detail & Storefront Cart Integration (`product_detail.php`, `home.php`, `includes/nav_public.php`):** Direct "Add to Cart" button with instant non-blocking toast notification, header navigation cart icon with dynamic badge counter (`#navCartCount`), and side drawer shopping cart shortcut.
+- **3. Multi-Vendor Split Escrow Checkout Engine (`checkout.php`):** Generates parent `order_group_id` upon single 3-field customer submission, automatically splitting cart orders into independent `partner_orders` rows per partner shop, and placing individual SafePay holds via `escrow_hold_funds()`.
+- **4. Resilient Database & Escrow Engine Compatibility (`config.php`, `includes/escrow_engine.php`):** Added `order_group_id`, `customer_name`, `customer_phone`, and `order_items` self-healing column migrations and fixed cross-database SQLite vs MySQL compatibility.
+
+### Phase 103 Details — Mandatory Product Photo Validation (Frontend + Backend Gatekeeper)
 - **1. Frontend Image Gatekeeper (`partner/product_add.php`):** Added client-side validation inside `validateFields()` verifying that at least one photo is uploaded (checking both native file input and cropped base64 representations). If empty, intercepts submission, highlights the dropzone with a glowing red border, displays `⚠️ অনুগ্রহ করে পণ্যের অন্তত একটি স্পষ্ট ছবি আপলোড করুন`, and auto-scrolls to the dropzone. Added live event listener to immediately clear error state upon file selection.
 - **2. Backend PHP Validation Gatekeeper (`partner/product_add.php`):** Implemented strict server-side check verifying `empty($_POST['images_b64'])`, `empty($_POST['uploaded_images'])`, and `empty($_FILES['images']['name'][0])`. Rejects invalid submissions before database insertion with clear error notification, completely eliminating empty product records.
 - **3. Real-Time Thumbnail Synchronization (`partner/product_add.php`):** Synchronized the primary thumbnail across both `partner_product_images` and `partner_products.image`/`partner_products.thumbnail`, ensuring storefront catalog queries immediately resolve real HD photography.
