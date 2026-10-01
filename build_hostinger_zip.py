@@ -31,7 +31,7 @@ EXCLUDE_DIRS = {
     '.git', '.idea', '.agents', 'node_modules', '__pycache__',
     'FastSiteApp', '_build_archives', '_dev_tools', 'chatbot-server',
     'whatsapp-bot', 'APK FILE USER', 'apk file ADMIN', 'AFFILIATE PARTNERS LOGO',
-    'MEDIA PHOTO', 'SQL FILE', 'sessions', 'scratch', 'build'
+    'MEDIA PHOTO', 'SQL FILE', 'sessions', 'scratch', 'build', 'uploads'
 }
 
 # File extensions to exclude

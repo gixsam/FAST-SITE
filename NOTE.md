@@ -1,7 +1,7 @@
 # 📘 FAST SITE — MASTER COMPREHENSIVE NOTE & STATUS REPORT (NOTE.md)
 **Project Name:** FAST SITE (Ecosystem Escrow Hub & Universal Marketplace)  
 **Main Domain:** `https://fastsite.best-travel.ltd`  
-**Current Active Version:** Phase 99 100% Complete & Production-Verified  
+**Current Active Version:** Phase 103 100% Complete & Production-Verified  
 **Document Classification:** Canonical Website State, Historical Log & Future Roadmap  
 **Target Audience:** AI Agents (Google Antigravity, Claude Sonnet, Gemini, GPT) and Human Developers / Project Managers  
 
@@ -10,7 +10,7 @@
 ## 🧭 PURPOSE OF THIS DOCUMENT
 This document (`NOTE.md`) is the **authoritative single source of truth** for the Fast Site platform. Whenever any AI agent or human developer opens this project, this file provides an instant, unambiguous understanding of:
 1. **Current Operational Status**: What works right now, active servers, active endpoints, and live test configurations.
-2. **Historical Updates Log**: A complete chronicle of all past updates from Phase 1 through Phase 99.
+2. **Historical Updates Log**: A complete chronicle of all past updates from Phase 1 through Phase 103.
 3. **Future Updates Plan**: The strategic roadmap of upcoming features, migrations, and enhancements.
 4. **Architecture & Guidelines**: Critical rules for database failover, Hostinger deployments, Google Stitch design standards, and file maintenance.
 
@@ -23,11 +23,28 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 99 Complete & Production-Verified (Clean Terminology Re-Word Migration)
-The platform is currently at **Phase 99: Clean Terminology Re-Word Migration & Consumer Trust Architecture (SafePay, Bengali Trust Badges, Refund & Claim Center)**.
+### Active Status: Phase 103 Complete & Production-Verified (Frictionless Storefront & Media Shield)
+The platform is currently at **Phase 103: Frictionless Storefront & Media Shield (1-Click WhatsApp Orders, 3-Field Guest Checkout, uploads/ Shield, Mandatory Photo Validation)**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Clean Terminology Re-Word Migration (Phase 99 100% Complete):**
+1. **Mandatory Product Photo Validation (Phase 103 100% Complete):**
+   - **Frontend Image Gatekeeper (`partner/product_add.php`):** Added client-side validation inside `validateFields()` verifying that at least one photo is uploaded (checking both native file input and cropped base64 representations). If empty, intercepts submission, highlights the dropzone with a glowing red border, displays `⚠️ অনুগ্রহ করে পণ্যের অন্তত একটি স্পষ্ট ছবি আপলোড করুন`, and auto-scrolls to the dropzone. Added live event listener to immediately clear error state upon file selection.
+   - **Backend PHP Validation Gatekeeper (`partner/product_add.php`):** Implemented strict server-side check verifying `empty($_POST['images_b64'])`, `empty($_POST['uploaded_images'])`, and `empty($_FILES['images']['name'][0])`. Rejects invalid submissions before database insertion with clear error notification, completely eliminating empty product records.
+   - **Real-Time Thumbnail Synchronization (`partner/product_add.php`):** Synchronized the primary thumbnail across both `partner_product_images` and `partner_products.image`/`partner_products.thumbnail`, ensuring storefront catalog queries immediately resolve real HD photography.
+2. **Standardized uploads/ Architecture & Deployment Media Shield (Phase 102 100% Complete):**
+   - **Standardized 5-Folder Directory Structure (`uploads/`):** Established canonical upload hierarchy: `uploads/users/` (profile avatars, KYC selfies, NID documents), `uploads/partners/` (shop logos, cover banners, trade licenses), `uploads/products/` (catalog photos, audio preview clips), `uploads/admin/` (Fast Site logos, promo banners), and `uploads/staff/` (staff profile photos).
+   - **Permanent Deployment Media Shield (`build_hostinger_zip.py`, `build_phase_zip.py`, `create_phase103_zip.py`):** Added `uploads` to `EXCLUDE_DIRS` and `excludes` lists across all build and packaging engines. Guarantees that user photos, customer receipts, and merchant documents already live on Hostinger are NEVER overwritten, wiped, or reset when extracting update zips.
+3. **3-Field Frictionless Phone Guest Checkout (Phase 101 100% Complete):**
+   - **Frictionless 3-Field Guest Order Form (`checkout.php`):** Streamlined checkout exclusively to 3 required customer fields: `customer_name` (আপনার পূর্ণ নাম), `customer_phone` (১১ ডিজিটের মোবাইল নম্বর), and `delivery_address` (পূর্ণাঙ্গ ডেলিভারি ঠিকানা ও জেলা).
+   - **Seamless Phone Normalization & Background Account Provisioning:** Automatically normalizes Bangladeshi phone numbers (`01XXXXXXXXX`). Checks if user exists; if not, automatically provisions a customer account in the background with zero password friction and logs them into session so they can immediately track their order.
+   - **Complete Recipient Order Record Storage:** Upgraded `partner_orders` INSERT statement to store recipient name, phone, full address, delivery zone, delivery charge, and payment status (`pending_cod` for COD, `pending_payment` for bKash/Nagad).
+   - **Dynamic Delivery Zone & Total Calculation:** Embedded interactive delivery zone dropdown (Dhaka City ৳60 / Outside Dhaka ৳120 / Digital ৳0) with real-time JavaScript total recalculation, coupon validation, and payment instructions.
+4. **1-Click WhatsApp Quick Order & Mobile Sticky Action Dock (Phase 100 100% Complete):**
+   - **Unclosed `<script>` Tag Glitch Resolved (`product_detail.php`):** Fixed critical syntax bug at line 1077 where `shareNativeProduct()` cut directly into HTML (`alert('Sharing is not sup <div class="desc-box">`), which had caused the browser to swallow the entire product description, required info box, and action panel inside an open `<script>` tag.
+   - **1-Click WhatsApp Quick Order Button (`product_detail.php`):** Embedded prominent green gradient CTA (`[ 💬 WhatsApp এ সরাসরি অর্ডার করুন ]`) with dynamic phone resolution (partner shop WhatsApp or official +8801337320544) and pre-filled Bengali order message template (Product Name, Price, URL, Customer Delivery Details).
+   - **4 Transparent Delivery & COD Trust Badges:** Replaced technical escrow text with 4 clean consumer trust badges: Dhaka City 24-48h (৳60), Outside Dhaka 2-3 Days (৳120), Cash on Delivery (পণ্য হাতে পেয়ে মূল্য পরিশোধ), and SafePay 100% Buyer Guarantee (সুরক্ষিত তহবিল).
+   - **Mobile Sticky Action Dock (`.mobile-sticky-action-dock`):** Built fixed floating bottom action bar on mobile screens (< 768px) with product thumbnail (44px), price display (BDT + Coins), `[ 💬 WhatsApp ]` button, and `[ 🛒 অর্ডার করুন ]` direct guest checkout trigger with hardware safe-area insets.
+5. **Clean Terminology Re-Word Migration (Phase 99 100% Complete):**
    - Eliminated technical and developer jargon across 18 core template files spanning Storefront, User Dashboard, Shop Panel, and Admin Command Center:
      - *Escrow* ➔ **SafePay / Buyer Guarantee (নিরাপদ গ্যারান্টি)**
      - *Escrow Vault* ➔ **Safety Hold / Protected Vault (সুরক্ষিত তহবিল)**
@@ -232,6 +249,34 @@ The platform is currently at **Phase 99: Clean Terminology Re-Word Migration & C
 - **Phase 93 (Hardcoded Google API Key Removal & Secret Scanning Alert Resolution)**:
   - Purged hardcoded Google Gemini API key from `config.php:279` and transitioned to `getenv('GEMINI_API_KEY') ?: ''`.
   - Resolved GitHub Secret Scanning security alert for commit `6f30295b` and established secure protocol for key rotation.
+- **Phase 94 (Professional Mobile Phone & Native APK App Responsive Optimization)**:
+  - Enforced universal viewport standards, 100dvh dynamic height, safe-area hardware insets, APK environment detection, and standardized z-index layering.
+- **Phase 95 (Admin Navbar Mobile Overflow Fix & Action Alert Modal Dropdown)**:
+  - Fixed mobile navbar overflow clipping on screens < 640px, converting text links into compact icon pills, and upgraded notifications/apps dropdowns to fixed floating modals.
+- **Phase 96 (Admin Settings Mobile Overflow Fix & DOM Hierarchy Restoration)**:
+  - Resolved swallowed tabs (#sec-staff & #sec-advance-settings), restored perfect tag balance diff=0 across all 7 partials, and added mobile .grid2 vertical flex collapse.
+- **Phase 97 (Universal Partner & Ecosystem Product Photo Sync Architecture)**:
+  - Fixed remote image dropping in api/receive_crosspost.php with cURL browser headers, eliminated double-domain prefixing, extended resolveProductArtwork() with authentic HD travel fallbacks, and engineered admin/sync_best_travel.php catalog auto-repair.
+- **Phase 98 (New Products Featuring Slideable Bar Integration)**:
+  - Deployed hardware-accelerated touch tracks with CSS scroll-snap on both Storefront (home.php) and User Dashboard (user/dashboard.php), displaying top 15 new listings with desktop glass controls.
+- **Phase 99 (Clean Terminology Re-Word Migration & Consumer Trust Architecture)**:
+  - Replaced technical jargon (Escrow, KYC, Disputes, Coins) with consumer-friendly Bengali/English trust terms across 18 core files: SafePay Buyer Guarantee (নিরাপদ গ্যারান্টি), Protected Vault (সুরক্ষিত তহবিল), 48h Auto-Completion, Refund & Claim Center, ID Verification, and Reseller Partners.
+- **Phase 100 (1-Click WhatsApp Quick Order & Mobile Sticky Action Dock)**:
+  - Fixed unclosed <script> bug in product_detail.php:1077 that swallowed the product description into JS.
+  - Deployed 1-Click WhatsApp Order button with pre-filled Bengali order message template (Product Name, Price, URL, Customer Delivery Details).
+  - Deployed 4 transparent delivery badges (৳60 Dhaka, ৳120 Outside, COD, SafePay).
+  - Built .mobile-sticky-action-dock on mobile viewports (< 768px) with product thumbnail, price, WhatsApp button, and order button.
+- **Phase 101 (3-Field Frictionless Phone Guest Checkout)**:
+  - Streamlined checkout.php exclusively to 3 required customer fields: Name, 11-digit Phone, Delivery Address.
+  - Added automatic phone normalization (01XXXXXXXXX) and background account provisioning with instant session login.
+  - Stored complete recipient delivery details in partner_orders (name, phone, address, delivery charge, COD/bKash/Nagad status).
+  - Added interactive delivery zone calculation (Dhaka ৳60 / Outside ৳120 / Digital ৳0) and dynamic payment instructions.
+- **Phase 102 (Standardized uploads/ Architecture & Deployment Media Shield)**:
+  - Standardized uploads/ into 5 dedicated directories: users/, partners/, products/, admin/, staff/.
+  - Permanently excluded uploads/ from build_hostinger_zip.py and build_phase_zip.py to protect customer and partner media on Hostinger from being overwritten during code updates.
+- **Phase 103 (Mandatory Product Photo Validation)**:
+  - Deployed two-layer gatekeeper in partner/product_add.php: Frontend JS validation intercepting empty submissions with red error highlight, and Backend PHP check aborting INSERT if 0 photos provided.
+  - Added automatic synchronization of partner_products.image and thumbnail to ensure instant HD storefront display.
 
 ---
 

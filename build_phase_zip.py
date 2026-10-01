@@ -26,7 +26,7 @@ if os.path.exists(zip_name):
 excludes = [
     '.git', '.idea', '.agents', 'node_modules', '__pycache__',
     'fastsite_phase', 'fastsite_admin', '.zip', '.db', '.sqlite',
-    'apk file ADMIN', 'apk file User', 'build', 'sessions'
+    'apk file ADMIN', 'apk file User', 'build', 'sessions', 'uploads'
 ]
 
 # Run build_hostinger_zip.py which handles Phase 88 target packaging

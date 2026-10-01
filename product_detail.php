@@ -106,6 +106,31 @@ $nagad_enabled = getPartnerSetting('payment_nagad_enabled', '1') === '1';
 $cod_enabled = getPartnerSetting('payment_cod_enabled', '1') === '1';
 $delivery_inside = floatval(getPartnerSetting('delivery_inside_dhaka', '60'));
 $delivery_outside = floatval(getPartnerSetting('delivery_outside_dhaka', '120'));
+
+// WhatsApp 1-Click Order Link & Message Resolution
+$official_wa = getPartnerSetting('marketplace_whatsapp', '') ?: getPartnerSetting('whatsapp_number', '8801337320544');
+$shop_wa = !empty($p['whatsapp']) ? $p['whatsapp'] : $official_wa;
+$clean_wa = preg_replace('/[^0-9]/', '', $shop_wa);
+if (strlen($clean_wa) === 11 && strpos($clean_wa, '01') === 0) {
+    $clean_wa = '88' . $clean_wa;
+}
+if (empty($clean_wa)) {
+    $clean_wa = '8801337320544';
+}
+
+$current_product_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/product_detail.php?id=' . $p['id'];
+
+$wa_msg = "আসসালামু আলাইকুম Fast Site, আমি এই পণ্যটি অর্ডার করতে চাই:\n\n"
+        . "📌 পণ্য: " . ($p['title'] ?? 'Product') . "\n"
+        . "💰 মূল্য: ৳" . number_format($product_price_bdt, 0) . " (" . number_format(ceil($product_price)) . " Points)\n"
+        . "🔗 লিংক: " . $current_product_url . "\n\n"
+        . "আমার ডেলিভারি তথ্য:\n"
+        . "নাম: " . (!empty($user_profile['name']) ? $user_profile['name'] : '') . "\n"
+        . "মোবাইল নম্বর: " . (!empty($user_profile['phone']) ? $user_profile['phone'] : '') . "\n"
+        . "ঠিকানা ও জেলা: ";
+
+$wa_order_link = "https://wa.me/" . $clean_wa . "?text=" . rawurlencode($wa_msg);
+$primary_thumb = !empty($images[0]['image_url']) ? $images[0]['image_url'] : '/assets/img/placeholder.png';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -687,6 +712,208 @@ if (mb_strlen($ogDesc) > 200) $ogDesc = mb_substr($ogDesc, 0, 197) . '...';
       line-height: 1.4;
     }
 
+    /* WhatsApp 1-Click Order Button */
+    .btn-whatsapp-order {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+      width: 100%;
+      border-radius: 50px;
+      padding: 0.85rem 1rem;
+      font-size: 0.95rem;
+      margin-top: 0.75rem;
+      box-shadow: 0 4px 18px rgba(37, 211, 102, 0.3);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      min-height: 48px;
+      box-sizing: border-box;
+    }
+    .btn-whatsapp-order:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(37, 211, 102, 0.45);
+      filter: brightness(1.08);
+      color: #fff;
+    }
+    .btn-whatsapp-order:active {
+      transform: scale(0.97);
+    }
+
+    /* 4 Transparent Delivery & Trust Badges */
+    .delivery-trust-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      margin-top: 1.2rem;
+    }
+    @media (max-width: 480px) {
+      .delivery-trust-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .trust-badge-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 0.65rem 0.8rem;
+      transition: border-color 0.2s;
+    }
+    .trust-badge-item:hover {
+      border-color: rgba(252, 185, 0, 0.25);
+      background: rgba(252, 185, 0, 0.02);
+    }
+    .trust-badge-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+    .trust-badge-text {
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      line-height: 1.35;
+    }
+    .trust-badge-text strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* Mobile Sticky Action Dock (< 768px) */
+    .mobile-sticky-action-dock {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+      
+      .mobile-sticky-action-dock {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1050;
+        background: rgba(10, 13, 26, 0.94);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border-top: 1px solid rgba(252, 185, 0, 0.25);
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.75);
+        padding: 0.6rem 0.9rem calc(env(safe-area-inset-bottom, 0px) + 0.55rem) 0.9rem;
+        box-sizing: border-box;
+      }
+
+      .dock-product-preview {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        min-width: 0;
+        flex: 1;
+      }
+
+      .dock-thumb {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: #12121a;
+        flex-shrink: 0;
+      }
+
+      .dock-price-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .dock-price-bdt {
+        font-size: 1.05rem;
+        font-weight: 900;
+        color: #fff;
+        white-space: nowrap;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+
+      .dock-price-coin {
+        font-size: 0.72rem;
+        color: var(--gold);
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .dock-buttons-group {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        flex-shrink: 0;
+      }
+
+      .dock-btn-whatsapp {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        background: linear-gradient(135deg, #25D366, #128C7E);
+        color: #fff !important;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 0.55rem 0.75rem;
+        border-radius: 50px;
+        min-height: 42px;
+        box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+        transition: transform 0.15s ease;
+        white-space: nowrap;
+      }
+      .dock-btn-whatsapp:active {
+        transform: scale(0.95);
+      }
+
+      .dock-btn-buy {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        background: linear-gradient(135deg, var(--gold), #ff9100);
+        color: #000 !important;
+        border: none;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 0.85rem;
+        padding: 0.55rem 0.95rem;
+        border-radius: 50px;
+        min-height: 42px;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(252, 185, 0, 0.35);
+        transition: transform 0.15s ease;
+        white-space: nowrap;
+      }
+      .dock-btn-buy:active {
+        transform: scale(0.95);
+      }
+    }
+
+    @media (max-width: 375px) {
+      .dock-btn-text {
+        display: none;
+      }
+      .dock-btn-whatsapp, .dock-btn-buy {
+        padding: 0.55rem 0.75rem;
+      }
+    }
+
     /* ================= REVIEWS SECTION ================= */
     .reviews-section {
       margin-top: 4rem;
@@ -1074,7 +1301,17 @@ if (mb_strlen($ogDesc) > 200) $ogDesc = mb_substr($ogDesc, 0, 197) . '...';
             url: window.location.href
           }).catch(console.error);
         } else {
-          alert('Sharing is not sup      <div class="desc-box">
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Product link copied to clipboard!');
+          } else {
+            alert('Sharing is not supported on this browser.');
+          }
+        }
+      }
+      </script>
+
+      <div class="desc-box">
         <h4 style="color:#fff; margin-bottom:0.4rem; font-size:0.9rem;">Product Description</h4>
         <p><?= nl2br(htmlspecialchars($p['description'])) ?></p>
       </div>
@@ -1114,18 +1351,43 @@ if (mb_strlen($ogDesc) > 200) $ogDesc = mb_substr($ogDesc, 0, 197) . '...';
           <?php if ($isUserLoggedIn): ?>
             <button onclick="openCheckoutModal()" class="btn-buy-now" style="background: linear-gradient(135deg, var(--gold), #ff9100);"> Proceed to Checkout</button>
           <?php else: ?>
-            <div style="text-align:center;">
-              <p style="font-size:0.82rem; color:var(--muted); margin-bottom:0.8rem;">You must be logged in as a customer to purchase items.</p>
-              <a href="/user/login.php" class="btn-secondary-login" style="padding:0.7rem;text-decoration:none;"> Login to Purchase</a>
-            </div>
+            <a href="checkout.php?product_id=<?= $p['id'] ?>&partner_id=<?= $p['partner_id'] ?>" class="btn-buy-now" style="background: linear-gradient(135deg, var(--gold), #ff9100); text-decoration:none;">
+              🛒 সরাসরি অর্ডার করুন (Easy Checkout)
+            </a>
           <?php endif; ?>
         <?php endif; ?>
         
-        <div class="escrow-shield-badge">
-          <span>🛡️</span>
-          <div>
-            <h5 style="color:#fff; font-size:0.82rem; margin-bottom:0.2rem; font-weight:800;">SafePay ১০০% নিরাপদ গ্যারান্টি (Buyer Guarantee)</h5>
-            <p>আপনার পেমেন্ট Fast Site সুরক্ষিত তহবিলে (Protected Vault) নিরাপদে জমা থাকে। সঠিক পণ্য হাতে পেয়ে নিশ্চিত করার পরই সেলার পেমেন্ট পাবে। কোনো সমস্যা হলে ১০০% রিফান্ড সহায়তা!</p>
+        <!-- 1-Click WhatsApp Quick Order Button -->
+        <a href="<?= htmlspecialchars($wa_order_link) ?>" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-order">
+          <span style="font-size: 1.25rem;">💬</span>
+          <span>WhatsApp এ সরাসরি অর্ডার করুন</span>
+        </a>
+
+        <!-- 4 Transparent Delivery & SafePay Trust Badges -->
+        <div class="delivery-trust-grid">
+          <div class="trust-badge-item">
+            <span class="trust-badge-icon">🚚</span>
+            <div class="trust-badge-text">
+              <strong>ঢাকা সিটির ভিতরে:</strong> ২৪-৪৮ ঘণ্টা (৳<?= number_format($delivery_inside, 0) ?>)
+            </div>
+          </div>
+          <div class="trust-badge-item">
+            <span class="trust-badge-icon">🚛</span>
+            <div class="trust-badge-text">
+              <strong>ঢাকা সিটির বাইরে:</strong> ২-৩ দিন (৳<?= number_format($delivery_outside, 0) ?>)
+            </div>
+          </div>
+          <div class="trust-badge-item">
+            <span class="trust-badge-icon">💵</span>
+            <div class="trust-badge-text">
+              <strong>ক্যাশ অন ডেলিভারি:</strong> পণ্য হাতে পেয়ে মূল্য পরিশোধ
+            </div>
+          </div>
+          <div class="trust-badge-item">
+            <span class="trust-badge-icon">🛡️</span>
+            <div class="trust-badge-text">
+              <strong>SafePay গ্যারান্টি:</strong> ১০০% সুরক্ষিত তহবিল ও রিফান্ড
+            </div>
           </div>
         </div>
       </div>
@@ -1677,6 +1939,38 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 })();
 </script>
+<!-- MOBILE STICKY ACTION DOCK (< 768px) -->
+<div class="mobile-sticky-action-dock">
+  <div class="dock-product-preview">
+    <img src="<?= htmlspecialchars($primary_thumb) ?>" alt="<?= htmlspecialchars($p['title']) ?>" class="dock-thumb" />
+    <div class="dock-price-col">
+      <div class="dock-price-bdt">৳<?= number_format($product_price_bdt, 0) ?></div>
+      <div class="dock-price-coin">🪙 <?= number_format(ceil($product_price)) ?> pts</div>
+    </div>
+  </div>
+  <div class="dock-buttons-group">
+    <a href="<?= htmlspecialchars($wa_order_link) ?>" target="_blank" rel="noopener noreferrer" class="dock-btn-whatsapp" title="WhatsApp এ অর্ডার করুন">
+      <span>💬</span>
+      <span class="dock-btn-text">WhatsApp</span>
+    </a>
+    <?php if ($isAffiliateProduct && !empty($affiliateTargetUrl)): ?>
+      <a href="<?= htmlspecialchars($affiliateTargetUrl) ?>" target="_blank" rel="noopener noreferrer" class="dock-btn-buy" style="background: linear-gradient(135deg, #10b981, #00b0ff);">
+        <span>🔗</span>
+        <span class="dock-btn-text">Claim Offer</span>
+      </a>
+    <?php elseif ($isUserLoggedIn): ?>
+      <button onclick="openCheckoutModal()" class="dock-btn-buy">
+        <span>🛒</span>
+        <span class="dock-btn-text">অর্ডার করুন</span>
+      </button>
+    <?php else: ?>
+      <a href="checkout.php?product_id=<?= $p['id'] ?>&partner_id=<?= $p['partner_id'] ?>" class="dock-btn-buy">
+        <span>🛒</span>
+        <span class="dock-btn-text">অর্ডার করুন</span>
+      </a>
+    <?php endif; ?>
+  </div>
+</div>
 
 </body>
 </html>

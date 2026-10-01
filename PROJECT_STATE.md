@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 99 100% COMPLETE — Clean Terminology Re-Word Migration & Consumer Trust Architecture (SafePay, Bengali Trust Badges, Refund & Claim Center)
+**Last Updated:** Phase 103 100% COMPLETE — Frictionless Storefront, WhatsApp 1-Click Orders, 3-Field Guest Checkout, Mandatory Photo Validation & uploads/ Shield
 
 ---
 
@@ -86,6 +86,31 @@
 | 97 | Universal Partner & Ecosystem Product Photo Sync Architecture (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution) |
 | 98 | New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture |
 | 99 | Clean Terminology Re-Word Migration & Consumer Trust Architecture (SafePay, Bengali Trust Badges, Refund & Claim Center) |
+| 100 | 1-Click WhatsApp Quick Order, Delivery Badges, Mobile Sticky Dock & Unclosed Script Fix (`product_detail.php`) |
+| 101 | 3-Field Frictionless Phone Guest Checkout & Delivery Zone Calculation (`checkout.php`) |
+| 102 | Standardized `uploads/` Architecture & Permanent Deployment Media Shield (`build_hostinger_zip.py`, `build_phase_zip.py`) |
+| 103 | Two-Layer Mandatory Product Photo Validation (Frontend JS + Backend PHP in `partner/product_add.php`) |
+
+### Phase 103 Details — Two-Layer Mandatory Product Photo Validation
+- **1. Frontend Image Gatekeeper (`partner/product_add.php`):** Added client-side validation inside `validateFields()` verifying that at least one photo is uploaded (checking both native file input and cropped base64 representations). If empty, intercepts submission, highlights the dropzone with a glowing red border, displays `⚠️ অনুগ্রহ করে পণ্যের অন্তত একটি স্পষ্ট ছবি আপলোড করুন`, and auto-scrolls to the dropzone. Added live event listener to immediately clear error state upon file selection.
+- **2. Backend PHP Validation Gatekeeper (`partner/product_add.php`):** Implemented strict server-side check verifying `empty($_POST['images_b64'])`, `empty($_POST['uploaded_images'])`, and `empty($_FILES['images']['name'][0])`. Rejects invalid submissions before database insertion with clear error notification, completely eliminating empty product records.
+- **3. Real-Time Thumbnail Synchronization (`partner/product_add.php`):** Synchronized the primary thumbnail across both `partner_product_images` and `partner_products.image`/`partner_products.thumbnail`, ensuring storefront catalog queries immediately resolve real HD photography.
+
+### Phase 102 Details — Standardized uploads/ Architecture & Deployment Media Shield
+- **1. Standardized 5-Folder Directory Structure (`uploads/`):** Established canonical upload hierarchy: `uploads/users/` (profile avatars, KYC selfies, NID documents), `uploads/partners/` (shop logos, cover banners, trade licenses), `uploads/products/` (catalog photos, audio preview clips), `uploads/admin/` (Fast Site logos, promo banners), and `uploads/staff/` (staff profile photos).
+- **2. Permanent Deployment Media Shield (`build_hostinger_zip.py`, `build_phase_zip.py`, `create_phase103_zip.py`):** Added `uploads` to `EXCLUDE_DIRS` and `excludes` lists across all build and packaging engines. Guarantees that user photos, customer receipts, and merchant documents already live on Hostinger are NEVER overwritten, wiped, or reset when extracting update zips.
+
+### Phase 101 Details — 3-Field Frictionless Phone Guest Checkout
+- **1. Frictionless 3-Field Guest Order Form (`checkout.php`):** Streamlined checkout exclusively to 3 required customer fields: `customer_name` (আপনার পূর্ণ নাম), `customer_phone` (১১ ডিজিটের মোবাইল নম্বর), and `delivery_address` (পূর্ণাঙ্গ ডেলিভারি ঠিকানা ও জেলা).
+- **2. Seamless Phone Normalization & Background Account Provisioning:** Automatically normalizes Bangladeshi phone numbers (`01XXXXXXXXX`). Checks if user exists; if not, automatically provisions a customer account in the background with zero password friction and logs them into session so they can immediately track their order.
+- **3. Complete Recipient Order Record Storage:** Upgraded `partner_orders` INSERT statement to store recipient name, phone, full address, delivery zone, delivery charge, and payment status (`pending_cod` for COD, `pending_payment` for bKash/Nagad).
+- **4. Dynamic Delivery Zone & Total Calculation:** Embedded interactive delivery zone dropdown (Dhaka City ৳60 / Outside Dhaka ৳120 / Digital ৳0) with real-time JavaScript total recalculation, coupon validation, and payment instructions.
+
+### Phase 100 Details — 1-Click WhatsApp Quick Order & Mobile Sticky Action Dock
+- **1. Unclosed `<script>` Tag Glitch Resolved (`product_detail.php`):** Fixed critical syntax bug at line 1077 where `shareNativeProduct()` cut directly into HTML (`alert('Sharing is not sup <div class="desc-box">`), which had caused the browser to swallow the entire product description, required info box, and action panel inside an open `<script>` tag.
+- **2. 1-Click WhatsApp Quick Order Button (`product_detail.php`):** Embedded prominent green gradient CTA (`[ 💬 WhatsApp এ সরাসরি অর্ডার করুন ]`) with dynamic phone resolution (partner shop WhatsApp or official +8801337320544) and pre-filled Bengali order message template (Product Name, Price, URL, Customer Delivery Details).
+- **3. 4 Transparent Delivery & COD Trust Badges:** Replaced technical escrow text with 4 clean consumer trust badges: Dhaka City 24-48h (৳60), Outside Dhaka 2-3 Days (৳120), Cash on Delivery (পণ্য হাতে পেয়ে মূল্য পরিশোধ), and SafePay 100% Buyer Guarantee (সুরক্ষিত তহবিল).
+- **4. Mobile Sticky Action Dock (`.mobile-sticky-action-dock`):** Built fixed floating bottom action bar on mobile screens (< 768px) with product thumbnail (44px), price display (BDT + Coins), `[ 💬 WhatsApp ]` button, and `[ 🛒 অর্ডার করুন ]` direct guest checkout trigger with hardware safe-area insets.
 
 ### Phase 99 Details — Clean Terminology Re-Word Migration & Consumer Trust Architecture
 - **1. Zero-Clutter & Everyday Consumer Terminology (18 Core Files):** Eliminated confusing technical and developer jargon across Storefront, User Portal, Merchant Dashboard, and Admin Command Center, replacing them with intuitive Bengali and English trust terminology:

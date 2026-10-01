@@ -89,6 +89,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $missing_fields[] = 'Customer Submission Instructions Prompt';
     }
 
+    // Mandatory Product Photo Validation (Phase 103)
+    $has_image_b64 = !empty($_POST['images_b64']) && is_array($_POST['images_b64']) && count(array_filter($_POST['images_b64'])) > 0;
+    $has_uploaded_img = !empty($_POST['uploaded_images']) && is_array($_POST['uploaded_images']) && count(array_filter($_POST['uploaded_images'])) > 0;
+    $has_file_upload = isset($_FILES['images']) && !empty($_FILES['images']['name'][0]) && $_FILES['images']['error'][0] === UPLOAD_ERR_OK;
+
+    if (!$has_image_b64 && !$has_uploaded_img && !$has_file_upload) {
+        $missing_fields[] = 'Product Photo (কমপক্ষে একটি স্পষ্ট ছবি আপলোড করা আবশ্যক)';
+    }
+
     if (!empty($missing_fields)) {
         $err = 'Please complete the required missing field(s): ' . implode(', ', $missing_fields);
         if ($is_ajax) {
@@ -194,6 +203,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     try {
                         $pdo->prepare("INSERT INTO partner_product_images (product_id, image_url, is_thumbnail) VALUES (?, ?, ?)")
                             ->execute([$product_id, $filename, $is_thumb]);
+                        if ($is_thumb) {
+                            $pdo->prepare("UPDATE partner_products SET image = ?, thumbnail = ? WHERE id = ?")
+                                ->execute(['uploads/partners/' . $filename, 'uploads/partners/' . $filename, $product_id]);
+                        }
                         $savedCount++;
                     } catch (Exception $e) {}
                 }
@@ -215,6 +228,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 try {
                                     $pdo->prepare("INSERT INTO partner_product_images (product_id, image_url, is_thumbnail) VALUES (?, ?, ?)")
                                         ->execute([$product_id, $filename, $is_thumb]);
+                                    if ($is_thumb) {
+                                        $pdo->prepare("UPDATE partner_products SET image = ?, thumbnail = ? WHERE id = ?")
+                                            ->execute(['uploads/partners/' . $filename, 'uploads/partners/' . $filename, $product_id]);
+                                    }
                                     $savedCount++;
                                 } catch (Exception $e) {}
                             }
@@ -972,6 +989,9 @@ if ($partner['status'] === 'pending') {
         <div class="gc-preview-grid" id="gc-preview-grid"></div>
         <!-- Hidden base64 inputs for cropped images -->
         <div id="gc-hidden-inputs" style="display:none;"></div>
+        <div class="field-error-msg" id="err-images" style="display:none; color:#ff5252; font-size:0.82rem; font-weight:700; margin-top:8px; align-items:center; gap:6px;">
+          ⚠️ অনুগ্রহ করে পণ্যের অন্তত একটি স্পষ্ট ছবি আপলোড করুন (Please upload at least 1 product photo)
+        </div>
       </div>
 
       <!-- 5. Audio Upload for Digital Tracks — Android APK WebView Fix -->
@@ -1148,6 +1168,25 @@ function validateFields() {
         }
     }
 
+    // Mandatory Product Photo Validation (Phase 103)
+    const hiddenB64 = document.querySelectorAll('#gc-hidden-inputs input[name="images_b64[]"]');
+    const hiddenUploaded = document.querySelectorAll('#gc-hidden-inputs input[name="uploaded_images[]"]');
+    const imagesFileInput = document.getElementById('images-input');
+    const hasRawFiles = imagesFileInput && imagesFileInput.files && imagesFileInput.files.length > 0;
+    const hasCroppedImages = (hiddenB64 && hiddenB64.length > 0) || (hiddenUploaded && hiddenUploaded.length > 0);
+
+    if (!hasRawFiles && !hasCroppedImages) {
+        hasError = true;
+        const dropzone = document.getElementById('gc-dropzone');
+        if (dropzone) {
+            dropzone.style.borderColor = '#ff5252';
+            dropzone.style.background = 'rgba(255, 82, 82, 0.05)';
+        }
+        const errImg = document.getElementById('err-images');
+        if (errImg) errImg.style.display = 'flex';
+        if (!firstErrorElement) firstErrorElement = dropzone;
+    }
+
     if (hasError) {
         const banner = document.getElementById('client-error-banner');
         const bannerText = document.getElementById('error-banner-text');
@@ -1278,7 +1317,21 @@ function handleProductFormSubmit(e) {
     xhr.send(formData);
 }
 
-// triggerImageChooser() removed — image input now uses direct overlay technique for Android WebView APK compatibility
+// Image input listener to clear error state on selection
+const imagesInputEl = document.getElementById('images-input');
+if (imagesInputEl) {
+    imagesInputEl.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+            const dropzone = document.getElementById('gc-dropzone');
+            if (dropzone) {
+                dropzone.style.borderColor = 'rgba(252, 185, 0, 0.35)';
+                dropzone.style.background = 'rgba(252, 185, 0, 0.02)';
+            }
+            const errImg = document.getElementById('err-images');
+            if (errImg) errImg.style.display = 'none';
+        }
+    });
+}
 
 // Audio preview
 const audioInput = document.getElementById('audio-file-input');
