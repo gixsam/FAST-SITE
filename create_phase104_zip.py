@@ -51,6 +51,7 @@ Option B: MANUAL FILE MANAGER ZIP UPLOAD
 
 2. EXACT FOLDER PATHS ON HOSTINGER
 --------------------------------------------------------------------------------
+- public_html/index.php                  (Phase 104: Central Router with Clean /cart & /checkout Alias Routes)
 - public_html/cart.php                   (Phase 104: Unified Multi-Store Shopping Cart with Shop Grouping, Steppers, & Zone Delivery)
 - public_html/checkout.php               (Phase 104: Multi-Store Split Escrow Engine, Parent order_group_id, Auto-Split into partner_orders)
 - public_html/product_detail.php         (Phase 104: Direct 'Add to Cart' CTA, Instant Feedback Toast, Header Badge Sync, Mobile Dock)
@@ -92,6 +93,7 @@ with open('DEPLOYMENT_GUIDE.txt', 'w', encoding='utf-8') as f:
     f.write(deployment_guide_content)
 
 FILES_TO_PACKAGE = [
+    'index.php',
     'cart.php',
     'checkout.php',
     'product_detail.php',

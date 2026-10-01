@@ -20,7 +20,9 @@ $routes = [
     'dashboard' => 'user/dashboard.php',
     'partner' => 'partner/dashboard.php',
     'admin' => 'admin/dashboard.php',
-    'marketplace' => 'home.php'
+    'marketplace' => 'home.php',
+    'cart' => 'cart.php',
+    'checkout' => 'checkout.php'
 ];
 
 if (array_key_exists($url, $routes)) {
