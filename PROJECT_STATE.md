@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 104 Complete (100% Verified) — Smart Multi-Store Unified Cart & Split Escrow Checkout Engine | Next: Phase 105 (Automated Direct MFS Webhooks)
+**Last Updated:** Phase 105 Complete (100% Verified) — Automated Direct MFS Webhooks & Gateway Engine | Next: Phase 106 (Progressive Web App & Native Web Push Notifications)
 
 ---
 
@@ -43,6 +43,7 @@
 | **Partner / Shop Portal** | [http://localhost:8000/partner/dashboard.php](http://localhost:8000/partner/dashboard.php) | [https://fastsite.best-travel.ltd/partner/dashboard.php](https://fastsite.best-travel.ltd/partner/dashboard.php) |
 | **Public Storefront** | [http://localhost:8000/](http://localhost:8000/) | [https://fastsite.best-travel.ltd/](https://fastsite.best-travel.ltd/) |
 | **Smart Unified Cart** | [http://localhost:8000/cart.php](http://localhost:8000/cart.php) | [https://fastsite.best-travel.ltd/cart.php](https://fastsite.best-travel.ltd/cart.php) |
+| **MFS Webhook Gateway** | [http://localhost:8000/api/mfs_webhook.php](http://localhost:8000/api/mfs_webhook.php) | [https://fastsite.best-travel.ltd/api/mfs_webhook.php](https://fastsite.best-travel.ltd/api/mfs_webhook.php) |
 
 ---
 
@@ -54,7 +55,7 @@
 3. Production `.env` credentials are permanently excluded and 100% safe.
 
 ### Method 2: Manual ZIP Archive Deployment (File Manager)
-1. Take the latest `.zip` (`fastsite_phase104.zip`) from `D:\TECH\WEBSITE\FAST SITE\fast site\`
+1. Take the latest `.zip` (`fastsite_phase105.zip`) from `D:\TECH\WEBSITE\FAST SITE\fast site\`
 2. Upload to `public_html` on Hostinger File Manager
 3. Extract and overwrite existing files (production `.env` credentials are safe and excluded)
 4. Visit `https://fastsite.best-travel.ltd/admin/seed_ecosystem_shops.php` once to seed shops (if needed)
@@ -92,6 +93,28 @@
 | 102 | Standardized `uploads/` Architecture & Permanent Deployment Media Shield (`build_hostinger_zip.py`, `build_phase_zip.py`) |
 | 103 | Two-Layer Mandatory Product Photo Validation (Frontend JS + Backend PHP in `partner/product_add.php`) |
 | 104 | Smart Multi-Store Unified Cart & Split Escrow Checkout Engine (`cart.php`, `checkout.php`, `includes/escrow_engine.php`) |
+| 105 | Automated Direct MFS Webhooks & Gateway Engine (`api/mfs_webhook.php`, `api/nagad_webhook.php`, `api/bkash_webhook.php`, `admin/payouts.php`, `admin/export_mass_payout.php`, `user/wallet.php`, `config.php`) |
+
+### Phase 105 Details — Automated Direct MFS Webhooks & Gateway Engine
+- **1. Universal MFS Webhook Receiver Engine (`api/mfs_webhook.php`):** Engineered universal IPN callback receiver supporting bKash, Nagad, Rocket, and generic MFS gateways via query parameter (`?provider=bkash`), custom header (`X-Provider`), or automated JSON payload detection. Supports both JSON and `application/x-www-form-urlencoded` payloads.
+- **2. Dedicated Provider IPN Endpoints (`api/bkash_webhook.php`, `api/nagad_webhook.php`):** Dedicated endpoints delegating directly to `mfs_webhook.php` with preset provider parameters for backward compatibility and provider-specific callback URL requirements.
+- **3. Cryptographic Secret Authentication & Security Guard:** Verifies incoming request secrets against `partner_settings.mfs_webhook_secret` via header (`X-Webhook-Secret`) or query parameter (`?secret=...`). Rejects unauthorized webhook callbacks with HTTP 403.
+- **4. Strict Idempotency Engine & Double-Credit Prevention:** Records all incoming transactions in `mfs_webhook_logs` table (`provider`, `trx_id`, `amount`, `event_type`, `status`, `raw_payload`). If a transaction ID is already marked `processed`, skips re-execution and responds with HTTP 200 `already_processed` to satisfy gateway retry logic without duplicate wallet crediting.
+- **5. Dual Event Dispatcher (Coin Deposits & Escrow Orders):**
+  - **Deposit Event:** Automatically locates pending `deposit_requests` by transaction ID, increments user coin balance (`users.coins_balance` and `coin_wallets.balance`), logs transaction in `coin_transactions`, marks deposit as approved, and creates notification in `user_notifications`.
+  - **Order Event:** Automatically locates pending orders by transaction ID or order ID, transitions status to `paid`, invokes `escrow_hold_funds()` from `includes/escrow_engine.php` to place total funds into the SafePay Escrow Vault (`escrow_vault.status = 'held'`), and sends dual push/in-app notifications to both customer and merchant.
+- **6. Enhanced Bulk Mass Payout CSV Engine (`admin/export_mass_payout.php`):**
+  - Upgraded bulk disbursement export supporting official bKash Merchant Bulk Disburse format (`Recipient MSISDN, Amount, Reference, Payment Reason, Counter Code`) and Nagad Corporate Disburse format (`Customer Mobile No, Amount, Purpose, Reference ID, Remarks`).
+  - Standardized cross-database timestamps to ANSI SQL `CURRENT_TIMESTAMP`, eliminating SQLite crashes while maintaining full MySQL compatibility.
+- **7. Admin Payouts & Webhook Command Center (`admin/payouts.php`):**
+  - Configured live MFS IPN Webhook Secret Token input with random secret generator (`🎲 Generate`).
+  - Added copyable Webhook Endpoints Directory card showing Universal, bKash, and Nagad callback URLs for both Localhost and Live Hostinger.
+  - Added export format selector (`🌸 bKash Bulk CSV` / `🟠 Nagad Corporate CSV`).
+  - Integrated real-time Webhook Audit Trail table querying `mfs_webhook_logs` with status badges, payload inspector modal, and transaction lookup.
+- **8. User Deposit Experience & Gateway Badging (`user/wallet.php`):**
+  - Added interactive payment gateway selector radio chips (`🌸 bKash`, `🟠 Nagad`, `🚀 Rocket`) storing the chosen gateway.
+  - Added animated pulse indicator (`⏳ Auto-Verifying IPN...`) and gateway badges on pending deposits.
+- **9. Cross-Database Self-Healing Schema (`config.php`):** Added self-healing table creation for `mfs_webhook_logs` and column migration for `deposit_requests.gateway` with cross-database driver-aware row-level locking (`FOR UPDATE` conditional on MySQL).
 
 ### Phase 104 Details — Smart Multi-Store Unified Cart & Split Escrow Checkout Engine
 - **1. Unified Shopping Cart Engine (`cart.php`):** Interactive, multi-store shopping cart grouped by partner shop. Supports quantity increment/decrement, item removal, cart clearing, dynamic delivery calculation (Dhaka ৳60 / Outside ৳120 / Digital ৳0), and sticky mobile checkout dock.
@@ -266,8 +289,8 @@
 - [ ] **Batch Catalog Feed Synchronization** -> Meta dynamic ads CSV/XLSX export formats (`catalog_products_facebook.csv`, `catalog_products_facebook.xlsx`).
 - [ ] **Offline Documentation & Copy Standardization** -> `policy.php` and `DEPLOYMENT_GUIDE.txt`.
 
-### ⏳ Deferred Milestone
-- **[Phase 70] Automated Direct bKash & Nagad MFS Webhooks** -> On hold pending official API proposals from gateways. Operational with manual TrxID + 1-click verification.
+### ✅ Completed Milestone (Formerly Deferred Phase 70)
+- [x] **[Phase 105] Automated Direct bKash & Nagad MFS Webhooks & Gateway Engine** (`api/mfs_webhook.php`, `api/nagad_webhook.php`, `api/bkash_webhook.php`, `admin/payouts.php`, `admin/export_mass_payout.php`, `user/wallet.php`, `config.php`) -> **100% COMPLETE & VERIFIED**. Full IPN receiver engine with secret token authentication, idempotency double-credit protection, dual deposit/order dispatcher, bKash & Nagad bulk CSV exporter, and Admin Webhook Audit Trail.
 
 ## 💡 FUTURE ENHANCEMENTS FOR NEXT STEPS
 

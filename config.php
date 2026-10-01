@@ -844,6 +844,23 @@ if ($_force_migrate || !isset($_SESSION[$_migration_session_key])) {
             } catch (Exception $ex) {}
         }
 
+        // Phase 105: Automated MFS Webhook Logs & Deposit Gateway Schema (SQLite)
+        try {
+            $pdo->exec("CREATE TABLE IF NOT EXISTS mfs_webhook_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                provider TEXT NOT NULL,
+                event_type TEXT DEFAULT 'deposit',
+                trx_id TEXT NOT NULL,
+                amount REAL NOT NULL,
+                reference_id TEXT DEFAULT NULL,
+                status TEXT DEFAULT 'success',
+                payload TEXT DEFAULT NULL,
+                ip_address TEXT DEFAULT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )");
+            @$pdo->exec("ALTER TABLE deposit_requests ADD COLUMN gateway TEXT DEFAULT 'bKash'");
+        } catch (Exception $exMfs) {}
+
         try {
             @$pdo->exec("ALTER TABLE partner_products ADD COLUMN listing_type TEXT DEFAULT 'product'");
             @$pdo->exec("ALTER TABLE partner_products ADD COLUMN stock INTEGER DEFAULT -1");
@@ -1357,6 +1374,25 @@ if ($_force_migrate || !isset($_SESSION[$_migration_session_key])) {
             try { @$pdo->exec("ALTER TABLE `partner_orders` ADD COLUMN `$col` $def"); } catch (Exception $ex) {}
             try { @$pdo->exec("ALTER TABLE partner_orders ADD COLUMN $col $def"); } catch (Exception $ex) {}
         }
+
+        // Phase 105: Automated MFS Webhook Logs & Deposit Gateway Schema (MySQL)
+        try {
+            $pdo->exec("CREATE TABLE IF NOT EXISTS `mfs_webhook_logs` (
+                `id` INT AUTO_INCREMENT PRIMARY KEY,
+                `provider` VARCHAR(50) NOT NULL,
+                `event_type` VARCHAR(50) DEFAULT 'deposit',
+                `trx_id` VARCHAR(100) NOT NULL,
+                `amount` DECIMAL(10,2) NOT NULL,
+                `reference_id` VARCHAR(100) DEFAULT NULL,
+                `status` VARCHAR(50) DEFAULT 'success',
+                `payload` LONGTEXT DEFAULT NULL,
+                `ip_address` VARCHAR(50) DEFAULT NULL,
+                `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                INDEX `idx_trx_id` (`trx_id`),
+                INDEX `idx_provider` (`provider`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            @$pdo->exec("ALTER TABLE `deposit_requests` ADD COLUMN `gateway` VARCHAR(50) DEFAULT 'bKash'");
+        } catch (Exception $exMfs) {}
 
         $dyn_cols_prods = [
             'listing_type'        => "VARCHAR(50) DEFAULT 'product'",

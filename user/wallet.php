@@ -51,18 +51,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         try {
+            $gateway = trim($_POST['gateway'] ?? 'bKash');
             $stmt = $pdo->prepare("INSERT INTO deposit_requests 
-                (user_id, sender_number, transaction_id, amount, screenshot_url, status) 
-                VALUES (:user_id, :sender_number, :transaction_id, :amount, :screenshot_url, 'pending')");
+                (user_id, sender_number, transaction_id, amount, screenshot_url, gateway, status) 
+                VALUES (:user_id, :sender_number, :transaction_id, :amount, :screenshot_url, :gateway, 'pending')");
             $stmt->execute([
                 ':user_id'        => $user_id,
                 ':sender_number'  => $sender_number,
                 ':transaction_id' => $transaction_id,
                 ':amount'         => $amount,
-                ':screenshot_url' => $screenshot_file
+                ':screenshot_url' => $screenshot_file,
+                ':gateway'        => $gateway
             ]);
 
-            $msg = 'Deposit request submitted successfully! Your Fast Points will be credited once verified.';
+            $msg = 'Deposit request submitted successfully! Your Fast Points will be auto-credited via MFS Webhook or admin review.';
         } catch (PDOException $e) {
             $err = 'Database Error: ' . $e->getMessage();
         }
@@ -552,6 +554,21 @@ $whatsapp_num = $settings['whatsapp_number'] ?? '01963601472';
       <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="action" value="submit_deposit" />
 
+        <div style="margin-bottom:1.2rem;">
+          <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:0.4rem;">Select Payment Method *</label>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(95px, 1fr)); gap:8px;">
+            <label style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); padding:0.6rem; border-radius:10px; text-align:center; cursor:pointer; font-size:0.82rem; font-weight:700; color:#fff;">
+              <input type="radio" name="gateway" value="bKash" checked /> 🌸 bKash
+            </label>
+            <label style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); padding:0.6rem; border-radius:10px; text-align:center; cursor:pointer; font-size:0.82rem; font-weight:700; color:#fff;">
+              <input type="radio" name="gateway" value="Nagad" /> 🟠 Nagad
+            </label>
+            <label style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); padding:0.6rem; border-radius:10px; text-align:center; cursor:pointer; font-size:0.82rem; font-weight:700; color:#fff;">
+              <input type="radio" name="gateway" value="Rocket" /> 🟣 Rocket
+            </label>
+          </div>
+        </div>
+
         <div class="dropdown-grid">
           <div class="field">
             <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:0.4rem;">Your Sender Mobile Number *</label>
@@ -818,10 +835,15 @@ $whatsapp_num = $settings['whatsapp_number'] ?? '01963601472';
             if ($dep['status'] === 'approved') $status_color = '#00e676';
             elseif ($dep['status'] === 'rejected') $status_color = '#ff5252';
         ?>
-          <div style="background:rgba(20,20,31,0.85); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:1.2rem; display:flex; justify-content:space-between; align-items:center;">
+          <div style="background:rgba(20,20,31,0.85); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:1.2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.8rem;">
             <div>
-              <div style="color:#fff; font-weight:700; font-size:0.95rem; margin-bottom:2px;">
-                TrxID: <span style="font-family:monospace; color:var(--brand);"><?= htmlspecialchars($dep['transaction_id']) ?></span>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                <span style="font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:6px; background:rgba(255,255,255,0.08); color:#fff;">
+                  <?= htmlspecialchars($dep['gateway'] ?? 'MFS') ?>
+                </span>
+                <span style="font-family:monospace; color:var(--brand); font-weight:700; font-size:0.92rem;">
+                  <?= htmlspecialchars($dep['transaction_id']) ?>
+                </span>
               </div>
               <div style="color:var(--muted); font-size:0.75rem;">
                 Sender: <?= htmlspecialchars($dep['sender_number']) ?> • <?= date('M d, Y • h:i A', strtotime($dep['created_at'])) ?>
@@ -831,9 +853,16 @@ $whatsapp_num = $settings['whatsapp_number'] ?? '01963601472';
               <div style="font-family:'Oswald',sans-serif; font-size:1.25rem; font-weight:700; color:var(--gold);">
                 ৳<?= number_format($dep['amount'], 2) ?> BDT
               </div>
-              <span style="font-size:0.7rem; font-weight:800; text-transform:uppercase; color:<?= $status_color ?>;">
-                <?= htmlspecialchars($dep['status']) ?>
-              </span>
+              <?php if ($dep['status'] === 'pending'): ?>
+                <span style="font-size:0.7rem; font-weight:800; text-transform:uppercase; color:#fcb900; display:inline-flex; align-items:center; gap:4px;">
+                  <span style="width:6px; height:6px; border-radius:50%; background:#fcb900; display:inline-block;"></span>
+                  Auto-Verifying IPN...
+                </span>
+              <?php else: ?>
+                <span style="font-size:0.7rem; font-weight:800; text-transform:uppercase; color:<?= $status_color ?>;">
+                  <?= htmlspecialchars($dep['status']) ?>
+                </span>
+              <?php endif; ?>
             </div>
           </div>
         <?php endforeach; ?>

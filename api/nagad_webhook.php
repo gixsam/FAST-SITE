@@ -1,9 +1,9 @@
 <?php
 // =========================================================================
-// api/bkash_webhook.php — Dedicated bKash IPN Webhook Endpoint
+// api/nagad_webhook.php — Dedicated Nagad IPN Webhook Endpoint
 // Delegates to master universal MFS engine with idempotency & audit logging
 // =========================================================================
 if (!isset($_GET['provider'])) {
-    $_GET['provider'] = 'bkash';
+    $_GET['provider'] = 'nagad';
 }
 require_once __DIR__ . '/mfs_webhook.php';

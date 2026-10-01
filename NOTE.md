@@ -1,7 +1,7 @@
 # 📘 FAST SITE — MASTER COMPREHENSIVE NOTE & STATUS REPORT (NOTE.md)
 **Project Name:** FAST SITE (Ecosystem Escrow Hub & Universal Marketplace)  
 **Main Domain:** `https://fastsite.best-travel.ltd`  
-**Current Active Version:** Phase 104 Complete (100% Verified) — Smart Multi-Store Unified Cart & Split Escrow Checkout Engine | Next: Phase 105 (Automated Direct MFS Webhooks)  
+**Current Active Version:** Phase 105 Complete (100% Verified) — Automated Direct MFS Webhooks & Gateway Engine | Next: Phase 106 (Progressive Web App & Native Web Push Notifications)  
 **Document Classification:** Canonical Website State, Historical Log & Future Roadmap  
 **Target Audience:** AI Agents (Google Antigravity, Claude Sonnet, Gemini, GPT) and Human Developers / Project Managers  
 
@@ -10,7 +10,7 @@
 ## 🧭 PURPOSE OF THIS DOCUMENT
 This document (`NOTE.md`) is the **authoritative single source of truth** for the Fast Site platform. Whenever any AI agent or human developer opens this project, this file provides an instant, unambiguous understanding of:
 1. **Current Operational Status**: What works right now, active servers, active endpoints, and live test configurations.
-2. **Historical Updates Log**: A complete chronicle of all past updates from Phase 1 through Phase 104.
+2. **Historical Updates Log**: A complete chronicle of all past updates from Phase 1 through Phase 105.
 3. **Future Updates Plan**: The strategic roadmap of upcoming features, migrations, and enhancements.
 4. **Architecture & Guidelines**: Critical rules for database failover, Hostinger deployments, Google Stitch design standards, and file maintenance.
 
@@ -23,11 +23,23 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 104 Complete (100% Verified) | Next: Phase 105 (Automated Direct MFS Webhooks)
-The platform has fully completed and verified **Phase 104: Smart Multi-Store Unified Cart & Split Escrow Checkout Engine**. Next up is **Phase 105: Automated Direct MFS Webhooks & Gateway Engine**.
+### Active Status: Phase 105 Complete (100% Verified) | Next: Phase 106 (Progressive Web App & Native Web Push Notifications)
+The platform has fully completed and verified **Phase 105: Automated Direct MFS Webhooks & Gateway Engine**. Next up is **Phase 106: Progressive Web App & Native Web Push Notifications**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **Smart Multi-Store Unified Cart & Split Escrow Checkout (Phase 104 100% Complete):**
+1. **Automated Direct MFS Webhooks & Gateway Engine (Phase 105 100% Complete):**
+   - **Universal MFS Webhook Receiver Engine (`api/mfs_webhook.php`):** Universal IPN callback receiver supporting bKash, Nagad, Rocket, and generic MFS gateways via query parameter (`?provider=bkash`), header (`X-Provider`), or auto-detection from JSON payload.
+   - **Dedicated Provider IPN Endpoints (`api/bkash_webhook.php`, `api/nagad_webhook.php`):** Dedicated endpoints delegating directly to `mfs_webhook.php` with preset provider parameters for backward compatibility and provider-specific callback URL requirements.
+   - **Cryptographic Secret Authentication:** Authenticates incoming webhooks against `partner_settings.mfs_webhook_secret` via header (`X-Webhook-Secret`) or query parameter (`?secret=...`).
+   - **Strict Idempotency Engine & Double-Credit Prevention:** Persists all requests into `mfs_webhook_logs`. Prevents double-processing of identical `trx_id` transactions, safely returning HTTP 200 `already_processed` to gateway retries.
+   - **Dual Event Dispatcher (Coin Deposits & Escrow Orders):**
+     - **Deposit Event:** Automatically locates pending `deposit_requests` by transaction ID, increments user coin balance (`users.coins_balance` and `coin_wallets.balance`), logs transaction in `coin_transactions`, marks deposit as approved, and creates notification in `user_notifications`.
+     - **Order Event:** Automatically locates pending orders by transaction ID or order ID, transitions status to `paid`, invokes `escrow_hold_funds()` from `includes/escrow_engine.php` to place total funds into the SafePay Escrow Vault (`escrow_vault.status = 'held'`), and sends dual push/in-app notifications to both customer and merchant.
+   - **Enhanced Bulk Mass Payout CSV Engine (`admin/export_mass_payout.php`):** Generates both bKash Bulk Disburse and Nagad Corporate Disburse CSV formats, with cross-database ANSI SQL `CURRENT_TIMESTAMP` fix.
+   - **Admin Payouts & Webhook Command Center (`admin/payouts.php`):** IPN Webhook Secret configuration with `🎲 Generate` tool, copyable Webhook Endpoints Directory card, bulk CSV format selector, and real-time MFS Webhook Audit Trail table with payload inspector modal.
+   - **User Deposit Experience & Gateway Badging (`user/wallet.php`):** Gateway selector chips (`🌸 bKash`, `🟠 Nagad`, `🚀 Rocket`) and animated pulse indicator (`⏳ Auto-Verifying IPN...`) for pending deposits.
+   - **Cross-Database Self-Healing Schema (`config.php`):** Added self-healing table creation for `mfs_webhook_logs` and column migration for `deposit_requests.gateway` with cross-database driver-aware row-level locking.
+2. **Smart Multi-Store Unified Cart & Split Escrow Checkout (Phase 104 100% Complete):**
    - **Unified Shopping Cart Engine (`cart.php`):** Interactive, multi-store shopping cart grouped by partner shop. Supports quantity increment/decrement, item removal, cart clearing, dynamic delivery calculation (Dhaka ৳60 / Outside ৳120 / Digital ৳0), and sticky mobile checkout dock.
    - **Product Detail & Storefront Cart Integration (`product_detail.php`, `home.php`, `includes/nav_public.php`):** Direct "Add to Cart" button with instant non-blocking toast notification, header navigation cart icon with dynamic badge counter (`#navCartCount`), and side drawer shopping cart shortcut.
    - **Multi-Vendor Split Escrow Checkout Engine (`checkout.php`):** Generates parent `order_group_id` upon single 3-field customer submission, automatically splitting cart orders into independent `partner_orders` rows per partner shop, and placing individual SafePay holds via `escrow_hold_funds()`.
@@ -146,7 +158,7 @@ The platform has fully completed and verified **Phase 104: Smart Multi-Store Uni
    - **Local Server Live Host**: `http://localhost:8000` (test locally before Hostinger upload).
    - **Cloudflare Mobile Live Tunnel**: `https://lamb-applications-favors-disabilities.trycloudflare.com`.
 8. **Latest Deployment Archive:**
-   - Archive Name: `fastsite_phase88.zip` (53.25 KB) located in root directory.
+   - Archive Name: `fastsite_phase105.zip` located in root directory.
    - Security Audit: 0 `.env` files detected, 100% clean.
 9. **Automated GitHub & Hostinger Git Auto-Deployment (`gixsam/FAST-SITE`):**
    - Public Repository initialized & linked: `https://github.com/gixsam/FAST-SITE` (Branch: `main`).
@@ -288,42 +300,33 @@ The platform has fully completed and verified **Phase 104: Smart Multi-Store Uni
   - Added direct "Add to Cart" CTA (`.btn-add-cart-detail`) in `product_detail.php` with non-blocking toast notifications and mobile sticky dock integration.
   - Built dual-mode single-product vs cart checkout engine in `checkout.php` with 3-field customer guest submission, automatic parent `order_group_id` generation, multi-shop order splitting into `partner_orders`, and independent SafePay holds in `escrow_vault`.
   - Upgraded `includes/escrow_engine.php` and `config.php` with cross-database SQLite vs MySQL compatibility, defensive column population, and self-healing column migrations.
-
+- **Phase 105 (Automated Direct MFS Webhooks & Gateway Engine)**:
+  - Engineered universal IPN callback receiver (`api/mfs_webhook.php`) and dedicated provider endpoints (`api/bkash_webhook.php`, `api/nagad_webhook.php`) supporting bKash, Nagad, and Rocket with secret token authentication.
+  - Implemented strict idempotency engine recording all incoming payloads into `mfs_webhook_logs` and preventing duplicate wallet balance credits on gateway retries.
+  - Dual event dispatcher automatically credits user coin balances on deposit webhooks and transitions order status to `paid` with automatic SafePay Escrow Vault hold (`escrow_vault.status = 'held'`).
+  - Enhanced bulk mass payout exporter (`admin/export_mass_payout.php`) supporting official bKash Merchant Bulk Disburse and Nagad Corporate Disburse CSV formats with cross-database ANSI `CURRENT_TIMESTAMP`.
+  - Upgraded Admin Payouts Hub (`admin/payouts.php`) with copyable Webhook Endpoints Directory, secret token generator, and real-time Webhook Audit Trail table.
+  - Upgraded `user/wallet.php` with gateway selection chips and pending verification pulse badges.
 
 ---
 
 ## 🚀 SECTION 3: FUTURE UPDATES PLAN (ROADMAP FOR UPCOMING PHASES)
 
-### 🔮 Phase 89: Smart Multi-Store Unified Cart & Split Escrow Checkout
-- **Files Affected:** `cart.php`, `checkout.php`, `includes/escrow_engine.php`
-- **Objective:** Enable buyers to add products from multiple partner shops (e.g., Ayra Mart + Enzor Motor + Fast Site Official) into a single unified shopping cart.
-- **Mechanism:** Single checkout transaction generating a parent `order_group_id`, with automatic backend splitting into individual shop orders and separate escrow holding vaults.
+### 🔮 Phase 106: Progressive Web App (PWA) Offline Engine & Native Web Push Notifications
+- **Files Affected:** `manifest.json`, `sw.js`, `api/push_subscribe.php`, `includes/footer.php`
+- **Objective:** Transform the web storefront into an installable Progressive Web App with offline service worker caching and native browser web push notifications for instant customer order updates, merchant order alerts, and escrow releases.
 
-### 🔮 Phase 90: Universal Shop Cover Photo & Profile Studio Upgrade
-- **Files Affected:** `partner/dashboard.php`, `partner/profile.php`, `shop.php`, `includes/image_helper.php`
-- **Objective:** Multi-directory avatar and banner image resolver scanning `uploads/partners/`, `uploads/profiles/`, and `uploads/shops/`.
-- **Mechanism:** Live interactive cropping studio allowing shop owners to upload cinematic banners (16:9) and store avatars (1:1) with instant CDN/local synchronization.
+### 🔮 Phase 107: Advanced Storefront Customization Studio
+- **Files Affected:** `shop.php`, `partner/dashboard.php`, `partner/profile.php`, `assets/css/shop_themes.css`
+- **Objective:** Allow verified partner shops to customize their store banner, color theme, and featured items layout.
 
-### 🔮 Phase 91: Automated Direct bKash & Nagad MFS Webhooks
-- **Files Affected:** `api/mfs_webhook.php`, `admin/payouts.php`, `user/wallet.php`
-- **Objective:** Transition from manual TrxID verification to instant automated payment gateway callbacks.
-- **Mechanism:** Direct integration with official bKash Merchant API / Nagad API for instant coin balance crediting upon payment and 1-click batch disbursement for user withdrawals.
-
-### 🔮 Phase 92: Advanced Storefront Customization Studio
-- **Files Affected:** `shop.php`, `partner/dashboard.php`, `assets/css/shop_themes.css`
-- **Objective:** Allow verified partner shops to customize their store theme color, hero banner layout, featured listings carousel, and promotional announcement banners.
-
-### 🔮 Phase 93: Batch Catalog Feed Synchronization for Meta & Google
-- **Files Affected:** `api/catalog_feed_facebook.php`, `api/catalog_feed_google.php`
-- **Objective:** Automated real-time CSV/XML product catalog feeds for Facebook Dynamic Ads, Instagram Shopping, and Google Merchant Center.
-
-### 🔮 Phase 94: Gamified Buyer Loyalty Hub & Tiered Buyer Rewards
+### 🔮 Phase 108: Gamified Buyer Loyalty Hub & Tiered Buyer Rewards
 - **Files Affected:** `user/loyalty.php`, `user/dashboard.php`, `config.php`
 - **Objective:** Expand the gamified mission engine to everyday buyers (e.g., "Make 3 purchases to unlock 5% cashback", "Leave 2 verified reviews to earn 50 bonus coins").
 
-### 🔮 Phase 95: Progressive Web App (PWA) Offline Engine & Web Push Notifications
-- **Files Affected:** `manifest.json`, `sw.js`, `api/push_subscribe.php`
-- **Objective:** Transform the web storefront into an installable Progressive Web App with offline caching and native browser push notifications for new orders, messages, and escrow status changes.
+### 🔮 Phase 109: Batch Catalog Feed Synchronization for Meta & Google
+- **Files Affected:** `api/catalog_feed_facebook.php`, `api/catalog_feed_google.php`
+- **Objective:** Automated real-time CSV/XML product catalog feeds for Facebook Dynamic Ads, Instagram Shopping, and Google Merchant Center.
 
 ---
 

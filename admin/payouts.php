@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_payment_settings
         'delivery_inside_dhaka'  => floatval($_POST['delivery_inside_dhaka'] ?? 60),
         'delivery_outside_dhaka' => floatval($_POST['delivery_outside_dhaka'] ?? 120),
         'official_payout_number' => trim($_POST['official_payout_number'] ?? '+8801337320544'),
+        'mfs_webhook_secret'     => trim($_POST['mfs_webhook_secret'] ?? ''),
     ];
 
     try {
@@ -96,6 +97,20 @@ $pending_payouts_count = count(array_filter($payouts, fn($p) => ($p['status'] ??
 $pending_total = array_sum(array_map(fn($p) => ($p['status'] === 'pending' ? (float)$p['amount'] : 0), $payouts));
 $paid_total = array_sum(array_map(fn($p) => ($p['status'] === 'paid' ? (float)$p['amount'] : 0), $payouts));
 $official_disburse_num = getPartnerSetting('official_payout_number', '+8801337320544');
+$mfs_webhook_secret = getPartnerSetting('mfs_webhook_secret', '');
+
+// Fetch MFS Webhook Logs
+$webhook_logs = [];
+$webhook_success_count = 0;
+$webhook_total_vol = 0;
+try {
+    $stmtLogs = $pdo->query("SELECT * FROM mfs_webhook_logs ORDER BY created_at DESC LIMIT 15");
+    $webhook_logs = $stmtLogs->fetchAll(PDO::FETCH_ASSOC);
+    $webhook_success_count = (int)$pdo->query("SELECT COUNT(*) FROM mfs_webhook_logs WHERE status = 'success'")->fetchColumn();
+    $webhook_total_vol = (float)$pdo->query("SELECT SUM(amount) FROM mfs_webhook_logs WHERE status = 'success'")->fetchColumn();
+} catch (Exception $e) {
+    $webhook_logs = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -358,12 +373,17 @@ $official_disburse_num = getPartnerSetting('official_payout_number', '+880133732
         </h3>
         
         <?php if (!empty($payouts)): ?>
-          <form method="POST" action="export_mass_payout.php" id="massPayoutForm" style="display:flex; gap:0.8rem; align-items:center; flex-wrap:wrap;">
+          <form method="POST" action="export_mass_payout.php" id="massPayoutForm" style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+            <input type="hidden" name="payout_type" value="agent"/>
+            <select name="format" style="background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.18); color:#fff; padding:0.4rem 0.7rem; border-radius:8px; font-size:0.8rem; font-weight:700; outline:none;">
+              <option value="bkash">🌸 bKash Bulk CSV</option>
+              <option value="nagad">🟠 Nagad Corporate CSV</option>
+            </select>
             <label style="color:#cbd5e1; font-size:0.82rem; display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
-              <input type="checkbox" name="mark_paid" value="1"/> Auto Mark as Paid
+              <input type="checkbox" name="mark_paid" value="1"/> Auto Mark Paid
             </label>
-            <button type="submit" onclick="return confirm('Export selected payouts to bKash Mass CSV?');" style="background:linear-gradient(135deg, #10b981, #059669); color:#000; font-weight:800; border:none; padding:0.5rem 1rem; border-radius:8px; font-size:0.82rem; cursor:pointer;">
-              📥 Export bKash CSV
+            <button type="submit" onclick="return confirm('Export selected payouts to CSV?');" style="background:linear-gradient(135deg, #10b981, #059669); color:#000; font-weight:800; border:none; padding:0.5rem 1rem; border-radius:8px; font-size:0.82rem; cursor:pointer;">
+              📥 Export Disburse CSV
             </button>
           </form>
         <?php endif; ?>
@@ -537,6 +557,54 @@ $official_disburse_num = getPartnerSetting('official_payout_number', '+880133732
             </label>
             <input type="text" name="official_payout_number" class="custom-input" value="<?= htmlspecialchars($official_disburse_num) ?>" placeholder="+8801337320544" required />
           </div>
+
+          <div>
+            <label style="display:block; font-size:0.75rem; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:0.4rem;">
+              MFS IPN Webhook Secret Token
+            </label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="mfs_secret_input" name="mfs_webhook_secret" class="custom-input" value="<?= htmlspecialchars($mfs_webhook_secret) ?>" placeholder="Optional secret token (leave blank for open testing)" />
+              <button type="button" onclick="generateSecret()" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:0 0.8rem; border-radius:10px; cursor:pointer; font-size:0.75rem; white-space:nowrap; font-weight:700;">
+                🎲 Generate
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Webhook Integration Endpoints Card -->
+        <div style="background:rgba(0,0,0,0.3); border:1px solid rgba(252,185,0,0.25); border-radius:12px; padding:1.2rem; margin-top:1.2rem; margin-bottom:1.5rem;">
+          <h4 style="color:var(--gold); font-size:0.95rem; font-weight:800; margin:0 0 0.5rem 0; display:flex; align-items:center; gap:6px;">
+            ⚡ Direct MFS IPN Webhook Endpoints (Copy & Paste to Gateway Portals)
+          </h4>
+          <p style="color:var(--muted); font-size:0.8rem; margin:0 0 1rem 0;">
+            Provide these callback URLs to your bKash Merchant Portal or Nagad Corporate Account for real-time automatic coin recharge & SafePay order verification.
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:0.8rem;">
+            <div>
+              <div style="font-size:0.75rem; font-weight:700; color:#38bdf8; margin-bottom:3px;">Universal MFS Webhook Router (Recommended):</div>
+              <div style="display:flex; gap:6px;">
+                <input type="text" readonly class="custom-input" value="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] ?>/api/mfs_webhook.php" id="url-universal" style="font-family:monospace; font-size:0.82rem; background:rgba(0,0,0,0.6) !important; color:#38bdf8 !important;" />
+                <button type="button" onclick="copyWebhook('url-universal')" style="background:rgba(56,189,248,0.2); border:1px solid #38bdf8; color:#38bdf8; border-radius:8px; padding:0 12px; font-weight:700; cursor:pointer; font-size:0.78rem;">Copy</button>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:0.75rem; font-weight:700; color:#ec4899; margin-bottom:3px;">Dedicated bKash IPN Callback URL:</div>
+              <div style="display:flex; gap:6px;">
+                <input type="text" readonly class="custom-input" value="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] ?>/api/bkash_webhook.php" id="url-bkash" style="font-family:monospace; font-size:0.82rem; background:rgba(0,0,0,0.6) !important; color:#ec4899 !important;" />
+                <button type="button" onclick="copyWebhook('url-bkash')" style="background:rgba(236,72,153,0.2); border:1px solid #ec4899; color:#ec4899; border-radius:8px; padding:0 12px; font-weight:700; cursor:pointer; font-size:0.78rem;">Copy</button>
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size:0.75rem; font-weight:700; color:#f97316; margin-bottom:3px;">Dedicated Nagad IPN Callback URL:</div>
+              <div style="display:flex; gap:6px;">
+                <input type="text" readonly class="custom-input" value="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] ?>/api/nagad_webhook.php" id="url-nagad" style="font-family:monospace; font-size:0.82rem; background:rgba(0,0,0,0.6) !important; color:#f97316 !important;" />
+                <button type="button" onclick="copyWebhook('url-nagad')" style="background:rgba(249,115,22,0.2); border:1px solid #f97316; color:#f97316; border-radius:8px; padding:0 12px; font-weight:700; cursor:pointer; font-size:0.78rem;">Copy</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <button type="submit" style="background:linear-gradient(135deg, var(--gold) 0%, #f59e0b 100%); color:#000; font-weight:900; padding:0.8rem 1.8rem; border-radius:10px; border:none; cursor:pointer; font-size:0.95rem;">
@@ -582,11 +650,98 @@ $official_disburse_num = getPartnerSetting('official_payout_number', '+880133732
         </a>
       </div>
     </div>
+
+    <!-- Real-Time MFS Webhook Activity & Audit Logs -->
+    <div class="panel-card" style="margin-top:2rem; border-color:rgba(56,189,248,0.35);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+        <div>
+          <h4 style="color:#38bdf8; font-size:1.1rem; font-weight:800; margin:0 0 4px 0; display:flex; align-items:center; gap:8px;">
+            📡 Real-Time MFS Webhook Audit Trail
+          </h4>
+          <p style="color:var(--muted); font-size:0.82rem; margin:0;">
+            Total verified callbacks: <strong><?= $webhook_success_count ?></strong> | Auto-processed volume: <strong>৳<?= number_format($webhook_total_vol, 2) ?></strong>
+          </p>
+        </div>
+      </div>
+
+      <?php if (empty($webhook_logs)): ?>
+        <div style="text-align:center; padding:2rem; color:#94a3b8; font-size:0.88rem;">
+          No incoming webhook callbacks recorded yet. When bKash or Nagad sends IPN pings, they will be logged here instantly.
+        </div>
+      <?php else: ?>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Provider</th>
+                <th>Type</th>
+                <th>Transaction ID</th>
+                <th style="text-align:right;">Amount</th>
+                <th>Reference</th>
+                <th style="text-align:center;">Status</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($webhook_logs as $log): ?>
+                <tr>
+                  <td style="color:#94a3b8; font-family:monospace;">#<?= $log['id'] ?></td>
+                  <td>
+                    <span style="font-weight:700; text-transform:uppercase; color:<?= $log['provider'] === 'bkash' ? '#ec4899' : ($log['provider'] === 'nagad' ? '#f97316' : '#38bdf8') ?>;">
+                      <?= htmlspecialchars($log['provider']) ?>
+                    </span>
+                  </td>
+                  <td>
+                    <span style="background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px; font-size:0.75rem; font-family:monospace;">
+                      <?= htmlspecialchars($log['event_type']) ?>
+                    </span>
+                  </td>
+                  <td style="font-family:monospace; color:#38bdf8; font-weight:700;">
+                    <?= htmlspecialchars($log['trx_id']) ?>
+                  </td>
+                  <td style="text-align:right; font-family:'Oswald',sans-serif; font-size:1.05rem; font-weight:700; color:var(--gold);">
+                    ৳<?= number_format((float)$log['amount'], 2) ?>
+                  </td>
+                  <td style="font-family:monospace; font-size:0.78rem; color:#cbd5e1;">
+                    <?= htmlspecialchars($log['reference_id'] ?: '—') ?>
+                  </td>
+                  <td style="text-align:center;">
+                    <span class="badge-paid" style="font-size:0.7rem;">VERIFIED</span>
+                  </td>
+                  <td style="font-size:0.75rem; color:#94a3b8;">
+                    <?= date('d M Y, h:i A', strtotime($log['created_at'])) ?>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      <?php endif; ?>
+    </div>
   </div>
 
 </div>
 
 <script>
+function generateSecret() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#%*';
+  let secret = 'fs_sec_';
+  for (let i = 0; i < 24; i++) {
+    secret += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  document.getElementById('mfs_secret_input').value = secret;
+}
+
+function copyWebhook(elementId) {
+  const input = document.getElementById(elementId);
+  input.select();
+  input.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(input.value).then(() => {
+    alert('✅ Webhook URL copied to clipboard: ' + input.value);
+  });
+}
+
 function switchTab(evt, tabId) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
