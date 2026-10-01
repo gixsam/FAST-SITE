@@ -120,9 +120,9 @@ if (strpos($ogImage, 'http://') === 0 || strpos($ogImage, 'https://') === 0 || s
 }
 $ogUrl = $protocol . '://' . $host . $_SERVER['REQUEST_URI'];
 
-$ogPriceText = '🪙 ' . number_format(ceil($product_price)) . ' Coins (' . number_format($product_price_bdt, 0) . ' BDT)';
+$ogPriceText = '৳ ' . number_format($product_price_bdt, 0) . ' (' . number_format(ceil($product_price)) . ' Fast Points)';
 $ogFullTitle = 'Buy ' . htmlspecialchars($p['title']) . ' — ' . $ogPriceText . ' | Fast Site';
-$ogDesc = 'Price: ' . $ogPriceText . ' | Shop: ' . htmlspecialchars($p['shop_name']) . '. Verified Escrow on Fast Site. ' . strip_tags($p['description']);
+$ogDesc = 'Price: ' . $ogPriceText . ' | Shop: ' . htmlspecialchars($p['shop_name']) . '. 100% SafePay Buyer Guarantee (নিরাপদ গ্যারান্টি) on Fast Site. ' . strip_tags($p['description']);
 if (mb_strlen($ogDesc) > 200) $ogDesc = mb_substr($ogDesc, 0, 197) . '...';
 ?>
 <head>
@@ -1124,8 +1124,8 @@ if (mb_strlen($ogDesc) > 200) $ogDesc = mb_substr($ogDesc, 0, 197) . '...';
         <div class="escrow-shield-badge">
           <span>🛡️</span>
           <div>
-            <h5 style="color:#fff; font-size:0.75rem; margin-bottom:0.15rem; font-weight:700;">Purchase Protection</h5>
-            <p>Our platform secures your payment. The merchant is paid upon delivery confirmation, or after dispute resolution by admin.</p>
+            <h5 style="color:#fff; font-size:0.82rem; margin-bottom:0.2rem; font-weight:800;">SafePay ১০০% নিরাপদ গ্যারান্টি (Buyer Guarantee)</h5>
+            <p>আপনার পেমেন্ট Fast Site সুরক্ষিত তহবিলে (Protected Vault) নিরাপদে জমা থাকে। সঠিক পণ্য হাতে পেয়ে নিশ্চিত করার পরই সেলার পেমেন্ট পাবে। কোনো সমস্যা হলে ১০০% রিফান্ড সহায়তা!</p>
           </div>
         </div>
       </div>

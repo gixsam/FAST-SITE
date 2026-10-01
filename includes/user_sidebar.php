@@ -579,7 +579,7 @@ body {
       <div class="stepper-num step-pending">3</div>
       <div>
         <div style="color:#fff; font-size:0.85rem; font-weight:700;">3. Storefront Live &amp; Selling Active</div>
-        <div style="color:var(--muted); font-size:0.75rem;">Instant product uploads &amp; escrow payout release</div>
+        <div style="color:var(--muted); font-size:0.75rem;">Instant product uploads &amp; SafePay guaranteed payouts</div>
       </div>
     </div>
   </div>
@@ -609,7 +609,7 @@ body {
     <button type="button" onclick="closeQuickShopDrawer()" style="background:none; border:none; color:var(--muted); font-size:1.6rem; cursor:pointer; width:44px; height:44px; min-width:44px; min-height:44px; display:inline-flex; align-items:center; justify-content:center; padding:0;" title="Close">&times;</button>
   </div>
   <p style="color:var(--muted); font-size:0.85rem; margin-top:0; margin-bottom:1.2rem; line-height:1.4;">
-    Setup your digital storefront in 30 seconds. Start selling directly on Fast Site Escrow Marketplace with zero upfront fee.
+    Setup your digital storefront in 30 seconds. Start selling directly on Fast Site with SafePay Buyer Guarantee and zero upfront fee.
   </p>
 
   <form action="/user/create_shop.php" method="POST">
@@ -641,7 +641,7 @@ body {
     </div>
 
     <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); padding:0.85rem; border-radius:12px; font-size:0.78rem; color:var(--muted); margin-bottom:1.2rem; line-height:1.5;">
-      👤 Owner: <strong style="color:#fff;"><?= htmlspecialchars($user['name'] ?? 'User') ?></strong> &bull; 📞 Phone: <strong style="color:#fff;"><?= htmlspecialchars($user['phone'] ?? 'N/A') ?></strong> &bull; 🛡️ Escrow: <strong style="color:var(--gold);">100% Protected</strong>
+      👤 Owner: <strong style="color:#fff;"><?= htmlspecialchars($user['name'] ?? 'User') ?></strong> &bull; 📞 Phone: <strong style="color:#fff;"><?= htmlspecialchars($user['phone'] ?? 'N/A') ?></strong> &bull; 🛡️ SafePay: <strong style="color:var(--gold);">100% Protected (সুরক্ষিত)</strong>
     </div>
 
     <button type="submit" class="btn" style="width:100%; min-height:48px; background:linear-gradient(135deg, #f59e0b, #d97706); color:#000; font-weight:900; font-size:1rem; padding:0.9rem; border-radius:50px; border:none; cursor:pointer; box-shadow:0 6px 20px rgba(245,158,11,0.35); box-sizing:border-box; transition:transform 0.15s ease;">

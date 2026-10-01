@@ -1,5 +1,5 @@
 # 🚀 FAST SITE — PROJECT STATE & WORKFLOW
-**Last Updated:** Phase 98 100% COMPLETE — New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture (Google Stitch Nocturne Aurum Standards)
+**Last Updated:** Phase 99 100% COMPLETE — Clean Terminology Re-Word Migration & Consumer Trust Architecture (SafePay, Bengali Trust Badges, Refund & Claim Center)
 
 ---
 
@@ -85,6 +85,31 @@
 | 96 | Admin Settings Mobile Overflow Fix, DOM Hierarchy Restoration & Responsive Shielding (Tag Balancing diff=0, Mobile .grid2 Collapse, Swipeable Tabs) |
 | 97 | Universal Partner & Ecosystem Product Photo Sync Architecture (Best Travel, Ayra Mart, Enzor Motor, Unsplash CDN & Direct Resolution) |
 | 98 | New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture |
+| 99 | Clean Terminology Re-Word Migration & Consumer Trust Architecture (SafePay, Bengali Trust Badges, Refund & Claim Center) |
+
+### Phase 99 Details — Clean Terminology Re-Word Migration & Consumer Trust Architecture
+- **1. Zero-Clutter & Everyday Consumer Terminology (18 Core Files):** Eliminated confusing technical and developer jargon across Storefront, User Portal, Merchant Dashboard, and Admin Command Center, replacing them with intuitive Bengali and English trust terminology:
+  - *Escrow* ➔ **SafePay / Buyer Guarantee (নিরাপদ গ্যারান্টি)**
+  - *Escrow Vault* ➔ **Safety Hold / Protected Vault (সুরক্ষিত তহবিল)**
+  - *Escrow Auto-Release* ➔ **48h Auto-Completion (৪৮ ঘণ্টা পর অটো পেমেন্ট রিলিজ)**
+  - *Partner Disputes* ➔ **Refund & Claim Center (রিটার্ন ও রিফান্ড সেন্টার)**
+  - *Adjudicate Dispute* ➔ **Resolve Claim (Pay Seller / Refund Buyer) (ক্লেইম নিষ্পত্তি)**
+  - *KYC Verification* ➔ **ID & Profile Verification (আইডি ও প্রোফাইল ভেরিফিকেশন)**
+  - *Fast Points / Coins* ➔ **Fast Cash / Points (১ কয়েন = ১ টাকা)**
+  - *Drop-Shoppers* ➔ **Reseller Partners (রিসেলার পার্টনার)**
+- **2. Customer Storefront & Trust Badges (`home.php`, `product_detail.php`, `checkout.php`):**
+  - Updated homepage hero to highlight 100% SafePay Buyer Guarantee and Reseller Partner programs in clean, bilingual typography.
+  - Upgraded product detail shield badge to an authentic consumer trust banner (`SafePay ১০০% নিরাপদ গ্যারান্টি: আপনার পেমেন্ট Fast Site সুরক্ষিত তহবিলে নিরাপদ থাকে...`).
+  - Transformed checkout confirmation and order submission CTAs to prominent SafePay Buyer Guarantee buttons with instant reassurance.
+- **3. User & Merchant Portals Re-Word Sync (`user/partner_orders.php`, `partner/orders.php`, `partner/nav.php`):**
+  - Renamed order stepper stages from technical "Escrow Held" to "SafePay Secured (নিরাপদ তহবিল)".
+  - Replaced harsh "Dispute" language with accessible "Refund Claim / Return Request (রিটার্ন ও রিফান্ড আবেদন)".
+  - Replaced "Auto-Release Active" with clear "48h Auto-Completion Active (অটো পেমেন্ট রিলিজ)".
+- **4. Admin Command Center Overhaul (`admin/nav.php`, `admin/partner_disputes.php`, `admin/partner_shops.php`, `admin/users_final.php`):**
+  - Upgraded navigation from "Escrow Disputes Adjudication" to "⚖️ Refund & Claim Center (রিটার্ন ও রিফান্ড)".
+  - Redesigned dispute decision buttons into clear 1-click action triggers: `[ 🟢 Pay Seller (সেলারকে পেমেন্ট দিন) ]` and `[ 🔴 Refund Buyer (গ্রাহককে রিফান্ড দিন) ]`.
+  - Updated user document management from "KYC Vault" to "🪪 ID & Profile Verification Vault (আইডি ভেরিফিকেশন)".
+- **5. Strict Codebase Integrity & Zero Syntax Errors:** Verified all 18 touched files via `php -l` (0 errors), audited 100% pure UTF-8 encoding with 0 BOM bytes, and ensured underlying database table and column names (`partner_disputes`, `partner_orders`, `total_coins`) remain completely undisturbed.
 
 ### Phase 98 Details — New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture
 - **1. Dedicated New Arrivals Data Query Pipeline (`home.php` & `user/dashboard.php`):** Implemented high-performance SQL query selecting top 15 newly listed, published products (`ORDER BY p.id DESC, p.created_at DESC`), joined with partner shop verification status and thumbnails across both the public marketplace and user portal.

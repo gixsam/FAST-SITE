@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 if (!isset($_SESSION['user_id'])) { header('Location: /user/login.php'); exit; }
 require_once __DIR__ . '/../config.php';
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_request'])) {
                     <span style="color:var(--green);">✓ Provided</span>
                 </div>
                 <div class="data-row">
-                    <span style="color:var(--muted);">KYC Documents</span>
+                    <span style="color:var(--muted);">ID &amp; Profile Documents</span>
                     <span><?= ($user['nid'] || $user['etin'] || $user['passport'] || $user['driving_license']) ? '<span style="color:var(--green);">✓ Provided</span>' : '<span style="color:var(--gold);">⚠ Optional</span>' ?></span>
                 </div>
             </div>

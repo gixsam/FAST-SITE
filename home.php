@@ -1625,11 +1625,11 @@ if ($show_banner !== 'none'):
   <?php if ($is_user_logged_in): ?>
       <span class="hero-tagline">✨ Welcome back, <?= htmlspecialchars($user_name) ?>!</span>
   <?php else: ?>
-      <span class="hero-tagline">✨ Verified Digital Escrow Marketplace</span>
+      <span class="hero-tagline">✨ ১০০% নিরাপদ কেনাকাটা • 100% SafePay Buyer Guarantee</span>
   <?php endif; ?>
 
-  <h1 class="hero-title">BUY &amp; SELL PREMIUM DIGITAL ASSETS SECURELY</h1>
-  <p class="hero-subtitle">Join the Fast Site ecosystem. Purchase high-quality digital products safely using coin escrow, or become a seller and earn massive commissions!</p>
+  <h1 class="hero-title">BUY &amp; SELL PREMIUM PRODUCTS &amp; SERVICES SECURELY</h1>
+  <p class="hero-subtitle">ফাস্ট সাইট নিরাপদ মার্কেটপ্লেস। SafePay ১০০% ক্রেতা সুরক্ষায় সুরক্ষিত পেমেন্ট, অথবা রিসেলার পার্টনার (Reseller Partner) হয়ে নিজের ব্যবসা পরিচালনা করুন।</p>
 
   <!-- Prominent Search Command Bar -->
   <div class="search-command-hub">

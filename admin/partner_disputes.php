@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                             ':ref'   => "Dispute Refund for Order #" . $dispute['order_id']
                         ]);
 
-                    $msg = 'Dispute resolved! Escrow coins refunded to customer wallet.';
+                    $msg = 'Claim resolved! Funds refunded to customer wallet.';
                 } elseif ($action === 'release') {
                     // 1. Update dispute status
                     $pdo->prepare("UPDATE partner_disputes 
@@ -97,16 +97,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                         ->execute([
                             ':uid'   => $dispute['customer_id'],
                             ':coins' => $dispute['total_coins'],
-                            ':ref'   => "Dispute Released for Order #" . $dispute['order_id']
+                            ':ref'   => "Claim Released for Order #" . $dispute['order_id']
                         ]);
 
-                    $msg = 'Dispute resolved! Escrow coins released to partner shop total earnings.';
+                    $msg = 'Claim resolved! Funds released to partner shop total earnings.';
                 }
 
                 $pdo->commit();
             } else {
                 $pdo->rollBack();
-                $err = 'Dispute not found or already resolved.';
+                $err = 'Claim not found or already resolved.';
             }
         } catch (Exception $e) {
             $pdo->rollBack();
@@ -136,7 +136,7 @@ $disputes = $pdo->query("SELECT d.*, o.total_coins, o.created_at AS order_date, 
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Escrow Disputes Adjudication — Fast Site Admin</title>
+  <title>Refund &amp; Claim Center — Fast Site Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
@@ -144,22 +144,22 @@ $disputes = $pdo->query("SELECT d.*, o.total_coins, o.created_at AS order_date, 
 <?php include 'nav.php'; ?>
 
 <div class="wrap">
-  <h1>⚖️ Escrow Disputes Adjudication</h1>
-  <p style="font-size:0.85rem; color:#8888aa; margin-bottom:1.5rem;">Adjudicate held points for contested orders. Refund back to customer or release to partner shop.</p>
+  <h1>⚖️ Refund &amp; Claim Center (রিটার্ন ও রিফান্ড সেন্টার)</h1>
+  <p style="font-size:0.85rem; color:#8888aa; margin-bottom:1.5rem;">Review and resolve customer refund requests and return claims. 1-Click action to refund buyer or release payment to seller.</p>
 
   <?php if($msg): ?><div class="alert-ok">✅ <?= htmlspecialchars($msg) ?></div><?php endif; ?>
   <?php if($err): ?><div class="alert-err">❌ <?= htmlspecialchars($err) ?></div><?php endif; ?>
 
   <div class="tabs-bar">
-    <a href="partner_disputes.php?status=pending" class="tab-link <?= $filter === 'pending' ? 'active' : '' ?>">Pending Resolution</a>
-    <a href="partner_disputes.php?status=refund_customer" class="tab-link <?= $filter === 'refund_customer' ? 'active' : '' ?>">Refunded to Customer</a>
-    <a href="partner_disputes.php?status=release_to_partner" class="tab-link <?= $filter === 'release_to_partner' ? 'active' : '' ?>">Released to Partner</a>
+    <a href="partner_disputes.php?status=pending" class="tab-link <?= $filter === 'pending' ? 'active' : '' ?>">Pending Claims</a>
+    <a href="partner_disputes.php?status=refund_customer" class="tab-link <?= $filter === 'refund_customer' ? 'active' : '' ?>">Refunded to Buyer</a>
+    <a href="partner_disputes.php?status=release_to_partner" class="tab-link <?= $filter === 'release_to_partner' ? 'active' : '' ?>">Released to Seller</a>
   </div>
 
   <div class="panel">
     <div class="table-container">
       <?php if(empty($disputes)): ?>
-        <p style="color:#8888aa; font-size:0.85rem; text-align:center; padding:2rem 0;">No active disputes found in this category.</p>
+        <p style="color:#8888aa; font-size:0.85rem; text-align:center; padding:2rem 0;">No active claims found in this category.</p>
       <?php else: ?>
         <div class="desktop-table-wrap">
           <table>
@@ -168,10 +168,10 @@ $disputes = $pdo->query("SELECT d.*, o.total_coins, o.created_at AS order_date, 
                 <th>ID</th>
                 <th>Order Details</th>
                 <th>Contesting Parties</th>
-                <th>Dispute Details</th>
+                <th>Claim Details</th>
                 <th>Evidence Provided</th>
                 <th>Status</th>
-                <th>Resolution Adjudication</th>
+                <th>Resolution Action</th>
               </tr>
             </thead>
             <tbody>
@@ -208,15 +208,15 @@ $disputes = $pdo->query("SELECT d.*, o.total_coins, o.created_at AS order_date, 
                   <td>
                     <?php if($d['admin_decision'] === 'pending'): ?>
                       <div style="display:flex; flex-direction:column; gap:0.4rem; min-width: 140px;">
-                        <form method="POST" style="display:inline;" onsubmit="return confirm('Confirm release of points to partner shop?');">
+                        <form method="POST" style="display:inline;" onsubmit="return confirm('Confirm release of payment to partner seller?');">
                           <input type="hidden" name="dispute_id" value="<?= $d['id'] ?>"/>
                           <input type="hidden" name="action" value="release"/>
-                          <button type="submit" class="btn-action" style="width:100%;">Release to Partner</button>
+                          <button type="submit" class="btn-action" style="width:100%; background:linear-gradient(135deg, #10b981, #059669); color:#000; font-weight:800;">🟢 Pay Seller</button>
                         </form>
-                        <form method="POST" style="display:inline;" onsubmit="return confirm('Confirm refund of points to customer wallet?');">
+                        <form method="POST" style="display:inline;" onsubmit="return confirm('Confirm refund of payment to customer wallet?');">
                           <input type="hidden" name="dispute_id" value="<?= $d['id'] ?>"/>
                           <input type="hidden" name="action" value="refund"/>
-                          <button type="submit" class="btn-action btn-refund" style="width:100%;">Refund Customer</button>
+                          <button type="submit" class="btn-action btn-refund" style="width:100%; background:linear-gradient(135deg, #ef4444, #dc2626); color:#fff; font-weight:800;">🔴 Refund Buyer</button>
                         </form>
                       </div>
                     <?php else: ?>
@@ -242,7 +242,7 @@ $disputes = $pdo->query("SELECT d.*, o.total_coins, o.created_at AS order_date, 
             </div>
             
             <div style="margin-bottom:10px; font-size:0.9rem;">
-              <div><strong style="color:var(--muted);">Dispute ID:</strong> #<?= htmlspecialchars($d['id']) ?></div>
+              <div><strong style="color:var(--muted);">Claim ID:</strong> #<?= htmlspecialchars($d['id']) ?></div>
               <div><strong style="color:var(--muted);">Amount:</strong> <?= number_format($d['total_coins'], 1) ?> <?= htmlspecialchars($coin_name) ?></div>
               <div><strong style="color:var(--muted);">Cust:</strong> <?= htmlspecialchars($d['customer_name']) ?></div>
               <div><strong style="color:var(--muted);">Shop:</strong> <?= htmlspecialchars($d['partner_name']) ?></div>
@@ -263,15 +263,15 @@ $disputes = $pdo->query("SELECT d.*, o.total_coins, o.created_at AS order_date, 
 
             <?php if($d['admin_decision'] === 'pending'): ?>
               <div style="display:flex; gap:10px; margin-top:15px;">
-                <form method="POST" style="flex:1;" onsubmit="return confirm('Release points to partner?');">
+                <form method="POST" style="flex:1;" onsubmit="return confirm('Release payment to partner seller?');">
                   <input type="hidden" name="dispute_id" value="<?= $d['id'] ?>"/>
                   <input type="hidden" name="action" value="release"/>
-                  <button type="submit" class="btn-action" style="width:100%; padding:10px;">Release to Shop</button>
+                  <button type="submit" class="btn-action" style="width:100%; padding:10px; background:linear-gradient(135deg, #10b981, #059669); color:#000; font-weight:800;">🟢 Pay Seller</button>
                 </form>
-                <form method="POST" style="flex:1;" onsubmit="return confirm('Refund points to customer?');">
+                <form method="POST" style="flex:1;" onsubmit="return confirm('Refund payment to customer?');">
                   <input type="hidden" name="dispute_id" value="<?= $d['id'] ?>"/>
                   <input type="hidden" name="action" value="refund"/>
-                  <button type="submit" class="btn-action btn-refund" style="width:100%; padding:10px;">Refund Cust</button>
+                  <button type="submit" class="btn-action btn-refund" style="width:100%; padding:10px; background:linear-gradient(135deg, #ef4444, #dc2626); color:#fff; font-weight:800;">🔴 Refund Buyer</button>
                 </form>
               </div>
             <?php else: ?>

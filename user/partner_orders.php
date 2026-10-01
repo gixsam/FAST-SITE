@@ -22,7 +22,7 @@ function renderStepper($ord) {
 
     $steps = [
         ['key' => 'pending', 'label' => 'Order Placed'],
-        ['key' => 'escrow_held', 'label' => 'Escrow Held'],
+        ['key' => 'escrow_held', 'label' => 'SafePay Secured (নিরাপদ গ্যারান্টি)'],
         ['key' => 'shipped', 'label' => 'Shipped / In Transit'],
         ['key' => 'delivered', 'label' => 'Delivered'],
         ['key' => 'completed', 'label' => 'Completed']
@@ -45,7 +45,7 @@ function renderStepper($ord) {
         return '<div style="color:var(--red); font-size:0.8rem; font-weight:700; background:rgba(255,82,82,0.06); padding:0.6rem 1rem; border-radius:8px; border:1px solid rgba(255,82,82,0.15); display:inline-block; margin-top:0.5rem; text-transform: uppercase;">❌ THIS ORDER HAS BEEN CANCELLED</div>';
     }
     elseif ($status === 'disputed') {
-        return '<div style="color:#e91e63; font-size:0.8rem; font-weight:700; background:rgba(233,30,99,0.06); padding:0.6rem 1rem; border-radius:8px; border:1px solid rgba(233,30,99,0.15); display:inline-block; margin-top:0.5rem; text-transform: uppercase;">⚠️ THIS ORDER IS IN DISPUTE</div>';
+        return '<div style="color:#e91e63; font-size:0.8rem; font-weight:700; background:rgba(233,30,99,0.06); padding:0.6rem 1rem; border-radius:8px; border:1px solid rgba(233,30,99,0.15); display:inline-block; margin-top:0.5rem; text-transform: uppercase;">⚠️ THIS ORDER HAS AN OPEN REFUND CLAIM (রিটার্ন ও রিফান্ড আবেদন চলছে)</div>';
     }
 
     $html = '<div class="stepper-container" style="display:flex; justify-content:space-between; align-items:center; position:relative; margin:1.2rem 0; padding:0 0.5rem; width:100%; box-sizing:border-box;">';
@@ -420,7 +420,7 @@ $orders = $stmt_orders->fetchAll();
           </div>
           <?php if (!empty($ord['delivered_at']) && $ord['status'] !== 'completed'): ?>
             <div style="grid-column: span 2; background: rgba(255, 152, 0, 0.1); border: 1px solid rgba(255,152,0,0.2); padding: 0.8rem; border-radius: 8px; margin-top: 0.5rem; color: #ff9800; font-size: 0.85rem; font-weight: 600;">
-              ⏳ 48h Auto-Release Active: Funds release on <?= date('d M Y, h:i A', strtotime($ord['auto_release_deadline'])) ?> if no dispute is filed.
+              ⏳ 48h Auto-Completion Active (অটো পেমেন্ট রিলিজ): Funds release on <?= date('d M Y, h:i A', strtotime($ord['auto_release_deadline'])) ?> if no claim is filed.
             </div>
           <?php endif; ?>
         </div>
@@ -445,11 +445,11 @@ $orders = $stmt_orders->fetchAll();
             <form method="POST" style="display:inline;" onsubmit="return confirm('Confirm receipt of product/service? This will release points directly to the partner shop.');">
               <input type="hidden" name="action" value="release"/>
               <input type="hidden" name="order_id" value="<?= $ord['id'] ?>"/>
-              <button type="submit" class="btn-action">✓ Release Payment (Confirm Received)</button>
+              <button type="submit" class="btn-action">✓ Confirm Received &amp; Pay Seller</button>
             </form>
 
             <!-- Raise Dispute Trigger -->
-            <button class="btn-action btn-dispute" onclick="document.getElementById('dispute-form-<?= $ord['id'] ?>').style.display = 'block';">⚠️ Raise Dispute</button>
+            <button class="btn-action btn-dispute" onclick="document.getElementById('dispute-form-<?= $ord['id'] ?>').style.display = 'block';">⚠️ Request Refund / Claim</button>
           <?php endif; ?>
 
           <?php if ($ord['partner_proof']): ?>
@@ -469,17 +469,17 @@ $orders = $stmt_orders->fetchAll();
 
         <!-- Dispute Form -->
         <div class="collapsible-form" id="dispute-form-<?= $ord['id'] ?>" style="display:none;">
-          <span class="detail-label" style="color:var(--red); margin-bottom:0.5rem; display:block;">File a Dispute</span>
+          <span class="detail-label" style="color:var(--red); margin-bottom:0.5rem; display:block;">File a Return or Refund Claim (রিটার্ন ও রিফান্ড আবেদন)</span>
           <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="action" value="dispute"/>
             <input type="hidden" name="order_id" value="<?= $ord['id'] ?>"/>
-            <textarea class="form-input" name="reason" rows="3" placeholder="Provide details on why the service was not delivered or has issues..." required></textarea>
+            <textarea class="form-input" name="reason" rows="3" placeholder="Provide details on why the product/service was not delivered or has issues..." required></textarea>
             <div class="field" style="margin-bottom: 0.8rem;">
               <label>Upload screenshot/evidence</label>
               <input type="file" name="evidence" accept=".jpg,.jpeg,.png,.webp,.pdf" style="font-size:0.78rem; color:var(--text);"/>
               <span style="font-size:0.72rem; color:red; display:block; margin-top:2px;">recommended size: clear screenshot or document evidence (max 2mb)</span>
             </div>
-            <button type="submit" class="btn-action btn-dispute" style="width:100%;">Submit Dispute Report</button>
+            <button type="submit" class="btn-action btn-dispute" style="width:100%;">Submit Refund Claim (ক্লেইম জমা দিন)</button>
           </form>
         </div>
 

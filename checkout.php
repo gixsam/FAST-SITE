@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             } catch (Exception $ex) {}
 
             $order_placed = true;
-            $msg = "Order #{$new_order_id} placed successfully under 100% Buyer Protection Escrow!";
+            $msg = "Order #{$new_order_id} placed successfully under 100% SafePay Buyer Guarantee (নিরাপদ গ্যারান্টি)!";
         } catch (Exception $e) {
             $err = 'Order creation failed: ' . $e->getMessage();
         }
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Frictionless Checkout — Fast Site</title>
+  <title>SafePay Checkout — Fast Site</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/css/admin.css">
   <style>
@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
 <div class="checkout-wrap">
   <h1 style="color:var(--gold,#fcb900); font-family:'Oswald',sans-serif; text-transform:uppercase; margin-top:0;">🛒 FRICTIONLESS CHECKOUT</h1>
-  <p style="color:#aaa; font-size:0.9rem; margin-bottom:1.5rem;">Fast Site Escrow Buyer Protection • No Pre-funded Coins Required!</p>
+  <p style="color:#aaa; font-size:0.9rem; margin-bottom:1.5rem;">Fast Site SafePay ১০০% ক্রেতা গ্যারান্টি (Buyer Guarantee) • অগ্রিম কয়েন ব্যালেন্স প্রয়োজন নেই!</p>
 
   <?php if($msg): ?><div style="background:rgba(16,185,129,0.15); border:1px solid #10b981; color:#10b981; padding:1rem; border-radius:12px; margin-bottom:1.5rem; font-weight:700;">✅ <?= htmlspecialchars($msg) ?></div><?php endif; ?>
   <?php if($err): ?><div style="background:rgba(239,68,68,0.15); border:1px solid #ef4444; color:#ef4444; padding:1rem; border-radius:12px; margin-bottom:1.5rem; font-weight:700;">❌ <?= htmlspecialchars($err) ?></div><?php endif; ?>
@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     <div style="text-align:center; padding:2rem; background:rgba(16,185,129,0.05); border:1px solid #10b981; border-radius:16px;">
       <h2 style="color:#10b981; font-family:'Oswald',sans-serif;">🎉 ORDER CONFIRMED!</h2>
       <p style="color:#fff; font-size:1.1rem; font-weight:800;">Order ID: #<?= htmlspecialchars($new_order_id) ?></p>
-      <p style="color:#aaa; max-width:500px; margin:0.5rem auto;">Your payment is safely held in Fast Site Escrow Vault. Funds will only be released after you confirm delivery!</p>
+      <p style="color:#aaa; max-width:500px; margin:0.5rem auto;">আপনার পেমেন্ট Fast Site সুরক্ষিত তহবিলে (Safety Hold / Protected Vault) নিরাপদে জমা রাখা হয়েছে। পণ্য হাতে পেয়ে নিশ্চিত করার পরই সেলার পেমেন্ট পাবে!</p>
       <div style="background:rgba(252,185,0,0.1); border:1px solid var(--gold,#fcb900); padding:1rem; border-radius:12px; margin-top:1.5rem; text-align:left;">
         <strong style="color:var(--gold,#fcb900);"><?= htmlspecialchars($payment_method) ?> Payment Instructions:</strong>
         <p style="margin:5px 0 0 0; color:#fff;">Please send exact <strong><?= number_format($product['price_bdt'], 2) ?> BDT</strong> to <?= htmlspecialchars($payment_method) ?> our official wallet below: <br><span style="color:var(--gold,#fcb900); font-weight:900; font-size: 1.2rem;">+8801337320544</span></p>
@@ -233,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
           <div id="promo-msg" style="margin-top:5px; font-size:0.85rem; font-weight:700;"></div>
       </div>
 
-      <button type="submit" name="place_order" class="btn" style="width:100%; margin-top:1.5rem; justify-content:center;">🛡️ Place Order with Escrow Protection</button>
+      <button type="submit" name="place_order" class="btn" style="width:100%; margin-top:1.5rem; justify-content:center;">🛡️ SafePay গ্যারান্টিতে অর্ডার কনফার্ম করুন (Place Order)</button>
     </form>
   <?php endif; ?>
 </div>

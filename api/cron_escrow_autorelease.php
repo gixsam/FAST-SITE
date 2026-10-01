@@ -45,7 +45,7 @@ function runEscrowAutoRelease($pdo) {
                     ->execute([$order['total_coins'], $order['partner_user_id']]);
                     
                 $pdo->prepare("INSERT INTO coin_transactions (user_id, type, amount, reference, status) VALUES (?, 'deposit', ?, ?, 'completed')")
-                    ->execute([$order['partner_user_id'], $order['total_coins'], 'Auto-Released Escrow for Order #' . $order['id']]);
+                    ->execute([$order['partner_user_id'], $order['total_coins'], 'SafePay 48h Auto-Completion for Order #' . $order['id']]);
             }
             
             if (function_exists('updatePartnerSellerLevel')) {

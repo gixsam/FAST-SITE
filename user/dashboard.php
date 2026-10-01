@@ -1399,7 +1399,7 @@ if ($refCount >= 100) {
       <div class="premium-card" style="background:linear-gradient(135deg, rgba(252, 185, 0, 0.1), rgba(20, 20, 31, 0.8)); border:1px solid rgba(252, 185, 0, 0.3); border-radius:16px; padding:1.5rem; text-align:center;">
         <div style="font-size:3rem; margin-bottom:0.5rem;">📧</div>
         <h3 style="color:var(--gold); margin-bottom:0.5rem;">Official Support Email</h3>
-        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1.2rem;">For official requests, dispute escalation, or verification:</p>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1.2rem;">For official requests, return &amp; refund claims, or ID verification:</p>
         <a href="mailto:info.fastsite@gmail.com" class="btn" style="background:linear-gradient(135deg, var(--gold), #ff9100); color:#000; font-weight:800; border-radius:30px; text-decoration:none; padding:0.7rem 1.5rem; display:inline-block; box-shadow:0 4px 15px rgba(252,185,0,0.3);">
           info.fastsite@gmail.com
         </a>

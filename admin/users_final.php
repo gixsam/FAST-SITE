@@ -568,7 +568,7 @@ $pending_kyc_count = count($pending_kyc_users);
                     <input type="hidden" name="user_id" value="<?= $ku['id'] ?>"/>
                     <input type="hidden" name="kyc_status" value="approved"/>
                     <button type="submit" style="width:100%; background:linear-gradient(135deg, #10b981, #059669); color:#000; font-weight:900; border:none; padding:0.65rem 1.2rem; border-radius:8px; cursor:pointer; font-size:0.85rem;">
-                      ✓ Approve KYC (Verified)
+                      ✓ Approve ID &amp; Profile (Verified)
                     </button>
                   </form>
 
@@ -720,7 +720,7 @@ $pending_kyc_count = count($pending_kyc_users);
   <div style="background:#12131e; border-radius:18px; width:100%; max-width:650px; border:1px solid rgba(255,255,255,0.08); box-shadow:0 20px 50px rgba(0,0,0,0.8); overflow:hidden; display:flex; flex-direction:column; max-height:90vh;">
     
     <div style="padding:1.5rem 1.8rem; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02);">
-      <h3 style="color:#fff; margin:0; font-size:1.2rem; font-weight:800; display:flex; align-items:center; gap:8px;">🪪 Document & KYC Vault</h3>
+      <h3 style="color:#fff; margin:0; font-size:1.2rem; font-weight:800; display:flex; align-items:center; gap:8px;">🪪 ID &amp; Profile Verification Vault (আইডি ভেরিফিকেশন)</h3>
       <button onclick="closeKycModal()" style="background:transparent; border:none; color:#94a3b8; font-size:1.5rem; cursor:pointer;">✕</button>
     </div>
 

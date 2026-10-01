@@ -175,14 +175,14 @@ try {
 
   <!-- Header Admin Hero -->
   <div class="admin-hero">
-    <h2 class="admin-hero-title">🏪 SHOPS & ESCROW HUB</h2>
-    <p class="admin-hero-subtitle">Manage registered storefronts, shop requests, partner payouts & 1-click escrow disputes</p>
+    <h2 class="admin-hero-title">🏪 SHOPS &amp; SAFEPAY HUB</h2>
+    <p class="admin-hero-subtitle">Manage registered storefronts, shop requests, partner payouts &amp; 1-click refund claims</p>
     
     <div class="tabs-nav">
       <button class="tab-btn active" id="btn-shops" onclick="switchTab(event, 'tab-shops')">🛒 Shop Registrations (<?= count($partners) ?>)</button>
       <button class="tab-btn" id="btn-requests" onclick="switchTab(event, 'tab-requests')">📝 Shop Requests (<?= count($partner_requests ?? []) ?>)</button>
       <button class="tab-btn" id="btn-payouts" onclick="switchTab(event, 'tab-payouts')">💰 Payout Requests (<?= count($partner_payouts) ?>)</button>
-      <button class="tab-btn" id="btn-disputes" onclick="switchTab(event, 'tab-disputes')">⚖️ Escrow Disputes (<?= count($disputes) ?>)</button>
+      <button class="tab-btn" id="btn-disputes" onclick="switchTab(event, 'tab-disputes')">⚖️ Refund &amp; Claim Center (<?= count($disputes) ?>)</button>
     </div>
   </div>
 
@@ -366,9 +366,9 @@ try {
   <!-- TAB 3: ESCROW DISPUTES -->
   <div id="tab-disputes" class="tab-content">
     <div class="overview-card" style="border:1px solid rgba(239,68,68,0.3); box-shadow:0 0 20px rgba(239,68,68,0.1);">
-      <h3 style="color:var(--red);">⚖️ Escrow Disputes Adjudication</h3>
+      <h3 style="color:var(--red);">⚖️ Refund &amp; Claim Center (রিটার্ন ও রিফান্ড)</h3>
       <?php if(empty($disputes)): ?>
-        <p style="color:var(--muted); font-size:0.85rem;">No active disputes in the queue. All marketplace orders are operating smoothly!</p>
+        <p style="color:var(--muted); font-size:0.85rem;">No active claims in the queue. All customer orders are operating smoothly!</p>
       <?php else: ?>
         <div class="desktop-table-wrap">
           <table>
@@ -377,7 +377,7 @@ try {
                 <th>Order ID</th>
                 <th>Shop Name</th>
                 <th>Customer</th>
-                <th>Dispute Reason</th>
+                <th>Claim Reason</th>
                 <th>Amount</th>
                 <th>Actions</th>
               </tr>
@@ -391,7 +391,7 @@ try {
                 <td style="font-size:0.8rem; color:var(--muted);"><?= htmlspecialchars($d['reason'] ?? 'Item not received') ?></td>
                 <td style="color:var(--gold); font-weight:800;">৳<?= number_format($d['total_amount'], 2) ?></td>
                 <td>
-                  <a href="partner_disputes.php?id=<?= $d['id'] ?>" class="btn-sm" style="text-decoration:none; padding:0.4rem 0.8rem; font-size:0.78rem;">Adjudicate →</a>
+                  <a href="partner_disputes.php?id=<?= $d['id'] ?>" class="btn-sm" style="text-decoration:none; padding:0.4rem 0.8rem; font-size:0.78rem;">Resolve Claim →</a>
                 </td>
               </tr>
               <?php endforeach; ?>

@@ -8,7 +8,7 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drop-Shop API | Fast Site</title>
+    <title>Reseller Partner API | Fast Site</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -201,7 +201,7 @@ $isUserLoggedIn = isset($_SESSION['user_id']);
     <section class="hero">
         <span class="tagline">The Headless Commerce Empire</span>
         <h1>BUILD YOUR OWN MARKETPLACE.<br>WE HANDLE THE REST.</h1>
-        <p>Integrate the Fast Site Drop-Shop API into your own website. Automatically sync our vast inventory, set your own retail prices, keep 100% of your markup, and let us handle the fulfillment.</p>
+        <p>Integrate the Fast Site Reseller Partner API into your own website. Automatically sync our vast inventory, set your own retail prices, keep 100% of your markup, and let us handle the fulfillment.</p>
     </section>
 
     <section class="flow-section">

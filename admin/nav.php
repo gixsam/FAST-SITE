@@ -82,7 +82,7 @@ $admin_sub_items = [
 $users_sub_items = [
     ['title' => '👥 All Customers & Users', 'link' => 'users.php#tab-customers'],
     ['title' => '🎯 User Tasks & Rewards', 'link' => 'tasks.php'],
-    ['title' => '🪪 KYC & Verification Vault', 'link' => 'users.php#tab-kyc'],
+    ['title' => '🪪 ID & Profile Verification (KYC)', 'link' => 'users.php#tab-kyc'],
     ['title' => '🔔 Broadcast Notifications', 'link' => 'users.php#tab-broadcast'],
     ['title' => '🎁 Customer Loyalty & Streaks', 'link' => 'users.php#tab-loyalty']
 ];
@@ -91,7 +91,7 @@ $shops_sub_items = [
     ['title' => '🛒 Shop Registrations', 'link' => 'partner_shops.php#tab-shops'],
     ['title' => '📝 Shop Requests', 'link' => 'partner_shops.php#tab-requests'],
     ['title' => '💸 Payout Requests', 'link' => 'partner_shops.php#tab-payouts'],
-    ['title' => '⚖️ Escrow Disputes Adjudication', 'link' => 'partner_shops.php#tab-disputes']
+    ['title' => '⚖️ Refund & Claim Center (রিটার্ন ও রিফান্ড)', 'link' => 'partner_disputes.php']
 ];
 
 $products_sub_items = [
@@ -131,7 +131,7 @@ try {
 
 $setting_sub_items = [
     ['title' => '⚙️ System Advanced Settings', 'link' => 'settings.php'],
-    ['title' => '📊 Escrow Financial Heatmap', 'link' => 'escrow_heatmap.php'],
+    ['title' => '📊 SafePay Financial Heatmap', 'link' => 'escrow_heatmap.php'],
     ['title' => '🛡️ Fraud & Security Monitor' . ($high_risk_detected ? ' 🔴' : ''), 'link' => 'fraud_detector.php'],
     ['title' => '🔑 Master API & Keys', 'link' => 'settings.php#sec-api'],
     ['title' => '🎨 Branding & Media Banners', 'link' => 'settings.php#sec-logo-banner-media'],
@@ -241,7 +241,7 @@ try {
         $dispCount = (int)$pdo->query("SELECT COUNT(*) FROM partner_disputes WHERE status = 'pending' OR status = 'open'")->fetchColumn();
         if ($dispCount > 0) {
             $admin_notif_count += $dispCount;
-            $admin_notifications[] = ["text" => "$dispCount active escrow dispute(s)", "link" => "partner_shops.php#tab-disputes"];
+            $admin_notifications[] = ["text" => "$dispCount active refund claim(s)", "link" => "partner_disputes.php"];
         }
     } catch (Exception $e) {}
 

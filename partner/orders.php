@@ -17,7 +17,7 @@ function renderStepper($ord) {
 
     $steps = [
         ['key' => 'pending', 'label' => 'Order Placed'],
-        ['key' => 'escrow_held', 'label' => 'Payment Secured'],
+        ['key' => 'escrow_held', 'label' => 'SafePay Secured (নিরাপদ তহবিল)'],
         ['key' => 'shipped', 'label' => 'Preparing Order'],
         ['key' => 'delivered', 'label' => 'Delivered'],
         ['key' => 'completed', 'label' => 'Completed']
@@ -40,7 +40,7 @@ function renderStepper($ord) {
         return '<div style="color:var(--red); font-size:0.8rem; font-weight:700; background:rgba(255,82,82,0.06); padding:0.6rem 1rem; border-radius:8px; border:1px solid rgba(255,82,82,0.15); display:inline-block; margin-top:0.5rem; text-transform: uppercase;">❌ THIS ORDER HAS BEEN CANCELLED</div>';
     }
     elseif ($status === 'disputed') {
-        return '<div style="color:#e91e63; font-size:0.8rem; font-weight:700; background:rgba(233,30,99,0.06); padding:0.6rem 1rem; border-radius:8px; border:1px solid rgba(233,30,99,0.15); display:inline-block; margin-top:0.5rem; text-transform: uppercase;">⚠️ THIS ORDER IS IN DISPUTE</div>';
+        return '<div style="color:#e91e63; font-size:0.8rem; font-weight:700; background:rgba(233,30,99,0.06); padding:0.6rem 1rem; border-radius:8px; border:1px solid rgba(233,30,99,0.15); display:inline-block; margin-top:0.5rem; text-transform: uppercase;">⚠️ THIS ORDER HAS AN OPEN REFUND CLAIM (রিটার্ন ও রিফান্ড আবেদন চলছে)</div>';
     }
 
     $html = '<div class="stepper-container" style="display:flex; justify-content:space-between; align-items:center; position:relative; margin:1.2rem 0; padding:0 0.5rem; width:100%; box-sizing:border-box;">';
@@ -405,8 +405,8 @@ $orders = $stmt_orders->fetchAll();
     <a href="orders.php?status=active" class="tab-link <?= $filter === 'active' ? 'active' : '' ?>">Active Orders</a>
     <a href="orders.php?status=pending" class="tab-link <?= $filter === 'pending' ? 'active' : '' ?>">New Orders (Paid)</a>
     <a href="orders.php?status=waiting" class="tab-link <?= $filter === 'waiting' ? 'active' : '' ?>">Delivered (Awaiting Buyer)</a>
-    <a href="orders.php?status=completed" class="tab-link <?= $filter === 'completed' ? 'active' : '' ?>">Completed (Funds Released)</a>
-    <a href="orders.php?status=disputed" class="tab-link <?= $filter === 'disputed' ? 'active' : '' ?>">Disputed</a>
+    <a href="orders.php?status=completed" class="tab-link <?= $filter === 'completed' ? 'active' : '' ?>">Completed (Payment Released)</a>
+    <a href="orders.php?status=disputed" class="tab-link <?= $filter === 'disputed' ? 'active' : '' ?>">Refund Claims (রিটার্ন ও রিফান্ড)</a>
     <a href="orders.php?status=cancelled" class="tab-link <?= $filter === 'cancelled' ? 'active' : '' ?>">Cancelled</a>
   </div>
 

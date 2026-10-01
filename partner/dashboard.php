@@ -810,7 +810,7 @@ try {
         </span>
       </div>
       <p style="font-size:0.84rem; color:#94a3b8; margin:0 0 1rem 0;">
-        Share your shop link with customers. When they make a purchase, payment is secured via platform Escrow.
+        Share your shop link with customers. When they make a purchase, payment is secured via SafePay Buyer Guarantee (নিরাপদ গ্যারান্টি).
       </p>
 
       <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:1rem;">
@@ -960,7 +960,7 @@ try {
         </a>
       </div>
       <p style="color:#94a3b8; font-size:0.88rem; margin:0 0 1.5rem 0;">
-        All orders placed with your shop are protected by the platform Escrow Vault. Confirm and upload delivery proof or tracking details to fulfill orders.
+        All orders placed with your shop are protected by SafePay Safety Hold (সুরক্ষিত তহবিল). Confirm and upload delivery proof or tracking details to fulfill orders.
       </p>
 
       <?php if (empty($recent_orders)): ?>

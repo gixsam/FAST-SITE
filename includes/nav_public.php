@@ -564,7 +564,7 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
                     <div class="drawer-auth-avatar">👤</div>
                     <div class="drawer-auth-meta">
                         <h4>Welcome to FAST SITE</h4>
-                        <p><span>🪙</span> Free 50 Coins on Register</p>
+                        <p><span>🪙</span> Free 50 Fast Cash (৳50) on Register</p>
                     </div>
                 </div>
                 <div class="drawer-auth-tabs">
@@ -629,7 +629,7 @@ $site_name = $settings['site_name'] ?? 'FAST SITE';
 
         <?php if ($is_user_logged_in): ?>
         <a href="/user/deposit.php" class="drawer-link">
-            <span style="font-size:1.2rem; margin-right:8px;">🪙</span> Buy Coins
+            <span style="font-size:1.2rem; margin-right:8px;">🪙</span> Fast Cash / Points
         </a>
         <a href="/user/partner_orders.php" class="drawer-link">
             <span style="font-size:1.2rem; margin-right:8px;">📦</span> My Purchases &amp; Orders

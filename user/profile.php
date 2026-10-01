@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 if (!isset($_SESSION['user_id'])) { 
     header('Location: /user/login.php'); 
@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
-            $msg = "Profile updated successfully!" . ($new_kyc_status === 'submitted' ? " Your KYC documents have been submitted for admin verification." : "");
+            $msg = "Profile updated successfully!" . ($new_kyc_status === 'submitted' ? " Your ID verification documents have been submitted for admin review." : "");
             
             // Refresh user data
             $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
@@ -435,10 +435,10 @@ $user_avatar = !empty($user['profile_pic']) ? '/' . ltrim($user['profile_pic'], 
       </div>
     </div>
 
-    <!-- ── Card 4: KYC Document Vault ── -->
+    <!-- ── Card 4: ID & Profile Verification ── -->
     <div class="section-card">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:0.8rem;">
-        <h3 style="margin:0;">📑 KYC Document Vault & Identity Verification</h3>
+        <h3 style="margin:0;">🪪 ID &amp; Profile Verification (আইডি ও প্রোফাইল ভেরিফিকেশন)</h3>
         <?php 
           $kst = strtolower($user['kyc_status'] ?? 'pending');
           if ($kst === 'approved'):
@@ -462,7 +462,7 @@ $user_avatar = !empty($user['profile_pic']) ? '/' . ltrim($user['profile_pic'], 
       </div>
 
       <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1.5rem;">
-        Uploading verified identity documents builds trust across the marketplace and fast-tracks withdrawals.
+        আপনার জাতীয় পরিচয়পত্র (NID) বা পাসপোর্ট দিয়ে প্রোফাইল ভেরিফাই করুন। ভেরিফাইড প্রোফাইল মার্কেটপ্লেসে সর্বোচ্চ নিরাপত্তা ও দ্রুত ক্যাশআউট সুবিধা পায়।
       </p>
 
       <div class="field" style="margin-bottom:1.2rem;">

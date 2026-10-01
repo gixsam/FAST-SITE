@@ -1,7 +1,7 @@
 # 📘 FAST SITE — MASTER COMPREHENSIVE NOTE & STATUS REPORT (NOTE.md)
 **Project Name:** FAST SITE (Ecosystem Escrow Hub & Universal Marketplace)  
 **Main Domain:** `https://fastsite.best-travel.ltd`  
-**Current Active Version:** Phase 98 100% Complete & Production-Verified  
+**Current Active Version:** Phase 99 100% Complete & Production-Verified  
 **Document Classification:** Canonical Website State, Historical Log & Future Roadmap  
 **Target Audience:** AI Agents (Google Antigravity, Claude Sonnet, Gemini, GPT) and Human Developers / Project Managers  
 
@@ -10,7 +10,7 @@
 ## 🧭 PURPOSE OF THIS DOCUMENT
 This document (`NOTE.md`) is the **authoritative single source of truth** for the Fast Site platform. Whenever any AI agent or human developer opens this project, this file provides an instant, unambiguous understanding of:
 1. **Current Operational Status**: What works right now, active servers, active endpoints, and live test configurations.
-2. **Historical Updates Log**: A complete chronicle of all past updates from Phase 1 through Phase 88.
+2. **Historical Updates Log**: A complete chronicle of all past updates from Phase 1 through Phase 99.
 3. **Future Updates Plan**: The strategic roadmap of upcoming features, migrations, and enhancements.
 4. **Architecture & Guidelines**: Critical rules for database failover, Hostinger deployments, Google Stitch design standards, and file maintenance.
 
@@ -23,11 +23,23 @@ This document (`NOTE.md`) is the **authoritative single source of truth** for th
 
 ## 🟢 SECTION 1: WHAT WE ARE DOING NOW (CURRENT ACTIVE STATE)
 
-### Active Status: Phase 98 Complete & Production-Verified (New Products Slideable Bar)
-The platform is currently at **Phase 98: New Products Featuring Slideable Bar Integration & High-Conversion Showcase Architecture (Google Stitch Nocturne Aurum Standards)**.
+### Active Status: Phase 99 Complete & Production-Verified (Clean Terminology Re-Word Migration)
+The platform is currently at **Phase 99: Clean Terminology Re-Word Migration & Consumer Trust Architecture (SafePay, Bengali Trust Badges, Refund & Claim Center)**.
 
 ### Current Core Capabilities Live in the Codebase:
-1. **New Products Featuring Slideable Bar (Phase 98 100% Complete):**
+1. **Clean Terminology Re-Word Migration (Phase 99 100% Complete):**
+   - Eliminated technical and developer jargon across 18 core template files spanning Storefront, User Dashboard, Shop Panel, and Admin Command Center:
+     - *Escrow* ➔ **SafePay / Buyer Guarantee (নিরাপদ গ্যারান্টি)**
+     - *Escrow Vault* ➔ **Safety Hold / Protected Vault (সুরক্ষিত তহবিল)**
+     - *Escrow Auto-Release* ➔ **48h Auto-Completion (৪৮ ঘণ্টা পর অটো পেমেন্ট রিলিজ)**
+     - *Partner Disputes* ➔ **Refund & Claim Center (রিটার্ন ও রিফান্ড সেন্টার)**
+     - *Adjudicate Dispute* ➔ **Resolve Claim (Pay Seller / Refund Buyer) (ক্লেইম নিষ্পত্তি)**
+     - *KYC Verification* ➔ **ID & Profile Verification (আইডি ও প্রোফাইল ভেরিফিকেশন)**
+     - *Fast Points / Coins* ➔ **Fast Cash / Points (১ কয়েন = ১ টাকা)**
+     - *Drop-Shoppers* ➔ **Reseller Partners (রিসেলার পার্টনার)**
+   - Homepage hero and product details now display authoritative consumer trust badges with 100% bilingual clarity.
+   - Admin command center upgraded to 1-click Pay Seller / Refund Buyer resolution buttons with 0 syntax errors across all touched files.
+2. **New Products Featuring Slideable Bar (Phase 98 100% Complete):**
    - Engineered dedicated, high-performance data queries in both `home.php` (Storefront) and `user/dashboard.php` (User Dashboard) selecting the top 15 newest published products (`ORDER BY p.id DESC, p.created_at DESC`), joined with partner shop verification status and thumbnails.
    - Every product thumbnail is resolved via `resolveProductArtwork()`, ensuring authentic HD imagery across all ecosystem shops (Best Travel, Ayra Mart, Enzor Motor) and official services with graceful fallback.
    - **Storefront Carousel (`home.php`):** Interactive swipe track (`#newProductsTrack`) with CSS scroll-snap, hidden scrollbars, and desktop chevron navigation buttons (`‹` / `›`).

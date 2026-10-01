@@ -756,7 +756,7 @@ document.addEventListener('click', function(e) {
         <span>🎟️</span> Discounts &amp; Coupons
       </a>
       <a href="disputes.php" class="drawer-link <?= isActive('disputes.php', $current_page) ?>">
-        <span>🛡️</span> Order Help &amp; Disputes
+        <span>🛡️</span> Refund &amp; Claim Center
       </a>
 
       <a href="profile.php" class="drawer-link <?= isActive('profile.php', $current_page) ?>">
