@@ -105,6 +105,7 @@ FILES_TO_PACKAGE = [
     'admin/export_mass_payout.php',
     'user/wallet.php',
     'config.php',
+    'extract_update.php',
     'PROJECT_STATE.md',
     'NOTE.md',
     'DEPLOYMENT_GUIDE.txt'
